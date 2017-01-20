@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Rawaton</title><!-- 
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> -->
+   <link href="/css/style.css" rel="stylesheet"/>
+   <link href="/css/slider.css" rel="stylesheet"/>
+   <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script> 
+   <script type="text/javascript" src="/js/move-top.js"></script>
+   <script type="text/javascript" src="/js/easing.js"></script>
+   <script type="text/javascript" src="/js/startstop-slider.js"></script>
+  <!--  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script src="/js/index.js"></script> -->
+   <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'>
+
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="headertop_desc">
+        <div class="call"></div>
+        <header class="navbar navbar-fixed-top">
+          <div class="navbar-inner">
+            <div class="container clearfix">
+              <div class="topbar-logo-wrapper">
+                <a href="/">RAWATON<span class="site-logo"></span></a>
+              </div>
+              <div class="pull-right">
+                <ul id="b-nav" class="topbar-nav">
+                  {{#if user}}
+                     <li role="presentation"><a href="/">Dashboard</a></li>
+                     <li role="presentation"><a href="/users/logout">Logout</a></li>
+                  {{else}}
+                     <li class="dropdown border-left"><a href="#">Chart</a></li>
+                     <li class="dropdown-single border-left"><a href="/users/register">Ragister</a></li>
+                     <li class="dropdown dropdown-right border-both" id="iframe-login"><a href="/users/login">Login</a></li>
+                  {{/if}}
+                  
+                </ul>
+              </div>
+            </div>
+          </div>
+        </header>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+      <div class="section group">
+         <div class="col-lg-8">
+         {{#if success_msg}}
+            <div class="alert alert-success">{{success_msg}}</div>
+         {{/if}}
+
+         {{#if error_msg}}
+            <div class="alert alert-danger">{{error_msg}}</div>
+         {{/if}}
+
+         {{#if error}}
+            <div class="alert alert-danger">{{error}}</div>
+         {{/if}}
+            
+            {{{body}}}
+      </div>
+      </div>      
+   </div>
+   <div class="footer">
+      <div class="wrap">  
+         <div class="section group">
+         <div class="col_1_of_4 span_1_of_4">
+            <h4>Information</h4>
+            <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Customer Service</a></li>
+            <li><a href="#">Advanced Search</a></li>
+            <li><a href="delivery.html">Orders and Returns</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+         </div>
+         <div class="col_1_of_4 span_1_of_4">
+            <h4>Why buy from us</h4>
+            <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Customer Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="contact.html">Site Map</a></li>
+            <li><a href="#">Search Terms</a></li>
+            </ul>
+         </div>
+         <div class="col_1_of_4 span_1_of_4">
+            <h4>My account</h4>
+            <ul>
+              <li><a href="contact.html">Sign In</a></li>
+              <li><a href="index.html">View Cart</a></li>
+              <li><a href="#">My Wishlist</a></li>
+              <li><a href="#">Track My Order</a></li>
+              <li><a href="contact.html">Help</a></li>
+            </ul>
+         </div>
+         <div class="col_1_of_4 span_1_of_4">
+            <h4>Contact</h4>
+            <ul>
+              <li><span>+91-123-456789</span></li>
+              <li><span>+00-123-000000</span></li>
+            </ul>
+               <div class="social-icons">
+               <h4>Follow Us</h4>
+                  <ul>
+                    <li><a href="#" target="_blank"><img src="/images/facebook.png" alt="" /></a></li>
+                    <li><a href="#" target="_blank"><img src="/images/twitter.png" alt="" /></a></li>
+                    <li><a href="#" target="_blank"><img src="/images/skype.png" alt="" /> </a></li>
+                    <li><a href="#" target="_blank"> <img src="/images/dribbble.png" alt="" /></a></li>
+                    <li><a href="#" target="_blank"> <img src="/images/linkedin.png" alt="" /></a></li>
+                    <div class="clear"></div>
+                  </ul>
+               </div>
+            </div>
+         </div>      
+      </div>
+   <div class="copy_right"><p>RAWATON | Design by  <a href="/">RAWATON</a> </p></div>
+   </div>
+   <script type="text/javascript">
+   $(document).ready(function() {      
+      $().UItoTop({ easingType: 'easeOutQuart' });
+      
+   });
+   </script>
+   <a href="#" id="toTop"><span id="toTopHover"> </span></a>
+
+   </div> <!-- /container -->
+</body>
+</html>
