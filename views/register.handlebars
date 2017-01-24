@@ -1,3 +1,4 @@
+
 <div class="wrap">
   <div class="section group"> 
     <h2 class="page-header">Register</h2>
@@ -8,10 +9,25 @@
   {{/if}}
 
 <form class="form-horizontal" method="post" action="/users/register">
+    
+    <div class="form-group">
+      <div class="cols-sm-10">
+        <div class="list-group"> 
+          <table border="1px" width="100%">
+            <tr>
+              <td width="20%"><label class="table">Anda sebagai : </label></td>
+              <td width="40%"><input type="radio" onclick="displayResult(this.value)" name="jk" value="seller"/>SELLER</td>
+              <td width="40%"><input type="radio" onclick="displayResult(this.value)"name="jk" value="buyer"/>BUYER</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <div class="form-group">
       <div class="cols-sm-10">
         <div class="input-group">
-          <span class="input-group-addon"><i class="glyphicon glyphicon-user" aria-hidden="true"></i></span>
+          <span class="input-group-addon"><i class="glyphicon glyphicon-user" aria-hidden="false"></i></span>
           <input type="text" class="form-control" name="name" id="name"  placeholder="Masukkan Nama Lengkap"/>
         </div>
       </div>

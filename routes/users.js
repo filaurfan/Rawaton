@@ -17,6 +17,7 @@ router.get('/login', function(req, res){
 
 // Register User
 router.post('/register', function(req, res){
+	var role = req.document.getElementById("jk").value;
 	var name = req.body.name;
 	var email = req.body.email;
 	var username = req.body.username;
@@ -39,6 +40,7 @@ router.post('/register', function(req, res){
 		});
 	} else {
 		var newUser = new User({
+			role: role,
 			name: name,
 			email:email,
 			username: username,
