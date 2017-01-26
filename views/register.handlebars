@@ -1,4 +1,5 @@
 
+
 <div class="wrap">
   <div class="section group"> 
     <h2 class="page-header">Register</h2>
@@ -16,8 +17,9 @@
           <table border="1px" width="100%">
             <tr>
               <td width="20%"><label class="table">Anda sebagai : </label></td>
-              <td width="40%"><input type="radio" onclick="displayResult(this.value)" name="jk" value="seller"/>SELLER</td>
-              <td width="40%"><input type="radio" onclick="displayResult(this.value)"name="jk" value="buyer"/>BUYER</td>
+              <td width="40%"><input type="radio" onclick="displayResult(this.value)" name="tipe" value="seller"/> SELLER</td>
+              <td width="40%"><input type="radio" onclick="displayResult(this.value)" name="tipe" value="buyer"/> BUYER</td>
+              <input type="hidden" name="role" id="role" value="" />
             </tr>
           </table>
         </div>
@@ -67,15 +69,20 @@
     <div class="form-group">
       <div class="col-xs-offset-3 col-xs-9">
       <label class="checkbox-inline">
-        <input type="checkbox" value="Setuju">  Saya Setuju dengan <a href="#">Kebijakan dan Ketentuan</a> yang berlaku.
+        <input type="checkbox" id="setuju" >  Saya Setuju dengan <a href="#">Kebijakan dan Ketentuan</a> yang berlaku.
       </label>
       </div>
     </div>
     <div class="form-group ">
-      <button type="submit" class="btn btn-primary btn-lg btn-block login-button log-btn">Register</button>
+      <button type="submit" name="register" id="register" class="btn btn-primary btn-lg btn-block login-button log-btn" >Register</button>
     </div>
   </form>
 
 
       </div>      
 </div>
+<script>
+  function displayResult(tipe){ 
+    document.getElementById("role").value=tipe; 
+  }
+</script>

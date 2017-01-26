@@ -18,9 +18,6 @@ var UserSchema = mongoose.Schema({
 	},
 	role: {
 		type: String
-	},
-	role: {
-		type: String
 	}
 });
 

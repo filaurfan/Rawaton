@@ -1,0 +1,56 @@
+<header class="navbar navbar-fixed-top">
+   <div class="navbar-inner">
+      <div class="container clearfix">
+         <div class="pull-right">
+            <ul id="b-nav" class="topbar-nav">
+               {{#if user}}
+                  {{#each data}}
+                     <li role="presentation"><a href="/">Dashboard</a></li>
+                     <li role="presentation"><a href="/users/profile">{{nama}}</a></li>
+                     <li role="presentation"><a href="/users/logout">Logout</a></li>
+                  {{/each}}
+               {{else}}
+                     <li class="border-left"><a href="#">Chart</a></li>
+                     <li class="dropdown-single border-left"><a href="/users/register">Ragister</a></li>
+                     <li class="dropdown dropdown-right border-both" id="iframe-login"><a href="/users/login">Login</a></li>
+               {{/if}}
+                  <ul class="dropdown-menu dropdown-basic" role="menu" aria-labelledby="dropdownMenu" id="accounts-menu">
+                     <li><input type="hidden" id="accounts-url" name="accounts_url" value="https://accounts.tokopedia.com/login"><iframe id="iframe-accounts" src="#"></iframe>
+                     </li>
+                  </ul>
+            </ul>
+         </div>
+         <a href="/"><img src="/images/logo_2.png"></a>
+         <!-- <input type="hidden" name="unique_id" value="">
+         <input type="hidden" name="autocompleteDeleteIcon" value="../ecs7.tokopedia.net/img/search_autocomplete/delete-icon.png">
+         <input type="hidden" name="image_router_url" value="https://imagerouter.tokopedia.com/">
+         <form id="navbar-search" action="https://www.tokopedia.com/search" class="navbar-search" method="get"> 
+            <input type="hidden" name="st" value="product">
+            <div class="search-parent-older">
+               <div class="searchform search-parent">
+                  <div class="overlay"></div>
+                  <input name="q" class="input-wrapper" id="search-keyword" type="text" placeholder="Cari Produk atau Toko" autocomplete="off" value="">
+                  <div id="div_autocomplete" style="position:relative"></div>
+                  <div class="cat-wrapper permanent-active">
+                  <div class=" cat-result-wrapper">
+                     <ul class="inline cat-result">
+                        <li class="cat-result-toggle">Semua Kategori</li>
+                        <li><i class="icon-caret-down"></i></li>
+                     </ul>
+                  </div>
+                  <select name="sc" id="cat-select" class="cat-select absolute">
+                     <option value="0">Semua Kategori</option> 
+                     <option class="ml-10" value="8">MOBILE PHONE</option>
+                     <option class="ml-10" value="20">KAMERA & ACCESORIES</option>
+                     <option class="ml-10" value="36">LAPTOP</option>
+                  </select>
+                  </div>
+                  <span class="btn-search-wrapper">
+                     <button class="btn btn-search" type="submit"><i class="icon-search icon-large orange"></i></button>
+                  </span>
+               </div>
+            </div>
+         </form> -->
+      </div>
+   </div>
+</header>

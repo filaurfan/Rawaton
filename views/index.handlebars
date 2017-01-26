@@ -73,77 +73,34 @@
     		<div class="clear"></div>
     	</div>
 	    <div class="section group">
+	    	{{#each products}}
 			<div class="grid_1_of_4 images_1_of_4">
-				<a href="preview.html"><img src="/images/feature-pic1.jpg" alt="" /></a><h2>Laptop Acer</h2>
+				<a href="preview.html"><img src='/uploads/'.{{ picture_product }}.''></a><h2>{{ name_product }}</h2>
 				<div class="price-details">
-				    <div class="price-number"><p><span class="rupees">Rp.6.000.000</span></p></div>
+				    <div class="price-number"><p><span class="rupees">Rp.{{ price_product }}</span></p></div>
 					<div class="add-cart"><h4><a href="preview.html">Add to Cart</a></h4></div>
 					<div class="clear"></div>
 				</div>	 
 			</div>
-			<div class="grid_1_of_4 images_1_of_4">
-				<a href="preview.html"><img src="/images/feature-pic2.jpg" alt="" /></a><h2>DSLR Canon 6D</h2>
-				<div class="price-details">
-				    <div class="price-number"><p><span class="rupees">Rp 25.000.000</span></p></div>
-					<div class="add-cart"><h4><a href="preview.html">Add to Cart</a></h4></div>
-					<div class="clear"></div>
-				</div>
-			</div>
-			<div class="grid_1_of_4 images_1_of_4">
-				<a href="preview.html"><img src="/images/feature-pic3.jpg" alt="" /></a><h2>Mac Book</h2>
-				<div class="price-details">
-				    <div class="price-number"><p><span class="rupees">Rp.13.000.000</span></p></div>
-					<div class="add-cart"><h4><a href="preview.html">Add to Cart</a></h4></div>
-					<div class="clear"></div>
-				</div>
-			</div>
-			<div class="grid_1_of_4 images_1_of_4">
-				<a href="preview.html"><img src="/images/feature-pic4.jpg" alt="" /></a><h2> Drone Dji Phantom</h2>
-				<div class="price-details">
-				    <div class="price-number"><p><span class="rupees">Rp 12.000.000</span></p></div>
-					<div class="add-cart"><h4><a href="preview.html">Add to Cart</a></h4></div>
-					<div class="clear"></div>
-				</div>				     
-			</div>
+			{{/each}}
 		</div>
+		
 		<div class="content_bottom">
 	    	<div class="heading"><h3>Feature Products</h3></div>
 	    	<div class="see"><p><a href="#">See all Products</a></p></div>
 	    	<div class="clear"></div>
     	</div>
 		<div class="section group">
+			{{#each products}}
 			<div class="grid_1_of_4 images_1_of_4">
-				<a href="preview.html"><img src="/images/new-pic1.jpg" alt="" /></a><h2>DSLR Canon 7D</h2>
+				<a href="preview.html"><img src="/uploads/".{{ picture_product }}.""></a><h2>{{ name_product }}</h2>
 				<div class="price-details">
-				    <div class="price-number"><p><span class="rupees">Rp 14.000.000</span></p></div>
+				    <div class="price-number"><p><span class="rupees">Rp.{{ price_product }}</span></p></div>
 					<div class="add-cart"><h4><a href="preview.html">Add to Cart</a></h4></div>
 					<div class="clear"></div>
 				</div>
 			</div>
-			<div class="grid_1_of_4 images_1_of_4">
-				<a href="preview.html"><img src="/images/new-pic2.jpg" alt="" /></a><h2>Drone Dji Phantom 4</h2>
-				<div class="price-details">
-				    <div class="price-number"><p><span class="rupees">Rp 15.000.000</span></p></div>
-					<div class="add-cart"><h4><a href="preview.html">Add to Cart</a></h4></div>
-					<div class="clear"></div>
-				</div>
-			</div>
-			<div class="grid_1_of_4 images_1_of_4">
-				<a href="preview.html"><img src="/images/new-pic4.jpg" alt="" /></a><h2>DSLR Canon 60D </h2>
-				<div class="price-details">
-				    <div class="price-number"><p><span class="rupees">Rp 8.000.000</span></p></div>
-					<div class="add-cart"><h4><a href="preview.html">Add to Cart</a></h4></div>
-					<div class="clear"></div>
-				</div>
-			</div>
-			<div class="grid_1_of_4 images_1_of_4">
-				<a href="preview.html"><img src="/images/new-pic3.jpg" alt="" /></a><h2>Xiaomy Drone </h2>					 
-				<div class="price-details">
-					<div class="price-number"><p><span class="rupees">Rp 7.000.000</span></p></div>
-					<div class="add-cart"><h4><a href="preview.html">Add to Cart</a></h4></div>
-					<div class="clear"></div>
-				</div>
-			</div>
+			{{/each}}
 		</div>
   	</div>
  </div>

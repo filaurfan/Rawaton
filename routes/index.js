@@ -1,30 +1,30 @@
 var express = require('express');
 var router = express.Router();
 
-// Get Homepage
-router.get('/', ensureAuthenticated, function(req, res){
-	res.render('index');
-});
+var Product = require('../models/product');
 
-function ensureAuthenticated(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	} else {
-		//req.flash('error_msg','You are not logged in');
-		res.redirect('/users/login');
-	}
-}
-
-// router.get('/register', function(req, res){
-// 	res.render('register');
+// // Get Homepage
+// router.get('/', ensureAuthenticated, function(req, res){
+// 	res.render('index');
 // });
 
-// router.get('/login', function(req, res){
-// 	res.render('login');
-// });
+// function ensureAuthenticated(req, res, next){
+// 	if(req.isAuthenticated()){
+// 		return next();
+// 	} else {
+// 		//req.flash('error_msg','You are not logged in');
+// 		res.redirect('/input');
+// 	}
+// }
 
-router.get('/index', function(req, res){
-	res.render('index');
+router.get('/', function(req, res){
+	Product.find(function(err, product) {
+	    if(!err) {
+	       	return res.render('index', {products: product});
+	    } else {
+	        return res.render('500');
+	    }
+    });
 });
 
 router.get('/about', function(req, res){
