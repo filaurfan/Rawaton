@@ -69,31 +69,31 @@ router.post('/input', function(req, res){
 
 		Product.addBarang(product, function(err, product){
 			if (err) {
-				// logger.error('error bung ', err);
+				//logger.error('error bung ', err);
 				return res.render('500');
 			}
 			// logger.debug('data tersimpan bung ', pegawai);
-			// logger.info('render page awal');
+			//logger.info('render page awal');
 			console.log(product);
 			return res.redirect('/seller/input');
 
-			// if(err) throw err;
+			 if(err) throw err;
 			
 		});
-		// req.flash('success_msg', 'You are registered and can now login');
+		 req.flash('success_msg', 'You are registered and can now login');
 	}
 });
 
-app.get('/users/:_id', function (req, res) {
-    if (req.params._id) {
-        Product.find({ _id: req.params._id }, function (err, docs) {
-            console.log(_id);
-        });
-    }
-});
+// app.get('/users/:_id', function (req, res) {
+//     if (req.params._id) {
+//         Product.find({ _id: req.params._id }, function (err, docs) {
+//             console.log(_id);
+//         });
+//     }
+// });
 
-router.post('/update', function(req, res){
+// router.post('/update', function(req, res){
 
-});
+// });
 
 module.exports = router;
