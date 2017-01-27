@@ -11,7 +11,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/rawaton');  //---> loginapp
+mongoose.connect('mongodb://filaurfan:rawaton123@ds131109.mlab.com:31109/rawaton');  //---> loginapp
 var db = mongoose.connection;
 
 var routes = require('./routes/index');
@@ -77,6 +77,12 @@ app.use(function (req, res, next) {
 });
 
 
+
+
+
+
+
+//cuma tambah komnetar untuk branch ajaaaaa
 
 app.use('/', routes);
 app.use('/users', users);

@@ -80,18 +80,18 @@ router.post('/input', function(req, res){
 
 		Product.addBarang(product, function(err, product){
 			if (err) {
-				// logger.error('error bung ', err);
+				//logger.error('error bung ', err);
 				return res.render('500');
 			}
 			// logger.debug('data tersimpan bung ', pegawai);
-			// logger.info('render page awal');
+			//logger.info('render page awal');
 			console.log(product);
 			return res.redirect('/seller/input');
 
-			// if(err) throw err;
+			 if(err) throw err;
 			
 		});
-		// req.flash('success_msg', 'You are registered and can now login');
+		 req.flash('success_msg', 'You are registered and can now login');
 	}
 });
 
@@ -105,6 +105,5 @@ router.get('/product/:id', function (req, res) {
         });
     }
 });
-
 
 module.exports = router;
