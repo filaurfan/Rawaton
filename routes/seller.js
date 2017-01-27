@@ -2,18 +2,29 @@ var express = require('express');
 var router = express.Router();
 
 var Product = require('../models/product');
+var User = require('../models/user');
 
 // app.get('/upload', common.imageForm);
 // app.post('/upload', common.uploadImage);
-
 router.get('/dashboard', function(req, res){
 	res.render('admindashboard', {layout: 'layout2'});
+});
+
+router.get('/dashboard/:username', function(req, res){
+	var username = req.params.username;
+	if (username) {
+        User.findOne(username, function(err, user) {
+            console.log(username);
+            console.log(product);
+            res.render('admindashboard', {users: user, layout: 'layout2'});
+        });
+    }	
 });
 
 //untuk menampilkan semua barang pada halaman index
 router.get('/list', function(req, res, next){
 	
-	Product.find(function(err, product) {
+	Product.find({}, function(err, product) {
       if(!err) {
         return res.render('adminlistproduct', {products: product, layout: 'layout2'});
       } else {
@@ -84,16 +95,16 @@ router.post('/input', function(req, res){
 	}
 });
 
-app.get('/users/:_id', function (req, res) {
-    if (req.params._id) {
-        Product.find({ _id: req.params._id }, function (err, docs) {
-            console.log(_id);
+router.get('/product/:id', function (req, res) {
+	var id = req.params.id;
+    if (id) {
+        Product.findById({_id : id}, function(err, product) {
+        	console.log(id);
+            console.log(product); 
+            res.render('adminupdateproduct', {products: product, layout: 'layout2'});
         });
     }
 });
 
-router.post('/update', function(req, res){
-
-});
 
 module.exports = router;

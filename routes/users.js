@@ -91,11 +91,9 @@ router.get('/login', function(req, res){
 	res.render('login');
 });
 
-router.post('/login',
-  passport.authenticate('local', {successRedirect:'/seller/dashboard', failureRedirect:'/users/login',failureFlash: true}),
-  function(req, res) {
-
-    res.redirect('/seller/dashboard');
+router.post('/login', passport.authenticate('local', {successRedirect:'/seller/dashboard', failureRedirect:'/users/login',failureFlash: true}),
+	function(req, res) {
+    	res.redirect('/seller/dashboard');
 });
 
 router.get('/logout', function(req, res){

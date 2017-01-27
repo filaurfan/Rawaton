@@ -18,9 +18,23 @@ var Product = require('../models/product');
 // }
 
 router.get('/', function(req, res){
-	Product.find(function(err, product) {
+	Product.find({}, function(err, product) {
 	    if(!err) {
 	       	return res.render('index', {products: product});
+	    } else {
+	        return res.render('500');
+	    }
+    });
+});
+
+router.get('/product/:id', function(req, res){
+	Product.find({}, function(err, products) {
+	    if(!err) {
+	    	Product.findOne({_id : id}, function(err, product) {
+	    		if(!err){
+	    			return res.render('preview', {products: products, product : product});
+	    		}	       		
+	       	});
 	    } else {
 	        return res.render('500');
 	    }

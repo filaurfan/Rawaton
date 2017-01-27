@@ -13,14 +13,15 @@
 	<!-- Main content -->
 	<section class="content">
 	<form method="post" action="/seller/input">
-		{{#each products}}
+		{{#products}}
 		<div class="form-group">
-			<label for="name_product">{{ name_product }}</label>
-			<input type="text" class="form-control" name="name_product" id="name_product">
+			<label for="name_product">Name</label>
+			<input type="text" class="form-control" name="name_product" id="name_product" value={{ name_product }}>
 		</div>
 		<div class="form-group">
 			<label for="category">Category</label>
-			<select class="form-control" onclick="displayResult(this.value)" name="category" id="category" value={{ category_product }}>
+			<select class="form-control" onclick="displayResult(this.value)" name="category" id="category">
+				<option name="category" value={{ category_product }}>{{ category_product }}</option>
 				<option name="category" value="Otomotif">Otomotif</option>
 				<option name="category" value="Smartphone_Handphone">Smartphone & Handphone</option>
 				<option name="category" value="Fashion">Fashion</option>
@@ -37,13 +38,14 @@
 		</div>
 		<div class="form-group">
 			<label for="description_product">Descryption</label>
-			<textarea rows="5" name="description_product" id="description_product" class="form-control" value={{ description_product }}></textarea>
+			<textarea rows="5" name="description_product" id="description_product" class="form-control" value={{ description_product }}>{{ description_product }}</textarea>
 		</div>
 		<div class="form-group">
 			<label for="picture_product">Image</label>
-			<input type="file" name="picture_product" id="picture_product" value="/admin/images/".{{ picture_product }}.""><br>
+			<input type="file" name="picture_product" id="picture_product" value={{ picture_product }}>
+			<input type="text" value={{ picture_product }}>
 		</div>
-		{{/each}}
+		{{/products}}
 		<input type="submit" name="mit" class="btn btn-primary" value="Submit">
 		<button type="reset" class="btn btn-success">Cancel</button>
 	</form>
