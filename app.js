@@ -17,6 +17,7 @@ var db = mongoose.connection;
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var seller = require('./routes/seller');
+var buyer = require('./routes/buyer');
 
 
 // Init App
@@ -38,9 +39,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Express Session
 app.use(session({
     secret: 'secret',
-    saveUninitialized: true,
-    resave: true
+    saveUninitialized: false,
+    resave: false
 }));
+
+// Connect Flash
+app.use(flash());
 
 // Passport init
 app.use(passport.initialize());
@@ -64,9 +68,6 @@ app.use(expressValidator({
   }
 }));
 
-// Connect Flash
-app.use(flash());
-
 // Global Vars
 app.use(function (req, res, next) {
   res.locals.success_msg = req.flash('success_msg');
@@ -87,6 +88,7 @@ app.use(function (req, res, next) {
 app.use('/', routes);
 app.use('/users', users);
 app.use('/seller', seller);
+app.use('/buyer', buyer);
 
 // Set Port
 app.set('port', (process.env.PORT || 3000));

@@ -3,22 +3,22 @@ var router = express.Router();
 
 var Product = require('../models/product');
 
-// // Get Homepage
-// router.get('/', ensureAuthenticated, function(req, res){
-// 	res.render('index');
-// });
+// Get Homepage
+router.get('/cart', ensureAuthenticated, function(req, res){
+	res.redirect('/seller/cart/list');
+});
 
-// function ensureAuthenticated(req, res, next){
-// 	if(req.isAuthenticated()){
-// 		return next();
-// 	} else {
-// 		//req.flash('error_msg','You are not logged in');
-// 		res.redirect('/input');
-// 	}
-// }
+function ensureAuthenticated(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	} else {
+		//req.flash('error_msg','You are not logged in');
+		res.redirect('/users/login');
+	}
+}
 
 router.get('/', function(req, res){
-	Product.find({}, function(err, product) {
+	Product.find().sort({created_at: 1}).limit(4, function(err, product) {
 	    if(!err) {
 	       	return res.render('index', {products: product});
 	    } else {
@@ -28,17 +28,17 @@ router.get('/', function(req, res){
 });
 
 router.get('/product/:id', function(req, res){
-	Product.find({}, function(err, products) {
-	    if(!err) {
-	    	Product.findOne({_id : id}, function(err, product) {
-	    		if(!err){
-	    			return res.render('preview', {products: products, product : product});
-	    		}	       		
-	       	});
-	    } else {
-	        return res.render('500');
-	    }
-    });
+	var new_product = Product.find().sort({created_at: 1}).limit(4);
+	Product.findOne({_id : id}, function(err, product) {
+	    if(!err){
+	    	return res.render('preview', {products: new_product, product : product});
+	    }	       		
+	});
+});
+
+router.post('/product/:id', ensureAuthenticated, function(req, res){
+	var id_product = req.params.id;
+	res.redirect('/seller/cart/add/' + id_product);
 });
 
 router.get('/about', function(req, res){

@@ -4,7 +4,8 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
 
-var User = require('../models/user');
+var Seller = require('../models/seller');
+var Buyer = require('../models/buyer');
 
 // Register
 router.get('/register', function(req, res){
@@ -13,16 +14,16 @@ router.get('/register', function(req, res){
 
 // Register User
 router.post('/register', function(req, res){
-	var role = req.body.role;
-	var name = req.body.name;
-	var email = req.body.email;
 	var username = req.body.username;
 	var password = req.body.password;
 	var password2 = req.body.password2;
-
+	var email = req.body.email;
+	var role = req.body.role;
+	// var name = req.body.name;
+	
 	// Validation
 	req.checkBody('role', 'Role is required').notEmpty();
-	req.checkBody('name', 'Name is required').notEmpty();
+	// req.checkBody('name', 'Name is required').notEmpty();
 	req.checkBody('email', 'Email is required').notEmpty();
 	req.checkBody('email', 'Email is not valid').isEmail();
 	req.checkBody('username', 'Username is required').notEmpty();
@@ -36,27 +37,55 @@ router.post('/register', function(req, res){
 			errors:errors
 		});
 	} else {
-		var newUser = new User({
-			role: role,
-			name: name,
-			email:email,
-			username: username,
-			password: password
-		});
+		if (role == "seller") {
+			var newUser = new Seller({
+				username_seller: username,
+				password_seller: password,
+				email_seller: email,
+				role_seller: role
+			});
 
-		User.createUser(newUser, function(err, user){
-			if(err) throw err;
-			console.log(user);
-			req.flash('success_msg', 'You are registered and can now login');
-		});
+			Seller.createUser(newUser, function(err, user){
+				if(err) throw err;
+				console.log(user);
+				req.flash('success_msg', 'You are registered and can now login');
+			});
+			res.redirect('/users/login');
+		}else if (role == "buyer") {
+			var newUser = new Buyer({
+				username_buyer: username,
+				password_buyer: password,
+				email_buyer: email,
+				role_buyer: role
+			});
 
-		
-		res.redirect('/users/login');
+			Buyer.createUser(newUser, function(err, user){
+				if(err) throw err;
+				console.log(user);
+				req.flash('success_msg', 'You are registered and can now login');
+			});
+			res.redirect('/users/login');
+		}else{
+
+		}
 	}
 });
 
-passport.use(new LocalStrategy(
-  	function(username, password, done) {
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.getUserById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
+passport.use(new LocalStrategy({
+	usernameField: 'username',
+	passwordField: 'password',
+	passReqToCallback: true
+}, function(req, username, password, done) {
    		User.getUserByUsername(username, function(err, user){
    		if(err) throw err;
    		
@@ -76,15 +105,6 @@ passport.use(new LocalStrategy(
    	});
 }));
 
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-  User.getUserById(id, function(err, user) {
-    done(err, user);
-  });
-});
 
 // Login
 router.get('/login', function(req, res){
