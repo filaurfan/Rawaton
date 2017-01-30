@@ -2,16 +2,16 @@ var express = require('express');
 var router = express.Router();
 
 var Product = require('../models/product');
-var Buyer = require('../models/buyer');
-var Profile = require('../models/profilebuyer');
-var Cart = require('../models/cart');
+var User = require('../models/users');
+var Alamat = require('../models/usersalamat');
+var Profile = require('../models/usersprofile');
 
 //akses dashboar buyer : masalah adalah apa yang di tampilkan di dashboard buyer
 //option satu produk produk baru
 router.get('/dashboard', function(req, res){
 	var username_buyer = req.body.username_buyer;
 	if (username_buyer) {
-        Buyer.findOne({username_buyer: username_buyer}, function(err, buyer) {
+        User.findOne({username: username_buyer}, function(err, buyer) {
             console.log(buyer);
             res.render('/buyer/buyerdashboard', {users: buyer, layout: 'layout_buyer'});
         });

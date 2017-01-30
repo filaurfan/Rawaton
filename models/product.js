@@ -2,13 +2,13 @@ var mongoose = require('mongoose');
 
 // Product Schema
 var ProductSchema = mongoose.Schema({
+  id_User: {
+    type: String,
+    ref: 'User'
+  },
   name_product: {
     type: String,
-    index:true
-  },
-  seller_profile: {
-    type: Schema.ObjectId,
-    ref: 'Profile'
+    index: true
   },
   category_product: {
     type: String

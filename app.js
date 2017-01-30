@@ -16,8 +16,8 @@ var db = mongoose.connection;
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var seller = require('./routes/seller');
-var buyer = require('./routes/buyer');
+// var seller = require('./routes/seller');
+// var buyer = require('./routes/buyer');
 
 
 // Init App
@@ -78,17 +78,12 @@ app.use(function (req, res, next) {
 });
 
 
-
-
-
-
-
 //cuma tambah komnetar untuk branch ajaaaaa
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/seller', seller);
-app.use('/buyer', buyer);
+// app.use('/seller', seller);
+// app.use('/buyer', buyer);
 
 // Set Port
 app.set('port', (process.env.PORT || 3000));

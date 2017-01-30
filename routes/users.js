@@ -4,8 +4,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
 
-var Seller = require('../models/seller');
-var Buyer = require('../models/buyer');
+var Users = require('../models/users');
 
 // Register
 router.get('/register', function(req, res){
@@ -19,11 +18,9 @@ router.post('/register', function(req, res){
 	var password2 = req.body.password2;
 	var email = req.body.email;
 	var role = req.body.role;
-	// var name = req.body.name;
 	
 	// Validation
 	req.checkBody('role', 'Role is required').notEmpty();
-	// req.checkBody('name', 'Name is required').notEmpty();
 	req.checkBody('email', 'Email is required').notEmpty();
 	req.checkBody('email', 'Email is not valid').isEmail();
 	req.checkBody('username', 'Username is required').notEmpty();
@@ -37,37 +34,19 @@ router.post('/register', function(req, res){
 			errors:errors
 		});
 	} else {
-		if (role == "seller") {
-			var newUser = new Seller({
-				username_seller: username,
-				password_seller: password,
-				email_seller: email,
-				role_seller: role
-			});
+		var newUser = new Users({
+			username: username,
+			password: password,
+			email: email,
+			role: role
+		});
 
-			Seller.createUser(newUser, function(err, user){
-				if(err) throw err;
-				console.log(user);
-				req.flash('success_msg', 'You are registered and can now login');
-			});
-			res.redirect('/users/login');
-		}else if (role == "buyer") {
-			var newUser = new Buyer({
-				username_buyer: username,
-				password_buyer: password,
-				email_buyer: email,
-				role_buyer: role
-			});
-
-			Buyer.createUser(newUser, function(err, user){
-				if(err) throw err;
-				console.log(user);
-				req.flash('success_msg', 'You are registered and can now login');
-			});
-			res.redirect('/users/login');
-		}else{
-
-		}
+		Users.createUser(newUser, function(err, user){
+			if(err) throw err;
+			console.log(user);
+			req.flash('success_msg', 'You are registered and can now login');
+		});
+		res.redirect('/users/login');
 	}
 });
 
@@ -76,45 +55,56 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  User.getUserById(id, function(err, user) {
+  Users.findOne({_id: id}, function(err, user) {
     done(err, user);
   });
 });
 
-passport.use(new LocalStrategy({
-	usernameField: 'username',
-	passwordField: 'password',
-	passReqToCallback: true
-}, function(req, username, password, done) {
-   		User.getUserByUsername(username, function(err, user){
-   		if(err) throw err;
-   		
-   		if(!user){
-   			return done(null, false, {message: 'Unknown User'});
+
+passport.use('local-login', new LocalStrategy(
+  function(username, password, done) {
+    Users.findOne({ username: username }, function (err, user) {
+      	if (err) {
+       		return done(err); 
    		}
-
-   		User.comparePassword(password, user.password, function(err, isMatch){
-   			if(err) throw err;
-   			
-   			if(isMatch){
-   				return done(null, user);
-   			} else {
-   				return done(null, false, {message: 'Invalid password'});
-   			}
-   		});
-   	});
-}));
-
+      	if (!user) {
+      		return done(null, false); 
+      	}
+      	// if (!user.verifyPassword(password)) {
+      	// 	return done(null, false); 
+      	// }
+      	return done(null, user);
+    });
+  }
+));
 
 // Login
 router.get('/login', function(req, res){
 	res.render('login');
 });
 
-router.post('/login', passport.authenticate('local', {successRedirect:'/seller/dashboard', failureRedirect:'/users/login',failureFlash: true}),
+//ketika login bagaimana caranya bisa masuk sesuai dengan role
+router.post('/login', passport.authenticate('local-login', {failureRedirect:'/users/login',failureFlash: true}),
 	function(req, res) {
-    	res.redirect('/seller/dashboard');
+		var username = req.body.username;
+		res.redirect('/' + username);
+		
 });
+
+router.get('/', function(req, res){
+	Product
+	.find({})
+	.limit(4)
+	.sort({'created_at': -1})
+	.exec(function(err, product) {
+	    if(!err) {
+	       	return res.render('index', {products: product});
+	    } else {
+	        return res.render('500');
+	    }
+    });
+});
+
 
 router.get('/logout', function(req, res){
 	req.logout();
