@@ -63,10 +63,10 @@ router.get('/pengaturan/:id', function(req, res){
 	        	Alamat.findOne({ _id: _id }, function(err, alamat){
 	        		if(seller.role == "seller"){
 		        		console.log(seller);
-		    	        res.render('sellerprofile', {users: seller, profile_seller: profile, alamat_seller: alamat, layout: 'layout_seller'});
+		    	        res.render('sellerpengaturan', {users: seller, profile_seller: profile, alamat_seller: alamat, layout: 'layout_seller'});
 		        	}else if(seller.role == "buyer"){
 		        		console.log(seller);
-		    	        res.render('buyerprofile', {users: seller, profile_buyer: profile, alamat_buyer: alamat,  layout: 'layout_buyer'});
+		    	        res.render('buyerpengaturan', {users: seller, profile_buyer: profile, alamat_buyer: alamat,  layout: 'layout_buyer'});
 		        	}else{
 
 		        	}
@@ -84,171 +84,139 @@ router.post('/pengaturan/:id', function(req, res){
 	var _id = req.params.id;
 	var nama_seller = req.body.nama_seller;
 	var no_telp_seller = req.body.no_telp_seller;
-	var alamat_seller.jalan = req.body.jalan;
-	var alamat_seller.kota = req.body.kota;
-	var alamat_seller.kabupaten = req.body.kabupaten;
-	var alamat_seller.kecamatan = req.body.kecamatan;
-	var alamat_seller.provinsi = req.body.provinsi;
-	var alamat_seller.kode_pos = req.body.kode_pos;
-	
+	var jalan = req.body.jalan;
+	var kota = req.body.kota;
+	var kabupaten = req.body.kabupaten;
+	var kecamatan = req.body.kecamatan;
+	var provinsi = req.body.provinsi;
+	var kode_pos = req.body.kode_pos;
+
+	var profileup = new Profile({
+		"nama_seller": nama_seller,
+		"no_telp_seller": no_telp_seller		    
+	});
+	var alamatup = new Alamat({
+		"alamat_seller.jalan": jalan,
+		"alamat_seller.kota": kota,
+		"alamat_seller.kabupaten": kabupaten,
+		"alamat_seller.kecamatan": kecamatan,
+		"alamat_seller.provinsi": provinsi,
+		"alamat_seller.kode_pos": kode_pos
+	});
+
+	Profile.findOne({ id_user: _id}, function(err, profile){
+		if(!profile){
+			Profile.save(profileup, function(err) {  
+				if (err) {
+					console.log(err);
+				}
+				else {
+					console.log('berhasil menyimpan');
+				}
+			});
+		}else{
+			Profile.update(profileup, function(err) {  
+				if (err) {
+					console.log(err);
+				}
+				else {
+					console.log('berhasil menyimpan');
+				}
+			});
+		}
+	});
+	Alamat.findOne({ id_user: _id}, function(err, alamat){
+		if(!alamat){
+			Alamat.save(alamatup, function(err) {  
+				if (err) {
+					console.log(err);
+				}
+				else {
+					console.log('berhasil menyimpan');
+				}
+			});
+		}else{
+			Alamat.update(alamatup, function(err) {  
+				if (err) {
+						console.log(err);
+				}
+				else {
+						console.log('berhasil menyimpan');
+				}
+			});
+		}
+	});	
+	return res.redirect('/seller/pengaturan/{ _id }');	
+	req.flash('success_msg', 'You are registered and can now login');
+});
+
+//akses list product sellers :
+//option satu
+router.get('/product/list/:id', function(req, res, next){
+	var _id = req.params.id;
+	User.findOne({ _id: _id }, function(err, seller) {
+		Product.find({id_User: _id}).sort({'created_at': 1}).exec(function(err, product){
+	      	if(!err) {
+	        	res.render('sellerlistproduct', {users: seller, products: product, layout: 'layout_seller'});
+	      	} else {
+	        	return res.render('500');
+	      	}
+	    });
+    });
+});
+
+//untuk menampilkan halaman input barang pada sisi seller
+router.get('/product/input/:id', function(req, res){
+	res.render('sellerinputproduct', {layout: 'layout_seller'});
+});
+
+//untuk menginputkan barang pada table products
+router.post('/product/input/:id', function(req, res){
+	var id_user = req.params.id;
+	var name_product = req.body.name_product;
+	var category_product = req.body.category_product;
+	var price_product = req.body.price_product;
+	var entity_product = req.body.entity_product;
+	var description_product = req.body.description_product;
+	var picture_product = req.body.picture_product;
+	var created_at = new Date();
 
 	// Validation
-	req.checkBody('nama_seller', 'Nama Barang is required').notEmpty();
-	req.checkBody('no_telp_seller', 'Kategory Barang is not valid').notEmpty();
-	req.checkBody('alamat_seller.jalan', 'Harga Barang is not valid').notEmpty();
-	req.checkBody('alamat_seller.kota', 'Stock Barang is required').notEmpty();
-	req.checkBody('alamat_seller.kabupaten', 'Deskripsi Barang is required').notEmpty();
-	req.checkBody('alamat_seller.kecamatan', 'Gambar Barang is required').notEmpty();
-	req.checkBody('alamat_seller.provinsi', 'Stock Barang is required').notEmpty();
-	req.checkBody('alamat_seller.kode_pos', 'Gambar Barang is required').notEmpty();
+	req.checkBody('name_product', 'Nama Barang is required').notEmpty();
+	req.checkBody('category_product', 'Kategory Barang is not valid').notEmpty();
+	req.checkBody('price_product', 'Harga Barang is not valid').notEmpty();
+	req.checkBody('entity_product', 'Stock Barang is required').notEmpty();
+	req.checkBody('description_product', 'Deskripsi Barang is required').notEmpty();
+	req.checkBody('picture_product', 'Gambar Barang is required').notEmpty();
 
 	var errors = req.validationErrors();
 
 	if(errors){
-		if (_id) {
-			User.findOne({ _id: _id }, function(err, user) {
-		        if(user.role == "seller"){
-		        	console.log(user);
-		    	    res.render('sellerpengaturan', {errors:errors, layout: 'layout_seller'});
-		        }else if(user.role == "buyer"){
-		        	console.log(user);
-		    	    res.render('buyerpengaturan', {errors:errors,  layout: 'layout_buyer'});
-		       	}else{
-
-		        }
-	        });
-	    }
+		res.render('sellerinputproduct',{
+			errors:errors,
+			layout: 'layout_seller'
+		});
 	} else {
-	    var profile = new Profile({
-		    "nama_seller": nama_seller,
-		    "no_telp_seller": no_telp_seller		    
+	    var product = new Product({
+		    name_product: name_product,
+		    id_User: id_user,
+		    category_product: category_product,
+		    price_product: price_product,
+		    entity_product: entity_product,
+		    description_product: description_product,
+		    picture_product: picture_product,
+		    created_at: created_at
 		});
-		var alamat = new Alamat({
-			"alamat_seller.jalan": alamat_seller.jalan,
-		    "alamat_seller.kota": alamat_seller.kota,
-		    "alamat_seller.kabupaten": alamat_seller.kabupaten,
-		    "alamat_seller.kecamatan": alamat_seller.kecamatan,
-		    "alamat_seller.provinsi": alamat_seller.provinsi,
-		    "alamat_seller.kode_pos": alamat_seller.kode_pos
-		});
-		User.findOne({ _id: _id }, function(err, user) {
-			Profile.findOne({ id_user: user._id}, function(err, profile){
-				if(!profile){
-					Profile.save(function(err) {  
-					    if (err) {
-					        console.log(err);
-					    }
-					    else {
-					        console.log('berhasil menyimpan');
-					    }
-					});
-				}else{
-
-				}
-			});
-		    if(user.role == "seller"){
-		        console.log(user);
-		    	res.render('sellerpengaturan', {errors:errors, layout: 'layout_seller'});
-		    	return res.redirect('/seller/pengaturan/{ _id }');
-		    }else if(user.role == "buyer"){
-		       	console.log(user);
-		    	res.render('buyerpengaturan', {errors:errors,  layout: 'layout_buyer'});
-		    	return res.redirect('/profile/'+ username_seller);
-		    }else{
-
-		    }
-	    });
-		Profile.update(profile, function(err, product){
-		   	if (err) {
+		Product.save(product, function(err, product){
+		    if (err) {
 				return res.render('500');
 			}
-			console.log(profile);
-			return res.redirect('/profile/'+ username_seller);
+			console.log(product);
+			return res.redirect('/seller/product/list/{ id_user }');
 		});
 	req.flash('success_msg', 'You are registered and can now login');
 	}
 });
-
-// //akses list product sellers :
-// //option satu
-// router.get('/product/list', function(req, res, next){
-// 	var no_telp_seller = req.body.no_telp_seller;
-// 	Product.find({"seller_profile.no_telp_seller": no_telp_seller}).sort({created_at: 1}, function(err, product){
-//       if(!err) {
-//         return res.render('/seller/sellerlistproduct', {products: product, layout: 'layout_seller'});
-//       } else {
-//         return res.render('500');
-//       }
-//     });
-// });
-
-// //untuk menampilkan halaman input barang pada sisi seller
-// router.get('/product/input', function(req, res){
-// 	res.render('/seller/sellerinputproduct', {layout: 'layout_seller'});
-// });
-
-// //untuk menginputkan barang pada table products
-// router.post('/product/input', function(req, res){
-// 	var nama_seller = req.body.nama_seller;
-// 	var no_telp_seller = req.body.no_telp_seller;
-// 	var alamat_seller.jalan = req.body.jalan;
-// 	var alamat_seller.kota = req.body.kota;
-// 	var alamat_seller.kabupaten = req.body.kabupaten;
-// 	var alamat_seller.kecamatan = req.body.kecamatan;
-// 	var alamat_seller.provinsi = req.body.provinsi;
-// 	var alamat_seller.kode_pos = req.body.kode_pos;
-
-// 	var name_product = req.body.name_product;
-// 	var category_product = req.body.category_product;
-// 	var price_product = req.body.price_product;
-// 	var entity_product = req.body.entity_product;
-// 	var description_product = req.body.description_product;
-// 	var picture_product = req.body.picture_product;
-// 	var created_at = new Date();
-
-// 	// Validation
-// 	req.checkBody('name_product', 'Nama Barang is required').notEmpty();
-// 	req.checkBody('category_product', 'Kategory Barang is not valid').notEmpty();
-// 	req.checkBody('price_product', 'Harga Barang is not valid').notEmpty();
-// 	req.checkBody('entity_product', 'Stock Barang is required').notEmpty();
-// 	req.checkBody('description_product', 'Deskripsi Barang is required').notEmpty();
-// 	req.checkBody('picture_product', 'Gambar Barang is required').notEmpty();
-
-// 	var errors = req.validationErrors();
-
-// 	if(errors){
-// 		res.render('/seller/sellerinputproduct',{
-// 			errors:errors,
-// 			layout: 'layout_seller'
-// 		});
-// 	} else {
-// 	    var product = new Product({
-// 		    name_product: name_product,
-// 		    "seller_profile.nama_seller": nama_seller,
-// 		    "seller_profile.no_telp_seller": no_telp_seller,
-// 		    "seller_profile.alamat_seller.jalan": alamat_seller.jalan,
-// 		    "seller_profile.alamat_seller.kota": alamat_seller.kota,
-// 		    "seller_profile.alamat_seller.kabupaten": alamat_seller.kabupaten,
-// 		    "seller_profile.alamat_seller.kecamatan": alamat_seller.kecamatan,
-// 		    "seller_profile.alamat_seller.provinsi": alamat_seller.provinsi,
-// 		    "seller_profile.alamat_seller.kode_pos": alamat_seller.kode_pos,
-// 		    category_product: category_product,
-// 		    price_product: price_product,
-// 		    entity_product: entity_product,
-// 		    description_product: description_product,
-// 		    picture_product: picture_product,
-// 		    created_at: created_at
-// 		});
-// 		Product.save(product, function(err, product){
-// 		    if (err) {
-// 				return res.render('500');
-// 			}
-// 			console.log(product);
-// 			return res.redirect('/seller/input');
-// 		});
-// 	req.flash('success_msg', 'You are registered and can now login');
-// 	}
-// });
 
 // router.get('/product/update/:id_product', function (req, res) {
 // 	var id = req.params.id_product;
