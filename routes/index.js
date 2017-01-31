@@ -20,16 +20,11 @@ function ensureAuthenticated(req, res, next){
 //////////////////////////////////////////////////////////////////////////////////////
 router.get('/', function(req, res){
 	if(req.isAuthenticated()){
-<<<<<<< HEAD
-		var username = username;
-		return res.redirect('/:username');
-=======
 		var username = req.body.username;
 		User.findOne({ username: username}, function(err, user){
 			var id = user._id;
 			res.redirect('/' + id);
 		});
->>>>>>> 3d2dcb74e71789ac351c6cddb2aad94aea84285a
 	} else {
 		Product
 		.find({})
@@ -43,20 +38,11 @@ router.get('/', function(req, res){
 		    }
 	    });
 	}
-<<<<<<< HEAD
-	
-});
-///////////////////////////////////////////////////////////////////////////////////
-router.get('/:username', ensureAuthenticated, function(req, res){
-	var username = req.params.username;
-=======
-
 	
 });
 
 router.get('/:id', ensureAuthenticated, function(req, res){
 	var _id = req.params.id;
->>>>>>> 3d2dcb74e71789ac351c6cddb2aad94aea84285a
 
 	Product
 	.find({})
