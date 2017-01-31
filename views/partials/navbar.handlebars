@@ -4,13 +4,13 @@
          <div class="pull-right">
             <ul id="b-nav" class="topbar-nav">
                {{#if user}}
-                
+                  {{#users}}
                      <li role="presentation"><a href="/">Dashboard</a></li>
-                     <li role="presentation"><a href="/seller/dashboard">Profile</a></li>
+                     <li role="presentation"><a href='/'+ {{ role }} +'/dashboard'>{{ username }}</a></li>
                      <li role="presentation"><a href="/users/logout">Logout</a></li>
-                 
+                  {{/users}}
                {{else}}
-                     <li class="border-left"><a href="#">Chart</a></li>
+                     <li class="border-left"><a href="/cart">Chart</a></li>
                      <li class="dropdown-single border-left"><a href="/users/register">Ragister</a></li>
                      <li class="dropdown dropdown-right border-both" id="iframe-login"><a href="/users/login">Login</a></li>
                {{/if}}
