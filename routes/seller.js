@@ -167,7 +167,10 @@ router.get('/product/list/:id', function(req, res, next){
 
 //untuk menampilkan halaman input barang pada sisi seller
 router.get('/product/input/:id', function(req, res){
-	res.render('sellerinputproduct', {layout: 'layout_seller'});
+	var _id = req.params.id;
+	User.findOne({ _id: _id }, function(err, seller) {
+		res.render('sellerinputproduct', {users: seller, layout: 'layout_seller'});
+    });
 });
 
 //untuk menginputkan barang pada table products
@@ -207,54 +210,69 @@ router.post('/product/input/:id', function(req, res){
 		    picture_product: picture_product,
 		    created_at: created_at
 		});
-		Product.save(product, function(err, product){
+		product.save(function(err) {  
 		    if (err) {
-				return res.render('500');
-			}
-			console.log(product);
-			return res.redirect('/seller/product/list/{ id_user }');
+		        console.log(err);
+		    }
+		    else {
+		        console.log('berhasil menyimpan');
+		    }
 		});
-	req.flash('success_msg', 'You are registered and can now login');
+		return res.redirect('/seller/product/list/'+ id_user);
+		req.flash('success_msg', 'You are registered and can now login');
 	}
 });
 
-// router.get('/product/update/:id_product', function (req, res) {
-// 	var id = req.params.id_product;
-//     if (id) {
-//         Product.findById({_id : id}, function(err, product) {
-//         	console.log(id);
-//             console.log(product); 
-//             res.render('seller/sellerupdateproduct', {products: product, layout: 'layout_seller'});
-//         });
-//     }
-// });
+router.get('/product/update/:id_product/:id_user', function (req, res) {
+	var id_product = req.params.id_product;
+	var id_user = req.params.id_user;
+    if (id_product) {
+        User.findOne({ _id: id_user }, function(err, seller) {
+        	Product.findOne({ _id: id_product}, function(err, product) {
+				res.render('sellerupdateproduct', {products: product, users: seller, layout: 'layout_seller'});
+		    });
+        });
+    }
+});
 
-// router.post('/product/update/:id_product', function(req, res){
-// 	var id = req.params.id_product;
-// 	var name_product = req.body.name_product;
-// 	var category_product = req.body.category_product;
-// 	var price_product = req.body.price_product;
-// 	var entity_product = req.body.entity_product;
-// 	var description_product = req.body.description_product;
-// 	var picture_product = req.body.picture_product;
-// 	var created_at = new Date();
+router.post('/product/update/:id_product/:id_user', function(req, res){
+	var id_product = req.params.id_product;
+	var id_user = req.params.id_user;
 
-// 	// Validation
-// 	req.checkBody('name_product', 'Nama Barang is required').notEmpty();
-// 	req.checkBody('category_product', 'Kategory Barang is not valid').notEmpty();
-// 	req.checkBody('price_product', 'Harga Barang is not valid').notEmpty();
-// 	req.checkBody('entity_product', 'Stock Barang is required').notEmpty();
-// 	req.checkBody('description_product', 'Deskripsi Barang is required').notEmpty();
-// 	req.checkBody('picture_product', 'Gambar Barang is required').notEmpty();
+	var name_product = req.body.name_product;
+	var category_product = req.body.category_product;
+	var price_product = req.body.price_product;
+	var entity_product = req.body.entity_product;
+	var description_product = req.body.description_product;
+	var picture_product = req.body.picture_product;
+	var created_at = new Date();
 
-//     if (id) {
-//         Product.update({_id : id}, function(err, product) {
-//         	console.log(id);
-//             console.log(product);
-//             return res.redirect('/seller/product/list');
-//         });
-//     }
-// }};
+	// Validation
+	req.checkBody('name_product', 'Nama Barang is required').notEmpty();
+	req.checkBody('category_product', 'Kategory Barang is not valid').notEmpty();
+	req.checkBody('price_product', 'Harga Barang is not valid').notEmpty();
+	req.checkBody('entity_product', 'Stock Barang is required').notEmpty();
+	req.checkBody('description_product', 'Deskripsi Barang is required').notEmpty();
+	req.checkBody('picture_product', 'Gambar Barang is required').notEmpty();
+
+    if (id_product) {
+    	var product = new Product({
+		    name_product: name_product,
+		    id_User: id_user,
+		    category_product: category_product,
+		    price_product: price_product,
+		    entity_product: entity_product,
+		    description_product: description_product,
+		    picture_product: picture_product,
+		    created_at: created_at
+		});
+        Product.update({_id : id_product}, function(err, product) {
+        	console.log(id_product);
+            console.log(product);
+            return res.redirect('/seller/product/list/'+id_user);
+        });
+    }
+});
 
 // router.post('/product/delete/:id_product', function(req, res){
 // 	var id = req.params.id_product;

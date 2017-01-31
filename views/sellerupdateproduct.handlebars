@@ -1,19 +1,20 @@
+{{#products}}
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
 		<h1>Update Product</h1>
 		<ol class="breadcrumb">
-		  <li><a href="index2.html"><i class="fa fa-dashboard"></i> Home</a></li>
-		  <li><a href="Barang.html">Product</a></li>
+		  <li><a href="/seller/dashboard/{{ id_User }}"><i class="fa fa-dashboard"></i> Home</a></li>
+		  <li><a href="/seller/product/list/{{ id_User }}">Product</a></li>
 		  <li class="active">Update Product</li>
 		</ol>
 	</section>
 
 	<!-- Main content -->
 	<section class="content">
-	<form method="post" action="/seller/input">
-		{{#products}}
+	<form method="post" action="/seller/product/update/{{ _id }}/{{ id_User }}">
+		
 		<div class="form-group">
 			<label for="name_product">Name</label>
 			<input type="text" class="form-control" name="name_product" id="name_product" value={{ name_product }}>
@@ -45,13 +46,13 @@
 			<input type="file" name="picture_product" id="picture_product" value={{ picture_product }}>
 			<input type="text" value={{ picture_product }}>
 		</div>
-		{{/products}}
+		
 		<input type="submit" name="mit" class="btn btn-primary" value="Submit">
 		<button type="reset" class="btn btn-success">Cancel</button>
 	</form>
 	</section>
 </div>
-
+{{/products}}
 <script>
   function displayResult(category){ 
     document.getElementById("category_product").value=category; 
