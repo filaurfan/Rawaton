@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 // User profile Schema
 var AlamatSchema = mongoose.Schema({
 	id_user: {
-	    type: Schema.ObjectId,
+	    type: mongoose.Schema.Types.ObjectId,
 	    ref: 'User'
 	},
 	alamat_user: {

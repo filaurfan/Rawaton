@@ -16,7 +16,7 @@ var db = mongoose.connection;
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-// var seller = require('./routes/seller');
+var seller = require('./routes/seller');
 // var buyer = require('./routes/buyer');
 
 
@@ -82,7 +82,7 @@ app.use(function (req, res, next) {
 
 app.use('/', routes);
 app.use('/users', users);
-// app.use('/seller', seller);
+app.use('/seller', seller);
 // app.use('/buyer', buyer);
 
 // Set Port

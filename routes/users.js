@@ -95,11 +95,18 @@ var auth = function(req, res, next) {
 router.post('/login', passport.authenticate('local-login', {failureRedirect:'/users/login',failureFlash: true}),
 	function(req, res) {
 		var username = req.body.username;
+<<<<<<< HEAD
 		Users.findOne({username: username}, function(err, user){
 			req.session.username = "username";
 	    	req.session.role = role;
 			res.redirect('/' + username);
 		}); 
+=======
+		Users.findOne({ username: username}, function(err, user){
+			var id = user._id;
+			res.redirect('/' + id);
+		});		
+>>>>>>> 3d2dcb74e71789ac351c6cddb2aad94aea84285a
 });
 
 router.get('/', function(req, res){
