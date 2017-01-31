@@ -38,8 +38,6 @@ router.get('/', function(req, res){
 		    }
 	    });
 	}
-
-	
 });
 
 router.get('/:id', ensureAuthenticated, function(req, res){
@@ -63,8 +61,8 @@ router.get('/:id', ensureAuthenticated, function(req, res){
     });
 });
 
-router.get('/product/:id', function(req, res){
-	var id = req.params.id;
+router.get('/product/:id_product', function(req, res){
+	var id = req.params.id_product;
 	var new_product = Product.find().sort({created_at: 1}).limit(4);
 	Product.findOne({ _id: id }, function(err, product) {
 	    if(!err){
@@ -73,7 +71,7 @@ router.get('/product/:id', function(req, res){
 	});
 });
 
-// router.post('/product/:id', ensureAuthenticated, function(req, res){
+// router.post('/product/:id_product', ensureAuthenticated, function(req, res){
 // 	var id_product = req.params.id;
 // 	res.redirect('/seller/cart/add/' + id_product);
 // });

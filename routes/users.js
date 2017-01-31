@@ -70,9 +70,6 @@ passport.use('local-login', new LocalStrategy(
       	if (!user) {
       		return done(null, false); 
       	}
-      	// if (!user.verifyPassword(password)) {
-      	// 	return done(null, false); 
-      	// }
       	return done(null, user);
     });
   }
@@ -82,14 +79,6 @@ passport.use('local-login', new LocalStrategy(
 router.get('/login', function(req, res){
 	res.render('login');
 });
-
-// Authentication and Authorization Middleware
-var auth = function(req, res, next) {
-  if (req.session && req.session.user === "amy" && req.session.admin)
-    return next();
-  else
-    return res.sendStatus(401);
-};
 
 //ketika login bagaimana caranya bisa masuk sesuai dengan role
 router.post('/login', passport.authenticate('local-login', {failureRedirect:'/users/login',failureFlash: true}),
@@ -102,21 +91,6 @@ router.post('/login', passport.authenticate('local-login', {failureRedirect:'/us
 		});
 });
 
-router.get('/', function(req, res){
-	Product
-	.find({})
-	.limit(4)
-	.sort({'created_at': -1})
-	.exec(function(err, product) {
-	    if(!err) {
-	       	return res.render('index', {products: product});
-	    } else {
-	        return res.render('500');
-	    }
-    });
-});
-
-
 router.get('/logout', function(req, res){
 	req.logout();
 
@@ -124,14 +98,5 @@ router.get('/logout', function(req, res){
 
 	res.redirect('/users/login');
 });
-
-
-
-// router.get('/:users', function(req, res, next){
-// 	res.send('users' + req.params.users); 
-// 	console.log('although this matches');
-//   	next();
-// });
-
 
 module.exports = router;

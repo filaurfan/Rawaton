@@ -15,10 +15,10 @@ router.get('/dashboard/:id', function(req, res){
         User.findOne({ _id: _id }, function(err, seller) {
         	if(seller.role == "seller"){
         		console.log(seller);
-    	        res.render('sellerdashboard', {users: seller, layout: 'layout_seller'});
+    	        res.render('sellerdashboard', {users: seller, layout: 'layout_user'});
         	}else if(seller.role == "buyer"){
         		console.log(seller);
-    	        res.render('buyerdashboard', {users: seller, layout: 'layout_buyer'});
+    	        res.render('buyerdashboard', {users: seller, layout: 'layout_user'});
         	}else{
 
         	}
@@ -38,10 +38,10 @@ router.get('/profile/:id', function(req, res){
 	        	Alamat.findOne({ _id: _id }, function(err, alamat){
 	        		if(seller.role == "seller"){
 		        		console.log(seller);
-		    	        res.render('sellerprofile', {users: seller, profile_seller: profile, alamat_seller: alamat, layout: 'layout_seller'});
+		    	        res.render('sellerprofile', {users: seller, profile_seller: profile, alamat_seller: alamat, layout: 'layout_user'});
 		        	}else if(seller.role == "buyer"){
 		        		console.log(seller);
-		    	        res.render('buyerprofile', {users: seller, profile_buyer: profile, alamat_buyer: alamat,  layout: 'layout_buyer'});
+		    	        res.render('buyerprofile', {users: seller, profile_buyer: profile, alamat_buyer: alamat,  layout: 'layout_user'});
 		        	}else{
 
 		        	}
@@ -63,10 +63,10 @@ router.get('/pengaturan/:id', function(req, res){
 	        	Alamat.findOne({ _id: _id }, function(err, alamat){
 	        		if(seller.role == "seller"){
 		        		console.log(seller);
-		    	        res.render('sellerpengaturan', {users: seller, profile_seller: profile, alamat_seller: alamat, layout: 'layout_seller'});
+		    	        res.render('sellerpengaturan', {users: seller, profile_seller: profile, alamat_seller: alamat, layout: 'layout_user'});
 		        	}else if(seller.role == "buyer"){
 		        		console.log(seller);
-		    	        res.render('buyerpengaturan', {users: seller, profile_buyer: profile, alamat_buyer: alamat,  layout: 'layout_buyer'});
+		    	        res.render('buyerpengaturan', {users: seller, profile_buyer: profile, alamat_buyer: alamat,  layout: 'layout_user'});
 		        	}else{
 
 		        	}
@@ -157,7 +157,7 @@ router.get('/product/list/:id', function(req, res, next){
 	User.findOne({ _id: _id }, function(err, seller) {
 		Product.find({id_User: _id}).sort({'created_at': 1}).exec(function(err, product){
 	      	if(!err) {
-	        	res.render('sellerlistproduct', {users: seller, products: product, layout: 'layout_seller'});
+	        	res.render('sellerlistproduct', {users: seller, products: product, layout: 'layout_user'});
 	      	} else {
 	        	return res.render('500');
 	      	}
@@ -169,7 +169,7 @@ router.get('/product/list/:id', function(req, res, next){
 router.get('/product/input/:id', function(req, res){
 	var _id = req.params.id;
 	User.findOne({ _id: _id }, function(err, seller) {
-		res.render('sellerinputproduct', {users: seller, layout: 'layout_seller'});
+		res.render('sellerinputproduct', {users: seller, layout: 'layout_user'});
     });
 });
 
@@ -197,7 +197,7 @@ router.post('/product/input/:id', function(req, res){
 	if(errors){
 		res.render('sellerinputproduct',{
 			errors:errors,
-			layout: 'layout_seller'
+			layout: 'layout_user'
 		});
 	} else {
 	    var product = new Product({
@@ -229,7 +229,7 @@ router.get('/product/update/:id_product/:id_user', function (req, res) {
     if (id_product) {
         User.findOne({ _id: id_user }, function(err, seller) {
         	Product.findOne({ _id: id_product}, function(err, product) {
-				res.render('sellerupdateproduct', {products: product, users: seller, layout: 'layout_seller'});
+				res.render('sellerupdateproduct', {products: product, users: seller, layout: 'layout_user'});
 		    });
         });
     }
