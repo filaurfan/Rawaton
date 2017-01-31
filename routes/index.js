@@ -17,7 +17,7 @@ function ensureAuthenticated(req, res, next){
 		res.redirect('/users/login');
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////
+
 router.get('/', function(req, res){
 	if(req.isAuthenticated()){
 		var username = req.body.username;
@@ -38,6 +38,7 @@ router.get('/', function(req, res){
 		    }
 	    });
 	}
+
 	
 });
 
