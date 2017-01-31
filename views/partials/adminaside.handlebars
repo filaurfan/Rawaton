@@ -30,14 +30,15 @@
 
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
+      {{#users}}
         <li class="header">MAIN NAVIGATION</li>
-        <li><a href="/seller/dashboard"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a> </li>       
-        <li><a href="/seller/list"><i class="fa fa-files-o"></i><span>Product</span></a></li>
+        <li><a href="/seller/dashboard/{{ _id }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a> </li>       
+        <li><a href="/seller/product/list/{{ _id }}"><i class="fa fa-files-o"></i><span>Product</span></a></li>
         <li><a href="#"><i class="fa fa-envelope"></i> Pesan</a></li>
         <li><a href="#"><i class="fa fa-book"></i> Pemesanan</a></li>
         <li><a href="#"><i class="fa fa-credit-card"></i> Pembayaran</a></li>
-        <li><a href="#"><i class="fa fa-cog"></i> Pengaturan</a></li>
-
+        <li><a href="/seller/pengaturan/{{ _id }}"><i class="fa fa-cog"></i> Pengaturan</a></li>
+      {{/users}}
       </ul>
     </section>
     <!-- /.sidebar -->
