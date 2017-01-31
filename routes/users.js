@@ -87,8 +87,10 @@ router.get('/login', function(req, res){
 router.post('/login', passport.authenticate('local-login', {failureRedirect:'/users/login',failureFlash: true}),
 	function(req, res) {
 		var username = req.body.username;
-		res.redirect('/' + username);
-		
+		Users.findOne({ username: username}, function(err, user){
+			var id = user._id;
+			res.redirect('/' + id);
+		});		
 });
 
 router.get('/', function(req, res){

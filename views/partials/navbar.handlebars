@@ -5,8 +5,8 @@
             <ul id="b-nav" class="topbar-nav">
                {{#if user}}
                   {{#users}}
-                     <li role="presentation"><a href="/">Dashboard</a></li>
-                     <li role="presentation"><a href='/'+ {{ role }} +'/dashboard'>{{ username }}</a></li>
+                     <li role="presentation"><a href="/{{ _id }}">Dashboard</a></li>
+                     <li role="presentation" name= "username"><a href="/seller/dashboard/{{ _id }}">{{ username }}</a></li>
                      <li role="presentation"><a href="/users/logout">Logout</a></li>
                   {{/users}}
                {{else}}
