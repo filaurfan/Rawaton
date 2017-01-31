@@ -83,12 +83,23 @@ router.get('/login', function(req, res){
 	res.render('login');
 });
 
+// Authentication and Authorization Middleware
+var auth = function(req, res, next) {
+  if (req.session && req.session.user === "amy" && req.session.admin)
+    return next();
+  else
+    return res.sendStatus(401);
+};
+
 //ketika login bagaimana caranya bisa masuk sesuai dengan role
 router.post('/login', passport.authenticate('local-login', {failureRedirect:'/users/login',failureFlash: true}),
 	function(req, res) {
 		var username = req.body.username;
-		res.redirect('/' + username);
-		
+		Users.findOne({username: username}, function(err, user){
+			req.session.username = "username";
+	    	req.session.role = role;
+			res.redirect('/' + username);
+		}); 
 });
 
 router.get('/', function(req, res){

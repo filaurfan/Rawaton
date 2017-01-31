@@ -17,21 +17,27 @@ function ensureAuthenticated(req, res, next){
 		res.redirect('/users/login');
 	}
 }
-
+//////////////////////////////////////////////////////////////////////////////////////
 router.get('/', function(req, res){
-	Product
-	.find({})
-	.limit(4)
-	.sort({'created_at': -1})
-	.exec(function(err, product) {
-	    if(!err) {
-	       	return res.render('index', {products: product});
-	    } else {
-	        return res.render('500');
-	    }
-    });
+	if(req.isAuthenticated()){
+		var username = username;
+		return res.redirect('/:username');
+	} else {
+		Product
+		.find({})
+		.limit(4)
+		.sort({'created_at': -1})
+		.exec(function(err, product) {
+		    if(!err) {
+		       	return res.render('index', {products: product});
+		    } else {
+		        return res.render('500');
+		    }
+	    });
+	}
+	
 });
-
+///////////////////////////////////////////////////////////////////////////////////
 router.get('/:username', ensureAuthenticated, function(req, res){
 	var username = req.params.username;
 
