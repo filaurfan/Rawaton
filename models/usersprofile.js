@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 // User profile Schema
 var ProfileSchema = mongoose.Schema({
 	id_user: {
-	    type: Schema.ObjectId,
+	    type: mongoose.Schema.Types.ObjectId,
 	    ref: 'User'
 	},
 	nama_user: {
@@ -16,4 +16,4 @@ var ProfileSchema = mongoose.Schema({
 	}
 });
 
-var Profile = module.exports = mongoose.model('Profile', ProfileSellerSchema);
+var Profile = module.exports = mongoose.model('Profile', ProfileSchema);

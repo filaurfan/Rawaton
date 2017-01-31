@@ -19,21 +19,31 @@ function ensureAuthenticated(req, res, next){
 }
 
 router.get('/', function(req, res){
-	Product
-	.find({})
-	.limit(4)
-	.sort({'created_at': -1})
-	.exec(function(err, product) {
-	    if(!err) {
-	       	return res.render('index', {products: product});
-	    } else {
-	        return res.render('500');
-	    }
-    });
+	if(req.isAuthenticated()){
+		var username = req.body.username;
+		User.findOne({ username: username}, function(err, user){
+			var id = user._id;
+			res.redirect('/' + id);
+		});
+	} else {
+		Product
+		.find({})
+		.limit(4)
+		.sort({'created_at': -1})
+		.exec(function(err, product) {
+		    if(!err) {
+		       	return res.render('index', {products: product});
+		    } else {
+		        return res.render('500');
+		    }
+	    });
+	}
+
+	
 });
 
-router.get('/:username', ensureAuthenticated, function(req, res){
-	var username = req.params.username;
+router.get('/:id', ensureAuthenticated, function(req, res){
+	var _id = req.params.id;
 
 	Product
 	.find({})
@@ -42,7 +52,7 @@ router.get('/:username', ensureAuthenticated, function(req, res){
 	.exec(function(err, product) {
 	    if(!err) {
 	    	User
-	    	.findOne({username : username})
+	    	.findOne({_id : _id})
 	    	.exec(function(err, user) {
 	    		return res.render('index', {products: product, users: user});
 	    	});
