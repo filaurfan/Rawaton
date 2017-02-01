@@ -6,6 +6,10 @@ var CartSchema = mongoose.Schema({
   		type: Schema.ObjectId,
     	ref: 'User'
   	}
+  	tanggal_buat: {
+      type : Date,
+      default: Date.now
+    }
 });
 
 var Cart = module.exports = mongoose.model('Cart', CartSchema);

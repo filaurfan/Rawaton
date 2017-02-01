@@ -6,7 +6,11 @@ var User = require('../models/users');
 
 // Get Homepage
 router.get('/cart', ensureAuthenticated, function(req, res){
-	res.redirect('/seller/cart/list');
+	var username = req.body.username;
+	User.findOne({ username: username}, function(err, user){
+		var id = user._id;
+		res.redirect('/cart/list/'+ id);
+	});
 });
 
 function ensureAuthenticated(req, res, next){
@@ -40,8 +44,8 @@ router.get('/', function(req, res){
 	}
 });
 
-router.get('/:id', ensureAuthenticated, function(req, res){
-	var _id = req.params.id;
+router.get('/:id_user', ensureAuthenticated, function(req, res){
+	var id_user = req.params.id_user;
 
 	Product
 	.find({})
@@ -50,7 +54,7 @@ router.get('/:id', ensureAuthenticated, function(req, res){
 	.exec(function(err, product) {
 	    if(!err) {
 	    	User
-	    	.findOne({_id : _id})
+	    	.findOne({_id : id_user})
 	    	.exec(function(err, user) {
 	    		return res.render('index', {products: product, users: user});
 	    	});
@@ -70,6 +74,17 @@ router.get('/product/:id_product', function(req, res){
 	    }	       		
 	});
 });
+
+router.get('/product/view/:id_product/:id_user', function(req, res){
+	var id_product = req.params.id_product;
+	var new_product = Product.find().sort({created_at: 1}).limit(4);
+	Product.findOne({ _id: id_product }, function(err, product) {
+	    if(!err){
+	    	return res.render('preview', {products: new_product, product : product});
+	    }	       		
+	});
+});
+
 
 // router.post('/product/:id_product', ensureAuthenticated, function(req, res){
 // 	var id_product = req.params.id;
