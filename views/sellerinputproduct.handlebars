@@ -5,8 +5,8 @@
 	<section class="content-header">
 		<h1>Add Product</h1>
 		<ol class="breadcrumb">
-		  <li><a href="/seller/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-		  <li><a href="/seller/list">Product</a></li>
+		  <li><a href="/seller/dashboard/{{ _id }}"><i class="fa fa-dashboard"></i> Home</a></li>
+		  <li><a href="/seller/product/list/{{ _id }}">Product</a></li>
 		  <li class="active">Add Product</li>
 		</ol>
 	</section>
@@ -44,13 +44,18 @@
 			<input type="file" name="picture_product" id="picture_product"><br>
 		</div>
 		<input type="submit" name="mit" class="btn btn-primary" value="Submit">
-		<button type="reset" class="btn btn-success">Cancel</button>
-	</form>
+		<button type="reset" onclick="cancel()" class="btn btn-success">Cancel</button>
+	</form> 
 	</section>
 </div>
 {{/users}}
+{{#users}}
 <script>
   function displayResult(category){ 
     document.getElementById("category_product").value=category; 
   }
+  function cancel(){
+    window.location.href = '/seller/product/list/{{ _id }}';
+  }
 </script>
+{{/users}}

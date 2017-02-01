@@ -5,6 +5,8 @@ var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
 
 var Users = require('../models/users');
+var Profile = require('../models/usersprofile');
+var Alamat = require('../models/usersalamat');
 
 // Register
 router.get('/register', function(req, res){
@@ -40,13 +42,45 @@ router.post('/register', function(req, res){
 			email: email,
 			role: role
 		});
-
-		Users.createUser(newUser, function(err, user){
-			if(err) throw err;
-			console.log(user);
-			req.flash('success_msg', 'You are registered and can now login');
-		});
-		res.redirect('/users/login');
+		Users.createUser(newUser, function(err){
+			if (!err) {
+				Users.findOne({username: username}, function(err, user){
+					var newProfile = new Profile({
+						id_user: user._id,
+						nama_user: "",
+						no_telp_user: ""
+					});
+					var newAlamat = new Alamat({
+						id_user: user._id,
+						"alamat_user.jalan": "",
+						"alamat_user.kota": "",
+						"alamat_user.kabupaten": "",
+						"alamat_user.kecamatan": "",
+						"alamat_user.provinsi": "",
+						"alamat_user.kode_pos": ""
+					});
+					Profile.create(newProfile, function(err){
+						if (err) {
+							console.log(err);
+						}
+						else {
+							console.log('berhasil menyimpan');
+						}
+					});
+					Alamat.create(newAlamat, function(err){
+						if (err) {
+							console.log(err);
+						}
+						else {
+							console.log('berhasil menyimpan');
+						}
+					});
+				});
+				res.redirect('/users/login');
+			}else{
+				throw err;
+			}			
+		});		
 	}
 });
 
@@ -70,9 +104,6 @@ passport.use('local-login', new LocalStrategy(
       	if (!user) {
       		return done(null, false); 
       	}
-      	// if (!user.verifyPassword(password)) {
-      	// 	return done(null, false); 
-      	// }
       	return done(null, user);
     });
   }
@@ -82,14 +113,6 @@ passport.use('local-login', new LocalStrategy(
 router.get('/login', function(req, res){
 	res.render('login');
 });
-
-// Authentication and Authorization Middleware
-var auth = function(req, res, next) {
-  if (req.session && req.session.user === "amy" && req.session.admin)
-    return next();
-  else
-    return res.sendStatus(401);
-};
 
 //ketika login bagaimana caranya bisa masuk sesuai dengan role
 router.post('/login', passport.authenticate('local-login', {failureRedirect:'/users/login',failureFlash: true}),
@@ -102,21 +125,6 @@ router.post('/login', passport.authenticate('local-login', {failureRedirect:'/us
 		});
 });
 
-router.get('/', function(req, res){
-	Product
-	.find({})
-	.limit(4)
-	.sort({'created_at': -1})
-	.exec(function(err, product) {
-	    if(!err) {
-	       	return res.render('index', {products: product});
-	    } else {
-	        return res.render('500');
-	    }
-    });
-});
-
-
 router.get('/logout', function(req, res){
 	req.logout();
 
@@ -124,14 +132,5 @@ router.get('/logout', function(req, res){
 
 	res.redirect('/users/login');
 });
-
-
-
-// router.get('/:users', function(req, res, next){
-// 	res.send('users' + req.params.users); 
-// 	console.log('although this matches');
-//   	next();
-// });
-
 
 module.exports = router;

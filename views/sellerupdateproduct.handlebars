@@ -48,13 +48,18 @@
 		</div>
 		
 		<input type="submit" name="mit" class="btn btn-primary" value="Submit">
-		<button type="reset" class="btn btn-success">Cancel</button>
+		<button type="reset" onclick="cancel()" class="btn btn-success">Cancel</button>
 	</form>
 	</section>
 </div>
 {{/products}}
+{{#products}}
 <script>
   function displayResult(category){ 
     document.getElementById("category_product").value=category; 
   }
+  function cancel(){
+    window.location.href = '/seller/product/list/{{ id_User }}';
+  }
 </script>
+{{/products}}
