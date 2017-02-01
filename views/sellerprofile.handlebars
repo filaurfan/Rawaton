@@ -1,3 +1,4 @@
+
 <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -5,10 +6,12 @@
       <h1>
        Profile
       </h1>
+      {{#profile_seller}}
       <ol class="breadcrumb">
-        <li><a href="index2.html"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="/seller/dashboard/{{ id_user }}"><i class="fa fa-dashboard"></i> Home</a></li>
         <li class="active">Profile</li>
       </ol>
+      {{/profile_seller}}
     </section>
 
     <!-- Main content -->

@@ -13,15 +13,6 @@ router.get('/cart', ensureAuthenticated, function(req, res){
 	});
 });
 
-function ensureAuthenticated(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	} else {
-		//req.flash('error_msg','You are not logged in');
-		res.redirect('/users/login');
-	}
-}
-
 router.get('/', function(req, res){
 	if(req.isAuthenticated()){
 		var username = req.body.username;
@@ -110,5 +101,14 @@ router.get('/preview', function(req, res){
 router.get('/delivery', function(req, res){
 	res.render('delivery');
 });
+
+function ensureAuthenticated(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	} else {
+		//req.flash('error_msg','You are not logged in');
+		res.redirect('/users/login');
+	}
+}
 
 module.exports = router;

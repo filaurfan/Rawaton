@@ -1,0 +1,89 @@
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+       Pengaturan
+      </h1>
+      {{#profile_seller}}
+      <ol class="breadcrumb">
+        <li><a href="/seller/dashboard/{{ id_user }}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Pengaturan</li>
+      </ol>
+      {{/profile_seller}}
+    </section>
+
+    <!-- Main content -->
+    
+    <section class="content">
+    {{#profile_seller}}
+    <form method="post" action="/seller/pengaturan/{{ id_User }}">
+    {{/profile_seller}}
+        <div class="row">
+        <div class="col-md-3">
+              <img class="profile-user-img img-responsive img-circle" src="../../dist/img/user4-128x128.jpg" alt="User profile picture">
+
+              <div class="form-group">
+                <input type="file" id="image" name="image"><br>
+              </div>
+        </div>
+        <!-- /.col -->
+        <div class="col-md-9">
+            {{#profile_seller}}
+            <div class="form-group">
+              <label for="fn">Nama</label>
+              <input type="text" class="form-control" value={{ nama_user }}>
+            </div>
+            <div class="form-group">
+              <label for="fn">No Telp.</label>
+              <input type="text" class="form-control" value={{ no_telp_user }}>
+            </div>
+            {{/profile_seller}}
+            {{#alamat_seller}}
+            <div class="form-group">
+              <label for="fn">Alamat</label>
+              <input type="text" class="form-control" value={{ alamat_user.jalan }}>
+            </div>
+            <div class="form-group">
+              <label for="fn">Kota</label>
+              <input type="text" class="form-control" value={{ alamat_user.kota }}>
+            </div>
+            <div class="form-group">
+              <label for="fn">Kabupaten</label>
+              <input type="text" class="form-control" value={{ alamat_user.kabupaten }}>
+            </div>
+            <div class="form-group">
+              <label for="fn">Kecamatan</label>
+              <input type="text" class="form-control" value={{ alamat_user.kecamatan }}>
+            </div>
+            <div class="form-group">
+              <label for="fn">Provinsi</label>
+              <input type="text" class="form-control" value={{ alamat_user.provinsi }}>
+            </div>
+            <div class="form-group">
+              <label for="fn">Kode Pos</label>
+              <input type="text" class="form-control" value={{ alamat_user.kode_pos }}>
+            </div>
+            {{/alamat_seller}}
+            <input type="submit" name="mit" class="btn btn-primary" value="Save">
+            <button type="button" onclick="cancel()" class="btn btn-success">Cancel</button>
+      
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+      </form>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+{{#profile_seller}}
+<script>
+  function cancel(){
+    window.location.href = '/seller/profile/{{ id_user }}';
+  }
+</script>
+{{/profile_seller}}
