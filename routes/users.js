@@ -4,7 +4,9 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
 
-var User = require('../models/user');
+var Users = require('../models/users');
+var Profile = require('../models/usersprofile');
+var Alamat = require('../models/usersalamat');
 
 // Register
 router.get('/register', function(req, res){
@@ -13,16 +15,14 @@ router.get('/register', function(req, res){
 
 // Register User
 router.post('/register', function(req, res){
-	var role = req.body.role;
-	var name = req.body.name;
-	var email = req.body.email;
 	var username = req.body.username;
 	var password = req.body.password;
 	var password2 = req.body.password2;
-
+	var email = req.body.email;
+	var role = req.body.role;
+	
 	// Validation
 	req.checkBody('role', 'Role is required').notEmpty();
-	req.checkBody('name', 'Name is required').notEmpty();
 	req.checkBody('email', 'Email is required').notEmpty();
 	req.checkBody('email', 'Email is not valid').isEmail();
 	req.checkBody('username', 'Username is required').notEmpty();
@@ -36,35 +36,75 @@ router.post('/register', function(req, res){
 			errors:errors
 		});
 	} else {
-		var newUser = new User({
-			role: role,
-			name: name,
-			email:email,
+		var newUser = new Users({
 			username: username,
-			password: password
+			password: password,
+			email: email,
+			role: role
 		});
-
-		User.createUser(newUser, function(err, user){
-			if(err) throw err;
-			console.log(user);
-			req.flash('success_msg', 'You are registered and can now login');
-		});
-
-		
-		res.redirect('/users/login');
+		Users.createUser(newUser, function(err){
+			if (!err) {
+				Users.findOne({username: username}, function(err, user){
+					var newProfile = new Profile({
+						id_user: user._id,
+						nama_user: "",
+						no_telp_user: ""
+					});
+					var newAlamat = new Alamat({
+						id_user: user._id,
+						"alamat_user.jalan": "",
+						"alamat_user.kota": "",
+						"alamat_user.kabupaten": "",
+						"alamat_user.kecamatan": "",
+						"alamat_user.provinsi": "",
+						"alamat_user.kode_pos": ""
+					});
+					Profile.create(newProfile, function(err){
+						if (err) {
+							console.log(err);
+						}
+						else {
+							console.log('berhasil menyimpan');
+						}
+					});
+					Alamat.create(newAlamat, function(err){
+						if (err) {
+							console.log(err);
+						}
+						else {
+							console.log('berhasil menyimpan');
+						}
+					});
+				});
+				res.redirect('/users/login');
+			}else{
+				throw err;
+			}			
+		});		
 	}
 });
 
-passport.use(new LocalStrategy(
-  	function(username, password, done) {
-   		User.getUserByUsername(username, function(err, user){
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  Users.findOne({_id: id}, function(err, user) {
+    done(err, user);
+  });
+});
+
+
+passport.use('local-login', new LocalStrategy(
+  function(username, password, done) {
+   		Users.getUserByUsername(username, function(err, user){
    		if(err) throw err;
    		
    		if(!user){
    			return done(null, false, {message: 'Unknown User'});
    		}
 
-   		User.comparePassword(password, user.password, function(err, isMatch){
+   		Users.comparePassword(password, user.password, function(err, isMatch){
    			if(err) throw err;
    			
    			if(isMatch){
@@ -76,24 +116,20 @@ passport.use(new LocalStrategy(
    	});
 }));
 
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-  User.getUserById(id, function(err, user) {
-    done(err, user);
-  });
-});
-
 // Login
 router.get('/login', function(req, res){
 	res.render('login');
 });
 
-router.post('/login', passport.authenticate('local', {successRedirect:'/seller/dashboard', failureRedirect:'/users/login',failureFlash: true}),
+//ketika login bagaimana caranya bisa masuk sesuai dengan role
+router.post('/login', passport.authenticate('local-login', {failureRedirect:'/users/login',failureFlash: true}),
 	function(req, res) {
-    	res.redirect('/seller/dashboard');
+		var username = req.body.username;
+
+		Users.findOne({ username: username}, function(err, user){
+			var id = user._id;
+			res.redirect('/' + id);
+		});
 });
 
 router.get('/logout', function(req, res){
@@ -103,14 +139,5 @@ router.get('/logout', function(req, res){
 
 	res.redirect('/users/login');
 });
-
-
-
-// router.get('/:users', function(req, res, next){
-// 	res.send('users' + req.params.users); 
-// 	console.log('although this matches');
-//   	next();
-// });
-
 
 module.exports = router;

@@ -1,0 +1,73 @@
+
+<!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+       Profile
+      </h1>
+      {{#profile_seller}}
+      <ol class="breadcrumb">
+        <li><a href="/seller/dashboard/{{ id_user }}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Profile</li>
+      </ol>
+      {{/profile_seller}}
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+         <div class="row">
+        <div class="col-md-12">
+          {{#profile_seller}}
+          <!-- Profile Image -->
+            <div class="box-body box-profile">
+              <img class="profile-user-img img-responsive img-circle" src="../../dist/img/user4-128x128.jpg" alt="User profile picture">
+
+              <h3 class="profile-username text-center">{{ nama_user }}</h3>
+
+            </div>
+            <!-- /.box-body -->
+            {{/profile_seller}}
+
+          <!-- About Me Box -->
+          <div class="col-md-12 box-body">
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">About Me</h3>
+            </div>
+            <!-- /.box-header -->
+             
+    
+            <div class="box-body">
+
+              <strong><i class="fa fa-map-marker margin-r-5"></i> Alamat</strong>
+
+              {{#alamat_seller}}
+                <p class="text-muted">{{ alamat_user.jalan }}, {{ alamat_user.kecamatan }}, {{ alamat_user.kota }}, {{ alamat_user.kabupaten }}, {{ alamat_user.provinsi }}, {{ alamat_user.kode_pos }}</p>
+              {{/alamat_seller}}
+              <hr>
+              <strong><i class="fa  fa-phone margin-r-5"></i></strong>
+              {{#profile_seller}}
+              <p class="text-muted">{{ no_telp_user }}</p>
+              {{/profile_seller}}
+              <hr>
+
+              <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
+
+              <p>“Produk yang kami jual 100% asli, murah dan nyaman”</p>
+            
+            </div>
+
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+          </div>
+        </div>
+        <!-- /.col -->
+        
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->

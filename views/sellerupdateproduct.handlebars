@@ -1,0 +1,65 @@
+{{#products}}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+	<!-- Content Header (Page header) -->
+	<section class="content-header">
+		<h1>Update Product</h1>
+		<ol class="breadcrumb">
+		  <li><a href="/seller/dashboard/{{ id_User }}"><i class="fa fa-dashboard"></i> Home</a></li>
+		  <li><a href="/seller/product/list/{{ id_User }}">Product</a></li>
+		  <li class="active">Update Product</li>
+		</ol>
+	</section>
+
+	<!-- Main content -->
+	<section class="content">
+	<form method="post" action="/seller/product/update/{{ _id }}/{{ id_User }}">
+		
+		<div class="form-group">
+			<label for="name_product">Name</label>
+			<input type="text" class="form-control" name="name_product" id="name_product" value={{ name_product }}>
+		</div>
+		<div class="form-group">
+			<label for="category">Category</label>
+			<select class="form-control" onclick="displayResult(this.value)" name="category" id="category">
+				<option name="category" value={{ category_product }}>{{ category_product }}</option>
+				<option name="category" value="Otomotif">Otomotif</option>
+				<option name="category" value="Smartphone_Handphone">Smartphone & Handphone</option>
+				<option name="category" value="Fashion">Fashion</option>
+			</select>
+			<input type="hidden" name="category_product" id="category_product" value={{ category_product }} />
+		</div>
+		<div class="form-group">
+			<label for="price_product">Price</label>
+			<input type="text" class="form-control"  name="price_product" id="price_product" value={{ price_product }}>
+		</div>
+		<div class="form-group">
+			<label for="entity_product">Entity</label>
+			<input type="text" class="form-control" name="entity_product" id="entity_product" value={{ entity_product }}>
+		</div>
+		<div class="form-group">
+			<label for="description_product">Descryption</label>
+			<textarea rows="5" name="description_product" id="description_product" class="form-control" value={{ description_product }}>{{ description_product }}</textarea>
+		</div>
+		<div class="form-group">
+			<label for="picture_product">Image</label>
+			<input type="file" name="picture_product" id="picture_product" value={{ picture_product }}>
+			<input type="text" value={{ picture_product }}>
+		</div>
+		
+		<input type="submit" name="mit" class="btn btn-primary" value="Submit">
+		<button type="reset" onclick="cancel()" class="btn btn-success">Cancel</button>
+	</form>
+	</section>
+</div>
+{{/products}}
+{{#products}}
+<script>
+  function displayResult(category){ 
+    document.getElementById("category_product").value=category; 
+  }
+  function cancel(){
+    window.location.href = '/seller/product/list/{{ id_User }}';
+  }
+</script>
+{{/products}}

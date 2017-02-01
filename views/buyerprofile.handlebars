@@ -1,0 +1,27 @@
+
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+    {{#profile_buyer}}
+      <h1>{{ id_user }}</h1>
+      <h1>{{ nama_user }}</h1>
+      <h1>{{ no_telp_user }}</h1>
+    {{/profile_buyer}}
+    
+    {{#alamat_buyer}}
+      <h1>{{ id_user }}</h1>
+      <h1>{{ alamat_user.jalan }}</h1>
+      <h1>{{ alamat_user.kota }}</h1>
+      <h1>{{ alamat_user.kabupaten }}</h1>
+      <h1>{{ alamat_user.kecamatan }}</h1>
+      <h1>{{ alamat_user.provinsi }}</h1>
+      <h1>{{ alamat_user.kode_pos }}</h1>
+    {{/alamat_buyer}}
+
+    </section>
+
+  </div>
+  <!-- /.content-wrapper -->
