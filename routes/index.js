@@ -15,19 +15,85 @@ router.get('/cart', ensureAuthenticated, function(req, res){
 
 router.get('/', function(req, res){
 	if(req.isAuthenticated()){
-		var username = req.body.username;
-		User.findOne({ username: username}, function(err, user){
-			var id = user._id;
-			res.redirect('/' + id);
-		});
+		// var username = req.body.username;
+		// User.findOne({ username: username}, function(err, user){
+		// 	var id = user._id;
+		// 	res.redirect('/' + id);
+		// });
 	} else {
 		Product
 		.find({})
-		.limit(4)
+		.limit(8)
 		.sort({'created_at': -1})
 		.exec(function(err, product) {
 		    if(!err) {
 		       	return res.render('index', {products: product});
+		    } else {
+		        return res.render('500');
+		    }
+	    });
+	}
+});
+
+router.get('/category/:otomotif', function(req, res){
+	var category = req.params.otomotif;
+	if(req.isAuthenticated()){
+		// var username = req.body.username;
+		// User.findOne({ username: username}, function(err, user){
+		// 	var id = user._id;
+		// 	res.redirect('/' + id);
+		// });
+	} else {
+		Product
+		.find({category_product : category})
+		.sort({'created_at': -1})
+		.exec(function(err, product) {
+		    if(!err) {
+		       	return res.render('productotomotif', {products: product});
+		    } else {
+		        return res.render('500');
+		    }
+	    });
+	}
+});
+
+router.get('/category/:handphone', function(req, res){
+	var category = req.params.handphone;
+	if(req.isAuthenticated()){
+		// var username = req.body.username;
+		// User.findOne({ username: username}, function(err, user){
+		// 	var id = user._id;
+		// 	res.redirect('/' + id);
+		// });
+	} else {
+		Product
+		.find({category_product: category})
+		.sort({'created_at': -1})
+		.exec(function(err, product) {
+		    if(!err) {
+		       	return res.render('productsmartphone', {products: product});
+		    } else {
+		        return res.render('500');
+		    }
+	    });
+	}
+});
+
+router.get('/category/:fashion', function(req, res){
+	var category = req.params.fashion;
+	if(req.isAuthenticated()){
+		// var username = req.body.username;
+		// User.findOne({ username: username}, function(err, user){
+		// 	var id = user._id;
+		// 	res.redirect('/' + id);
+		// });
+	} else {
+		Product
+		.find({category_product: category})
+		.sort({'created_at': -1})
+		.exec(function(err, product) {
+		    if(!err) {
+		       	return res.render('productfashion', {products: product});
 		    } else {
 		        return res.render('500');
 		    }
@@ -57,12 +123,13 @@ router.get('/:id_user', ensureAuthenticated, function(req, res){
 });
 
 router.get('/product/:id_product', function(req, res){
-	var id = req.params.id_product;
-	var new_product = Product.find().sort({created_at: 1}).limit(4);
-	Product.findOne({ _id: id }, function(err, product) {
-	    if(!err){
-	    	return res.render('preview', {products: new_product, product : product});
-	    }	       		
+	var id_product = req.params.id_product;
+	Product.find().sort({created_at: 1}).limit(4).exec(function(err, products) {
+		Product.findOne({ _id: id_product }, function(err, product) {
+		    if(!err){
+		    	res.render('preview', {products: products, product : product});
+		    }	       		
+		});
 	});
 });
 
@@ -76,11 +143,10 @@ router.get('/product/view/:id_product/:id_user', function(req, res){
 	});
 });
 
-
-// router.post('/product/:id_product', ensureAuthenticated, function(req, res){
-// 	var id_product = req.params.id;
-// 	res.redirect('/seller/cart/add/' + id_product);
-// });
+router.post('/product/:id_product', ensureAuthenticated, function(req, res){
+	var id_product = req.params.id;
+	res.redirect('/seller/cart/add/' + id_product);
+});
 
 router.get('/about', function(req, res){
 	res.render('about');

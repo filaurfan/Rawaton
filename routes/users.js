@@ -10,7 +10,7 @@ var Alamat = require('../models/usersalamat');
 
 // Register
 router.get('/register', function(req, res){
-	res.render('register');
+	res.render('register', {layout: 'layout_login'});
 });
 
 // Register User
@@ -118,7 +118,7 @@ passport.use('local-login', new LocalStrategy(
 
 // Login
 router.get('/login', function(req, res){
-	res.render('login');
+	res.render('login', {layout: 'layout_login'});
 });
 
 //ketika login bagaimana caranya bisa masuk sesuai dengan role

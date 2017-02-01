@@ -35,11 +35,8 @@ router.get('/profile/:id_user', ensureAuthenticated, function(req, res){
 	console.log(_id);
 	if (_id) {
 		User.findOne({ _id: _id }, function(err, user) {
-			profile = user;
 	        Profile.findOne({ id_user: _id }, function(err, profile) {
-	        	profile += profile;
 	        	Alamat.findOne({ id_user: _id }, function(err, alamat){
-	        		profile += alamat;
 	        		if(user.role == "seller"){
 		        		console.log(user);
 		    	        res.render('sellerprofile', {users: user, profile_seller: profile, alamat_seller: alamat, layout: 'layout_user'});
