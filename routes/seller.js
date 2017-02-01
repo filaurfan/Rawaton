@@ -31,11 +31,15 @@ router.get('/dashboard/:id_user', ensureAuthenticated, function(req, res){
 //option satu redirect ke /seller/profile/:username
 router.get('/profile/:id_user', ensureAuthenticated, function(req, res){
 	var _id = req.params.id_user;
+	var profile = "";
 	console.log(_id);
 	if (_id) {
 		User.findOne({ _id: _id }, function(err, user) {
+			profile = user;
 	        Profile.findOne({ id_user: _id }, function(err, profile) {
+	        	profile += profile;
 	        	Alamat.findOne({ id_user: _id }, function(err, alamat){
+	        		profile += alamat;
 	        		if(user.role == "seller"){
 		        		console.log(user);
 		    	        res.render('sellerprofile', {users: user, profile_seller: profile, alamat_seller: alamat, layout: 'layout_user'});
@@ -48,9 +52,48 @@ router.get('/profile/:id_user', ensureAuthenticated, function(req, res){
 	        	});
 	        });
         });
+    }
+});
+
+//akses dashboar seller : masalah adalah apa yang di tampilkan di dashboard seller
+//option satu jumlah order, permintaan nego
+router.get('/pesan/:id_user', ensureAuthenticated, function(req, res){
+	var _id = req.params.id_user;
+	console.log(_id);
+	if (_id) {
+        User.findOne({ _id: _id }, function(err, user) {
+        	if(user.role == "seller"){
+        		console.log(user);
+    	        res.render('sellerpesan', {users: user, layout: 'layout_user'});
+        	}else if(user.role == "buyer"){
+        		console.log(user);
+    	        res.render('buyerpesan', {users: user, layout: 'layout_user'});
+        	}else{
+
+        	}
+        });
     }	
 });
 
+//akses dashboar seller : masalah adalah apa yang di tampilkan di dashboard seller
+//option satu jumlah order, permintaan nego
+router.get('/pemesanan/:id_user', ensureAuthenticated, function(req, res){
+	var _id = req.params.id_user;
+	console.log(_id);
+	if (_id) {
+        User.findOne({ _id: _id }, function(err, user) {
+        	if(user.role == "seller"){
+        		console.log(user);
+    	        res.render('sellerpemesanan', {users: user, layout: 'layout_user'});
+        	}else if(user.role == "buyer"){
+        		console.log(user);
+    	        res.render('buyerpemesanan', {users: user, layout: 'layout_user'});
+        	}else{
+
+        	}
+        });
+    }	
+});
 //yang ditampilkan adalah profile seller dengan semua element di dienable.
 //akses edit profile seller : masalah adalah ketika user hanya mengetikkan /seller/profile/update di url
 //option satu redirect ke /seller/profile/update/:username
@@ -105,50 +148,24 @@ router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 		"alamat_seller.provinsi": provinsi,
 		"alamat_seller.kode_pos": kode_pos
 	});
-
-	Profile.findOne({ id_user: _id}, function(err, profile){
-		if(!profile){
-			Profile.create(profileup ,function(err) {  
-				if (err) {
-					console.log(err);
-				}
-				else {
-					console.log('berhasil menyimpan');
-				}
-			});
-		}else{
-			Profile.findOneAndUpdate({ id_user: _id }, profileup, function(err) {  
-				if (err) {
-					console.log(err);
-				}
-				else {
-					console.log('berhasil menyimpan');
-				}
-			});
+	
+	Profile.findOneAndUpdate({ id_user: _id }, profileup, function(err) {  
+		if (err) {
+			console.log(err);
+		}
+		else {
+			console.log('berhasil menyimpan');
 		}
 	});
-	Alamat.findOne({ id_user: _id}, function(err, alamat){
-		if(!alamat){
-			Alamat.create(alamatup, function(err) {  
-				if (err) {
-					console.log(err);
-				}
-				else {
-					console.log('berhasil menyimpan');
-				}
-			});
-		}else{
-			Alamat.findOneAndUpdate({ id_user: _id }, alamatup, function(err) {  
-				if (err) {
-						console.log(err);
-				}
-				else {
-						console.log('berhasil menyimpan');
-				}
-			});
+	Alamat.findOneAndUpdate({ id_user: _id }, alamatup, function(err) {  
+		if (err) {
+			console.log(err);
 		}
-	});	
-	return res.redirect('/seller/pengaturan/{ _id }');	
+		else {
+			console.log('berhasil menyimpan');
+		}
+	});
+	return res.redirect('/seller/pengaturan/'+_id);	
 	req.flash('success_msg', 'You are registered and can now login');
 });
 
@@ -309,11 +326,14 @@ router.post('/product/update/:id_product/:id_user', ensureAuthenticated, functio
 		User.findOne({ _id: id_user }, function(err, user) {
         	if(user.role == "seller"){
 			    if(!err) {
-			    	// Product.update({_id : id_product}, function(err, product) {
-			     //    	console.log(id_product);
-			     //        console.log(product);
-			     //        return res.redirect('/seller/product/list/'+id_user);
-			     //    });			
+			    	Product.update({_id : id_product}, {$set: product}, function(err, product) {
+			    		if(err){
+			    			console.log(err);
+			    		}
+			        	console.log(id_product);
+			            console.log(product);
+			            return res.redirect('/seller/product/list/'+id_user);
+			        });	
 			    } else {
 			       	return res.render('500');
 			    }
@@ -326,14 +346,14 @@ router.post('/product/update/:id_product/:id_user', ensureAuthenticated, functio
     }
 });
 
-router.post('/product/delete/:id_product/:id_user', ensureAuthenticated, function(req, res){
+router.get('/product/delete/:id_product/:id_user', ensureAuthenticated, function(req, res){
 	var id_product = req.params.id_product;
 	var id_user = req.params.id_user;
 	if (id_product) {
 		User.findOne({ _id: id_user }, function(err, user) {
         	if(user.role == "seller"){
 			    if(!err) {
-			    	Product.remove({_id : id}, function(err) {
+			    	Product.remove({_id : id_product}, function(err) {
 			        	if(!err) {
 				          	console.log('Removed Product');
 				          	return res.redirect('/seller/product/list/'+id_user);

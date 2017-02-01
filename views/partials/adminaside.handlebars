@@ -15,28 +15,14 @@
         {{/users}}
       </div>
 
-      <!-- search form -->
-      <form action="#" method="get" class="sidebar-form">
-        <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="Search...">
-              <span class="input-group-btn">
-                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-                </button>
-              </span>
-        </div>
-      </form>
-      <!-- /.search form -->
-
-
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
       {{#users}}
         <li class="header">MAIN NAVIGATION</li>
         <li><a href="/seller/dashboard/{{ _id }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a> </li>       
         <li><a href="/seller/product/list/{{ _id }}"><i class="fa fa-files-o"></i><span>Product</span></a></li>
-        <li><a href="#"><i class="fa fa-envelope"></i> Pesan</a></li>
-        <li><a href="#"><i class="fa fa-book"></i> Pemesanan</a></li>
-        <li><a href="#"><i class="fa fa-credit-card"></i> Pembayaran</a></li>
+        <li><a href="/seller/pesan/{{ _id }}"><i class="fa fa-envelope"></i> Pesan</a></li>
+        <li><a href="/seller/pemesanan/{{ _id }}"><i class="fa fa-book"></i> Pemesanan</a></li>
         <li><a href="/seller/pengaturan/{{ _id }}"><i class="fa fa-cog"></i> Pengaturan</a></li>
       {{/users}}
       </ul>

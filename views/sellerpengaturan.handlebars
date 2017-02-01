@@ -18,7 +18,7 @@
     
     <section class="content">
     {{#profile_seller}}
-    <form method="post" action="/seller/pengaturan/{{ id_User }}">
+    <form method="post" action="/seller/pengaturan/{{ id_user }}">
     {{/profile_seller}}
         <div class="row">
         <div class="col-md-3">
@@ -33,37 +33,37 @@
             {{#profile_seller}}
             <div class="form-group">
               <label for="fn">Nama</label>
-              <input type="text" class="form-control" value={{ nama_user }}>
+              <input type="text" class="form-control" name=nama_seller value={{ nama_user }}>
             </div>
             <div class="form-group">
               <label for="fn">No Telp.</label>
-              <input type="text" class="form-control" value={{ no_telp_user }}>
+              <input type="text" class="form-control" name=no_telp_seller value={{ no_telp_user }}>
             </div>
             {{/profile_seller}}
             {{#alamat_seller}}
             <div class="form-group">
               <label for="fn">Alamat</label>
-              <input type="text" class="form-control" value={{ alamat_user.jalan }}>
+              <input type="text" class="form-control" name=jalan value={{ alamat_user.jalan }}>
             </div>
             <div class="form-group">
               <label for="fn">Kota</label>
-              <input type="text" class="form-control" value={{ alamat_user.kota }}>
+              <input type="text" class="form-control" name=kota value={{ alamat_user.kota }}>
             </div>
             <div class="form-group">
               <label for="fn">Kabupaten</label>
-              <input type="text" class="form-control" value={{ alamat_user.kabupaten }}>
+              <input type="text" class="form-control" name=kabupaten value={{ alamat_user.kabupaten }}>
             </div>
             <div class="form-group">
               <label for="fn">Kecamatan</label>
-              <input type="text" class="form-control" value={{ alamat_user.kecamatan }}>
+              <input type="text" class="form-control" name=kecamatan value={{ alamat_user.kecamatan }}>
             </div>
             <div class="form-group">
               <label for="fn">Provinsi</label>
-              <input type="text" class="form-control" value={{ alamat_user.provinsi }}>
+              <input type="text" class="form-control" name=provinsi value={{ alamat_user.provinsi }}>
             </div>
             <div class="form-group">
               <label for="fn">Kode Pos</label>
-              <input type="text" class="form-control" value={{ alamat_user.kode_pos }}>
+              <input type="text" class="form-control" name=kode_pos value={{ alamat_user.kode_pos }}>
             </div>
             {{/alamat_seller}}
             <input type="submit" name="mit" class="btn btn-primary" value="Save">

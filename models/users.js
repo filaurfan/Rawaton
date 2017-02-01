@@ -32,13 +32,13 @@ module.exports.createUser = function(newSeller, callback){
 	});
 }
 
-module.exports.getSellerByUsername = function(username, callback){
+module.exports.getUserByUsername = function(username, callback){
 	var query = {username: username};
-	Seller.findOne(query, callback);
+	User.findOne(query, callback);
 }
 
-module.exports.getSellerById = function(id, callback){
-	Seller.findById(id, callback);
+module.exports.getUserById = function(id, callback){
+	User.findById(id, callback);
 }
 
 

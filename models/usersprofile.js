@@ -11,7 +11,7 @@ var ProfileSchema = mongoose.Schema({
 		type: String
 	},
 	no_telp_user: {
-		type: Number,
+		type: String,
 		unique: true
 	}
 });
