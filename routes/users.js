@@ -97,17 +97,24 @@ passport.deserializeUser(function(id, done) {
 
 passport.use('local-login', new LocalStrategy(
   function(username, password, done) {
-    Users.findOne({ username: username }, function (err, user) {
-      	if (err) {
-       		return done(err); 
+   		Users.getUserByUsername(username, function(err, user){
+   		if(err) throw err;
+   		
+   		if(!user){
+   			return done(null, false, {message: 'Unknown User'});
    		}
-      	if (!user) {
-      		return done(null, false); 
-      	}
-      	return done(null, user);
-    });
-  }
-));
+
+   		Users.comparePassword(password, user.password, function(err, isMatch){
+   			if(err) throw err;
+   			
+   			if(isMatch){
+   				return done(null, user);
+   			} else {
+   				return done(null, false, {message: 'Invalid password'});
+   			}
+   		});
+   	});
+}));
 
 // Login
 router.get('/login', function(req, res){
