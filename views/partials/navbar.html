@@ -8,6 +8,7 @@
                      <li role="presentation"><a href="/{{ _id }}">Dashboard</a></li>
                      <li role="presentation" name= "username"><a href="/seller/dashboard/{{ _id }}">{{ username }}</a></li>
                      <li role="presentation"><a href="/users/logout">Logout</a></li>
+                     <input type="hidden" name="id" id="id" value={{ _id }} />
                   {{/users}}
                {{else}}
                      <li class="border-left"><a href="/cart">Cart</a></li>

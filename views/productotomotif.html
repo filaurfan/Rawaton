@@ -4,9 +4,9 @@
 		<div class="categories">
 		  	<ul>
 			 	<h3>Categories</h3>
-			    <li class="äctive"><a href="/category/Otomotif">Otomotif</a></li>
-				<li><a href="/category/Smartphone">Smartphone</a></li>
-				<li><a href="/category/Fashion">Fashion</a></li>
+			    <li class="active"><a href="/category/otomotif">Otomotif</a></li>
+				<li><a href="/category/smartphone">Smartphone</a></li>
+				<li><a href="/category/fashion">Fashion</a></li>
 			</ul>
 		</div>					
 	</div>
@@ -19,7 +19,7 @@
 	    <div class="section group">
 	    	{{#each products}}
 			<div class="grid_1_of_4 images_1_of_4">
-				<a href="preview.html"><img src='/uploads/{{ picture_product }}'></a><h2>{{ name_product }}</h2>
+				<a href="/product/{{ _id }}"><img src='/uploads/{{ picture_product }}'></a><h2>{{ name_product }}</h2>
 				<div class="price-details">
 				    <div class="price-number"><p><span class="rupees">Rp.{{ price_product }}</span></p></div>
 					<div class="add-cart"><h4><a href="/product/{{ _id }}">Add to Cart</a></h4></div>

@@ -21,7 +21,7 @@ router.get('/cart/list/:id_user', function(req, res, next){
 				    if(cart) {
 				    	CartItem.find({ id_cart: cart._id}, function(err, item){
 				    		if (!err) {
-				    			return res.render('buyerlistcart', {carts: cart, items: item, layout: 'layout_user'});
+				    			return res.render('buyerlistcart', {users: user, carts: cart, items: item, layout: 'layout_user'});
 				    		}else{
 				    			return res.render('500');
 				    		}
@@ -37,6 +37,7 @@ router.get('/cart/list/:id_user', function(req, res, next){
 							}
 							else {
 								console.log('berhasil menyimpan');
+								res.redirect('/buyer/cart/list/'+_id);
 							}
 						});
 				    }
@@ -71,7 +72,7 @@ router.post('/cart/add/:id_product/:id_cart/:id_user', function(req, res){
 		      		});
 				    CartItem.create(item, function(err){
 				    	if (!err) {
-				    		res.redirect('/product/view/'+id_product+'/'+id_user);
+				    		res.redirect('/product/'+id_product+'/'+id_user);
 				    	}else{
 				    		return res.render('500');
 				    	}

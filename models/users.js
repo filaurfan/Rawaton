@@ -17,6 +17,10 @@ var UserSchema = mongoose.Schema({
 	},
 	role: {
 		type: String
+	},
+	member_at: {
+	    type : Date,
+	    default: Date.now
 	}
 });
 

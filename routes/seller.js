@@ -31,7 +31,7 @@ router.get('/dashboard/:id_user', ensureAuthenticated, function(req, res){
 //option satu redirect ke /seller/profile/:username
 router.get('/profile/:id_user', ensureAuthenticated, function(req, res){
 	var _id = req.params.id_user;
-	var profile = "";
+	// var profile = "";
 	console.log(_id);
 	if (_id) {
 		User.findOne({ _id: _id }, function(err, user) {
