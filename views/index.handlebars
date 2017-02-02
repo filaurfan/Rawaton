@@ -14,7 +14,7 @@
 		<div class="slider">					     
 			<div id="slider">
 			    <div id="mover">
-			    {{#each products}}
+			    {{#products}}
 			        <div id="slide-1" class="slide">			                    
 						<div class="slider-img"><a href="/product/{{ _id }}">
 							<img src="/uploads/{{ picture_product }}" alt="learn more" /></a>		
@@ -29,7 +29,7 @@
 					    </div>			               
 						<div class="clear"></div>				
 				   	</div>	
-				{{/each}}	
+				{{/products}}	
 
 				</div>		
 			</div>
