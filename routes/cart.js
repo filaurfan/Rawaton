@@ -10,7 +10,7 @@ var CartItem = require('../models/cartitem');
 
 //akses list cart buyer :
 //option satu
-router.get('/cart/list/:id_user', function(req, res, next){
+router.get('/list/:id_user', function(req, res, next){
 	var _id = req.params.id_user;
 	var tanggal_buat = new Date();
 	console.log(_id);
@@ -21,7 +21,7 @@ router.get('/cart/list/:id_user', function(req, res, next){
 				    if(cart) {
 				    	CartItem.find({ id_cart: cart._id}, function(err, item){
 				    		if (!err) {
-				    			return res.render('buyerlistcart', {carts: cart, items: item, layout: 'layout_user'});
+				    			return res.render('buyerlistcart', {users: user, carts: cart, items: item, layout: 'layout_user'});
 				    		}else{
 				    			return res.render('500');
 				    		}
@@ -37,6 +37,7 @@ router.get('/cart/list/:id_user', function(req, res, next){
 							}
 							else {
 								console.log('berhasil menyimpan');
+								res.redirect('/cart/list/'+_id);
 							}
 						});
 				    }
@@ -52,7 +53,7 @@ router.get('/cart/list/:id_user', function(req, res, next){
 
 //untuk menginputkan product ke cart jadi posisi buyer berada di localhost:3000/
 //masalah ada ketika penyimpanan ke database
-router.post('/cart/add/:id_product/:id_cart/:id_user', function(req, res){
+router.post('/add/:id_product/:id_cart/:id_user', function(req, res){
 	var id_product = req.params.id_product;
 	var id_cart = req.params.id_cart;
 	var id_user = req.params.id_user;
@@ -71,7 +72,7 @@ router.post('/cart/add/:id_product/:id_cart/:id_user', function(req, res){
 		      		});
 				    CartItem.create(item, function(err){
 				    	if (!err) {
-				    		res.redirect('/product/view/'+id_product+'/'+id_user);
+				    		res.redirect('/product/'+id_product+'/'+id_user);
 				    	}else{
 				    		return res.render('500');
 				    	}

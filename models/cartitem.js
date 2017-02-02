@@ -3,11 +3,11 @@ var mongoose = require('mongoose');
 // User profile Schema
 var CartItemSchema = mongoose.Schema({
     id_cart: {
-      type: Schema.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'Cart'
     },
     id_product: {
-      type: Schema.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'Product'
     },
     harga_nego: {

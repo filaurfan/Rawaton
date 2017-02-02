@@ -9,8 +9,8 @@ var Profile = require('../models/usersprofile');
 var Alamat = require('../models/usersalamat');
 
 // Register
-router.get('/register', function(req, res){
-	res.render('register');
+router.get('/register', ensureAuthenticated, function(req, res){
+	res.render('homeregister', {layout: 'layout_login'});
 });
 
 // Register User
@@ -32,7 +32,7 @@ router.post('/register', function(req, res){
 	var errors = req.validationErrors();
 
 	if(errors){
-		res.render('register',{
+		res.render('homeregister',{
 			errors:errors
 		});
 	} else {
@@ -117,8 +117,8 @@ passport.use('local-login', new LocalStrategy(
 }));
 
 // Login
-router.get('/login', function(req, res){
-	res.render('login');
+router.get('/login', ensureAuthenticated, function(req, res){
+	res.render('homelogin', {layout: 'layout_login'});
 });
 
 //ketika login bagaimana caranya bisa masuk sesuai dengan role
@@ -140,4 +140,12 @@ router.get('/logout', function(req, res){
 	res.redirect('/users/login');
 });
 
+function ensureAuthenticated(req, res, next){
+	if(!req.isAuthenticated()){
+		return next();
+	} else {
+		//req.flash('error_msg','You are not logged in');
+		res.redirect('/');
+	}
+}
 module.exports = router;

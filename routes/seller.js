@@ -31,15 +31,12 @@ router.get('/dashboard/:id_user', ensureAuthenticated, function(req, res){
 //option satu redirect ke /seller/profile/:username
 router.get('/profile/:id_user', ensureAuthenticated, function(req, res){
 	var _id = req.params.id_user;
-	var profile = "";
+	// var profile = "";
 	console.log(_id);
 	if (_id) {
 		User.findOne({ _id: _id }, function(err, user) {
-			profile = user;
 	        Profile.findOne({ id_user: _id }, function(err, profile) {
-	        	profile += profile;
 	        	Alamat.findOne({ id_user: _id }, function(err, alamat){
-	        		profile += alamat;
 	        		if(user.role == "seller"){
 		        		console.log(user);
 		    	        res.render('sellerprofile', {users: user, profile_seller: profile, alamat_seller: alamat, layout: 'layout_user'});
@@ -94,6 +91,7 @@ router.get('/pemesanan/:id_user', ensureAuthenticated, function(req, res){
         });
     }	
 });
+
 //yang ditampilkan adalah profile seller dengan semua element di dienable.
 //akses edit profile seller : masalah adalah ketika user hanya mengetikkan /seller/profile/update di url
 //option satu redirect ke /seller/profile/update/:username
