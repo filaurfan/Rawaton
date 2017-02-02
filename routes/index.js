@@ -27,7 +27,7 @@ router.get('/:id_user', ensureAuthenticated, function(req, res){
 
 router.get('/', function(req, res){
 	if(req.isAuthenticated()){
-		var id_user = req.body.id;
+		var id_user = req.session.id;
 		res.redirect('/' + id_user);
 	} else {
 		Product
@@ -195,6 +195,8 @@ router.get('/product/:id_product', function(req, res){
 		});
 	}
 });
+
+
 
 // Get Homepage
 router.get('/cart', ensureAuthenticated, function(req, res){

@@ -188,6 +188,32 @@ router.get('/product/list/:id_user', ensureAuthenticated, function(req, res, nex
     });
 });
 
+router.get('/product/all/:id_user', ensureAuthenticated, function(req, res){
+	var id_user = req.params.id_user;
+	Product.find().sort({created_at: 1}).exec(function(err, products) {
+			if(!err){
+				User
+		    	.findOne({_id : id_user})
+		    	.exec(function(err, user) {
+		    		return res.render('productall', {products: products, users: user});
+		    	});
+			} else {
+			    return res.render('500');
+			}
+	});
+});
+
+router.get('/product/all', function(req, res){
+	if(req.isAuthenticated()){
+		var id_user = req.session.id;
+		res.redirect('/seller/product/all/' + id_user);
+	} else {
+	    Product.find().sort({created_at: 1}).exec(function(err, products) {
+			res.render('productall', {products: products});
+		});
+	}
+});
+
 //untuk menampilkan halaman input barang pada sisi seller
 router.get('/product/input/:id_user', ensureAuthenticated, function(req, res){
 	var _id = req.params.id_user;

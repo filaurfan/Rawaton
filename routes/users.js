@@ -128,6 +128,12 @@ router.post('/login', passport.authenticate('local-login', {failureRedirect:'/us
 
 		Users.findOne({ username: username}, function(err, user){
 			var id = user._id;
+			console.log(user._id);
+			console.log(id);
+			req.session.id = user._id;
+			console.log(req.session.id);
+			// localStorage.setItem('id_user', id);
+
 			res.redirect('/' + id);
 		});
 });
@@ -138,6 +144,7 @@ router.get('/logout', function(req, res){
 	req.flash('success_msg', 'You are logged out');
 
 	res.redirect('/users/login');
+	req.session.destroy();
 });
 
 function ensureAuthenticated(req, res, next){
