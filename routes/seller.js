@@ -208,7 +208,7 @@ router.get('/product/all', function(req, res){
 		var id_user = req.session.id;
 		res.redirect('/seller/product/all/' + id_user);
 	} else {
-	    Product.find().sort({created_at: 1}).exec(function(err, products) {
+	    Product.find({}).sort({created_at: 1}).exec(function(err, products) {
 			res.render('productall', {products: products});
 		});
 	}

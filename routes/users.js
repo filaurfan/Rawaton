@@ -127,14 +127,16 @@ router.post('/login', passport.authenticate('local-login', {failureRedirect:'/us
 		var username = req.body.username;
 
 		Users.findOne({ username: username}, function(err, user){
-			var id = user._id;
-			console.log(user._id);
-			console.log(id);
-			req.session.id = user._id;
-			console.log(req.session.id);
-			// localStorage.setItem('id_user', id);
+			if (!err) {
+				var id = user._id;
+				console.log(user._id);
+				console.log(id);
+				req.session.id_user = user._id;
+				console.log(req.session.id_user);
+				// localStorage.setItem('id_user', id);
 
-			res.redirect('/' + id);
+				res.redirect('/' + id);
+			}
 		});
 });
 

@@ -28,6 +28,7 @@
     "passport-http": "*",
     "passport-local": "*",
     "promise": "^7.1.1",
+    "serve-favicon": "^2.3.2",
     "uuid-v4": "^0.1.0"
   }
 }
