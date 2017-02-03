@@ -134,7 +134,6 @@ router.post('/login', passport.authenticate('local-login', {failureRedirect:'/us
 				req.session.id_user = user._id;
 				console.log(req.session.id_user);
 				// localStorage.setItem('id_user', id);
-
 				res.redirect('/' + id);
 			}
 		});

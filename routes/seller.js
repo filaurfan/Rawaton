@@ -18,7 +18,7 @@ router.get('/dashboard/:id_user', ensureAuthenticated, function(req, res){
     	        res.render('sellerdashboard', {users: user, layout: 'layout_user'});
         	}else if(user.role == "buyer"){
         		console.log(user);
-    	        res.render('buyerdashboard', {users: user, layout: 'layout_user'});
+    	        res.render('buyerdashboard', {users: user, layout: 'layout_buyer'});
         	}else{
 
         	}
@@ -42,7 +42,7 @@ router.get('/profile/:id_user', ensureAuthenticated, function(req, res){
 		    	        res.render('sellerprofile', {users: user, profile_seller: profile, alamat_seller: alamat, layout: 'layout_user'});
 		        	}else if(user.role == "buyer"){
 		        		console.log(user);
-		    	        res.render('buyerprofile', {users: user, profile_buyer: profile, alamat_buyer: alamat,  layout: 'layout_user'});
+		    	        res.render('buyerprofile', {users: user, profile_buyer: profile, alamat_buyer: alamat,  layout: 'layout_buyer'});
 		        	}else{
 
 		        	}
@@ -64,7 +64,7 @@ router.get('/pesan/:id_user', ensureAuthenticated, function(req, res){
     	        res.render('sellerpesan', {users: user, layout: 'layout_user'});
         	}else if(user.role == "buyer"){
         		console.log(user);
-    	        res.render('buyerpesan', {users: user, layout: 'layout_user'});
+    	        res.render('buyerpesan', {users: user, layout: 'layout_buyer'});
         	}else{
 
         	}
@@ -84,7 +84,7 @@ router.get('/pemesanan/:id_user', ensureAuthenticated, function(req, res){
     	        res.render('sellerpemesanan', {users: user, layout: 'layout_user'});
         	}else if(user.role == "buyer"){
         		console.log(user);
-    	        res.render('buyerpemesanan', {users: user, layout: 'layout_user'});
+    	        res.render('buyerpemesanan', {users: user, layout: 'layout_buyer'});
         	}else{
 
         	}
@@ -107,7 +107,7 @@ router.get('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 		    	        res.render('sellerpengaturan', {users: user, profile_seller: profile, alamat_seller: alamat, layout: 'layout_user'});
 		        	}else if(user.role == "buyer"){
 		        		console.log(user);
-		    	        res.render('buyerpengaturan', {users: user, profile_buyer: profile, alamat_buyer: alamat,  layout: 'layout_user'});
+		    	        res.render('buyerpengaturan', {users: user, profile_buyer: profile, alamat_buyer: alamat,  layout: 'layout_buyer'});
 		        	}else{
 
 		        	}

@@ -27,7 +27,7 @@ router.get('/:id_user', ensureAuthenticated, function(req, res){
 
 router.get('/', function(req, res){
 	if(req.isAuthenticated()){
-		var id_user = req.session.id;
+		var id_user = req.session.id_user;
 		res.redirect('/' + id_user);
 	} else {
 		Product
@@ -67,7 +67,7 @@ router.get('/category/:otomotif/:id_user', ensureAuthenticated, function(req, re
 router.get('/category/:otomotif', function(req, res){
 	var category = req.params.otomotif;
 	if(req.isAuthenticated()){
-		var id_user = req.session.id;
+		var id_user = req.session.id_user;
 		res.redirect('/category/otomotif/' + id_user);
 	} else {
 		Product
@@ -106,7 +106,7 @@ router.get('/category/:smartphone/:id_user', ensureAuthenticated, function(req, 
 router.get('/category/:smartphone', function(req, res){
 	var category = req.params.smartphone;
 	if(req.isAuthenticated()){
-		var id_user = req.session.id;
+		var id_user = req.session.id_user;
 		res.redirect('/category/smartphone/' + id_user);
 	} else {
 		Product
@@ -144,7 +144,7 @@ router.get('/category/:fashion/:id_user', ensureAuthenticated, function(req, res
 router.get('/category/:fashion', function(req, res){
 	var category = req.params.fashion;
 	if(req.isAuthenticated()){
-		var id_user = req.session.id;
+		var id_user = req.session.id_user;
 		res.redirect('/category/fashion/' + id_user);
 	} else {
 		Product
@@ -181,7 +181,7 @@ router.get('/product/:id_product/:id_user', ensureAuthenticated, function(req, r
 router.get('/product/:id_product', function(req, res){
 	var id_product = req.params.id_product;
 	if(req.isAuthenticated()){
-		var id_user = req.session.id;
+		var id_user = req.session.id_user;
 		res.redirect('/product/'+ id_product +'/' + id_user);
 	} else {
 	    Product.find().sort({created_at: 1}).limit(4).exec(function(err, products) {
@@ -198,7 +198,7 @@ router.get('/product/:id_product', function(req, res){
 
 // Get Homepage
 router.get('/cart', ensureAuthenticated, function(req, res){
-	var id_user = req.session.id;
+	var id_user = req.session.id_user;
 	res.redirect('/cart/list/'+ id_user);
 });
 
