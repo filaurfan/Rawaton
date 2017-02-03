@@ -165,18 +165,28 @@ router.get('/category/:fashion', function(req, res){
 router.get('/product/:id_product/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 	var id_product = req.params.id_product;
-	Product.find().sort({created_at: 1}).limit(4).exec(function(err, products) {
-		Product.findOne({ _id: id_product }, function(err, product) {
-			if(!err){
-				User
-		    	.findOne({_id : id_user})
-		    	.exec(function(err, user) {
-		    		return res.render('preview', {products: products, product : product, users: user});
-		    	});
-			} else {
-			    return res.render('500');
-			}	       		
-		});
+	Product.find({}).limit(4).sort({'created_at': -1}).exec(function(err, allproducts) {
+	   	if(!err){
+			Product.findOne({ _id: id_product }, function(err, product) {
+			    if(!err){
+			    	SellerProfile.findOne({ id_user: product.id_User }, function(err, sellerProfile){
+			    		if(!err){
+				    		SellerAlamat.findOne({ id_user: product.id_User }, function(err, sellerAlamat){
+				    			if(!err){
+				    				User.findOne({_id : id_user}).exec(function(err, user) {
+							    		return res.render('preview', {products: allproducts, sellerprofile: sellerProfile, selleralamat: sellerAlamat, product: product, users: user});
+							    	});
+				    			} else {
+							        return res.render('500');
+							    }
+				    		});
+			    		}
+			    	});
+			    } else {
+			        return res.render('500');
+			    }	       		
+			});
+		}
 	});
 });
 

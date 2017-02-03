@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var multer = require('multer');
+var upload = multer({ dest : 'public/uploads/'});
 
 var Product = require('../models/product');
 var User = require('../models/users');
@@ -121,7 +123,8 @@ router.get('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 //apakah pada table seller akan ikut berubah dengan asumsi bahwa table profile memiliki relasi ke table seller
 //melakukan edit pada profile : masalah ada pada menginputkan data ke database
 //option satu cari cara menginputkan data relasi
-router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
+router.post('/pengaturan/:id_user', upload.any(), ensureAuthenticated, function(req, res){
+
 	var _id = req.params.id_user;
 	var nama_seller = req.body.nama_seller;
 	var no_telp_seller = req.body.no_telp_seller;
@@ -163,7 +166,7 @@ router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 			console.log('berhasil menyimpan');
 		}
 	});
-	return res.redirect('/seller/pengaturan/'+_id);	
+	return res.redirect('/seller/pengaturan/'+_id);
 	req.flash('success_msg', 'You are registered and can now login');
 });
 
@@ -233,7 +236,7 @@ router.get('/product/input/:id_user', ensureAuthenticated, function(req, res){
 });
 
 //untuk menginputkan barang pada table products
-router.post('/product/input/:id_user', ensureAuthenticated, function(req, res){
+router.post('/product/input/:id_user', upload.any(), ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 	var name_product = req.body.name_product;
 	var category_product = req.body.category_product;
