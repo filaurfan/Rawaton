@@ -3,6 +3,8 @@ var router = express.Router();
 
 var Product = require('../models/product');
 var User = require('../models/users');
+var SellerProfile = require('../models/usersprofile');
+var SellerAlamat = require('../models/usersalamat');
 
 router.get('/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
@@ -184,14 +186,32 @@ router.get('/product/:id_product', function(req, res){
 		var id_user = req.session.id_user;
 		res.redirect('/product/'+ id_product +'/' + id_user);
 	} else {
-	    Product.find().sort({created_at: 1}).limit(4).exec(function(err, products) {
-			Product.findOne({ _id: id_product }, function(err, product) {
-			    if(!err){
-			    	res.render('preview', {products: products, product : product});
-			    } else {
-			        return res.render('500');
-			    }	       		
-			});
+	    Product
+	    .find({})
+	    .limit(4)
+	    .sort({'created_at': -1})
+	    .exec(function(err, allproducts) {
+	    	if(!err){
+				Product.findOne({ _id: id_product }, function(err, product) {
+				    if(!err){
+				    	SellerProfile.findOne({ id_user: product.id_User }, function(err, sellerProfile){
+				    		if(!err){
+					    		SellerAlamat.findOne({ id_user: product.id_User }, function(err, sellerAlamat){
+					    			if(!err){
+					    				console.log(sellerProfile);
+					    				console.log(sellerAlamat);
+					    				return res.render('preview', {products: allproducts, sellerprofile: sellerProfile, selleralamat: sellerAlamat, product: product});
+					    			} else {
+								        return res.render('500');
+								    }
+					    		});
+				    		}
+				    	});
+				    } else {
+				        return res.render('500');
+				    }	       		
+				});
+			}
 		});
 	}
 });
