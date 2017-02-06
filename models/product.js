@@ -7,8 +7,7 @@ var ProductSchema = mongoose.Schema({
     ref: 'User'
   },
   name_product: {
-    type: String,
-    index: true
+    type: String
   },
   category_product: {
     type: String

@@ -65,12 +65,13 @@ router.post('/register', function(req, res){
 								});
 								var newAlamat = new Alamat({
 									id_user: user._id,
-									"alamat_user.jalan": "",
-									"alamat_user.kota": "",
-									"alamat_user.kabupaten": "",
-									"alamat_user.kecamatan": "",
-									"alamat_user.provinsi": "",
-									"alamat_user.kode_pos": ""
+									no_telp_kantor: Math.random(),
+									alamat_jalan: "",
+									alamat_kecamatan: "",
+									alamat_kota: "",
+									alamat_kabupaten: "",
+									alamat_provinsi: "",
+									alamat_kode_pos: ""
 								});
 								Alamat.create(newAlamat, function(err){
 									if (err) {

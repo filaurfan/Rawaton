@@ -5,22 +5,20 @@ var Product = require('../models/product');
 var User = require('../models/users');
 var SellerProfile = require('../models/usersprofile');
 var SellerAlamat = require('../models/usersalamat');
+var Cart = require('../models/cart');
 
 router.get('/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 
-	Product
-	.find({})
-	.limit(4)
-	.sort({'created_at': -1})
-	.exec(function(err, product) {
+	Product.find({}).limit(4).sort({'created_at': -1}).exec(function(err, product) {
 	    if(!err) {
-	    	User
-	    	.findOne({_id : id_user})
-	    	.exec(function(err, user) {
-	    		return res.render('index', {products: product, users: user});
-	    	});
-	       	
+	    	User.findOne({_id : id_user}).exec(function(err, user) {
+	    		if(!err){
+	    			Cart.findOne({id_user: id_user}, function(err, cart){
+	    				return res.render('index', {products: product, users: user, carts: cart});
+	    			});
+	    		}
+	    	});	       	
 	    } else {
 	        return res.render('500');
 	    }
@@ -32,11 +30,7 @@ router.get('/', function(req, res){
 		var id_user = req.session.id_user;
 		res.redirect('/' + id_user);
 	} else {
-		Product
-		.find({})
-		.limit(4)
-		.sort({'created_at': -1})
-		.exec(function(err, product) {
+		Product.find({}).limit(4).sort({'created_at': -1}).exec(function(err, product) {
 		    if(!err) {
 		       	return res.render('index', {products: product});
 		    } else {

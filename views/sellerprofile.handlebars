@@ -29,11 +29,18 @@
 						<div class="box-header with-border"><h3 class="box-title">About Me</h3></div>
 			<!-- /.box-header -->
 						<div class="box-body">
-							<strong><i class="fa fa-map-marker margin-r-5"></i> Alamat</strong>
 							{{#alamat_seller}}
-								<p class="text-muted">{{ alamat_user.jalan }}, {{ alamat_user.kecamatan }}, {{ alamat_user.kota }}, {{ alamat_user.kabupaten }}, {{ alamat_user.provinsi }}, {{ alamat_user.kode_pos }}</p>
+							<strong><i class="fa  fa-phone margin-r-5"></i>Nama Toko</strong>
+			  					<p class="text-muted">{{ nama_toko }}</p>
+
+							<hr><strong><i class="fa fa-map-marker margin-r-5"></i> Alamat</strong>							
+								<p class="text-muted">{{ alamat_jalan }}, {{ alamat_kecamatan }}, {{ alamat_kota }}, {{ alamat_kabupaten }}, {{ alamat_provinsi }}, {{ alamat_kode_pos }}</p>
+			  				
+			  				<hr><strong><i class="fa  fa-phone margin-r-5"></i>No. Telp Toko</strong>
+			  					<p class="text-muted">{{ no_telp_kantor }}</p>
 			  				{{/alamat_seller}}
-			  					<hr><strong><i class="fa  fa-phone margin-r-5"></i></strong>
+
+			  					<hr><strong><i class="fa  fa-phone margin-r-5"></i>No. Telp</strong>
 			  				{{#profile_seller}}
 			  					<p class="text-muted">{{ no_telp_user }}</p>
 			  				{{/profile_seller}}
@@ -42,6 +49,11 @@
 						<!-- /.box-body -->
 		  			</div>
 		  			<!-- /.box -->
+		  			<div class="col-md-8">
+	                {{#users}}
+	                    <p><a href="/seller/pengaturan/{{ _id }}" class="btn btn-primary">Update</a></p>
+	                {{/users}}
+	                </div>
 		  		</div>
 			</div>
 			<!-- /.col -->

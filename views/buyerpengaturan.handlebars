@@ -3,20 +3,20 @@
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
 	  	<h1>Pengaturan</h1>
-	  	{{#profile_seller}}
+	  	{{#profile_buyer}}
 	  	<ol class="breadcrumb">
 			<li><a href="/seller/dashboard/{{ id_user }}"><i class="fa fa-dashboard"></i> Home</a></li>
 			<li class="active">Pengaturan</li>
 	  	</ol>
-	  	{{/profile_seller}}
+	  	{{/profile_buyer}}
 	</section>
 
 	<!-- Main content -->
 	
 	<section class="content">
-	{{#profile_seller}}
+	{{#profile_buyer}}
 	<form method="post" action="/seller/pengaturan/{{ id_user }}">
-	{{/profile_seller}}
+	{{/profile_buyer}}
 		<div class="row">
 			<div class="col-md-3">
 				  <img class="profile-user-img img-responsive img-circle" src="../../dist/img/user4-128x128.jpg" alt="User profile picture">
@@ -26,7 +26,7 @@
 			</div>
 			<!-- /.col -->
 			<div class="col-md-9">
-				{{#profile_seller}}
+				{{#profile_buyer}}
 				<div class="form-group">
 				  	<label for="fn">Nama</label>
 				  	<input type="text" class="form-control" name="nama_seller" placeholder={{ nama_user }}>
@@ -35,16 +35,8 @@
 				  	<label for="fn">No Telp.</label>
 				  	<input type="text" class="form-control" name="no_telp_seller" placeholder={{ no_telp_user }}>
 				</div>
-				{{/profile_seller}}
-				{{#alamat_seller}}
-				<div class="form-group">
-				  	<label for="fn">Nama Toko</label>
-				  	<input type="text" class="form-control" name="nama_toko" placeholder={{ nama_toko }}>
-				</div>
-				<div class="form-group">
-				  	<label for="fn">Nomor Telp. Toko</label>
-				  	<input type="text" class="form-control" name="no_telp_kantor" placeholder={{ no_telp_kantor }}>
-				</div>
+				{{/profile_buyer}}
+				{{#alamat_buyer}}
 				<div class="form-group">
 				  	<label for="fn">Alamat</label>
 				  	<input type="text" class="form-control" name="jalan" placeholder={{ alamat_jalan }}>
@@ -69,7 +61,7 @@
 				  	<label for="fn">Kode Pos</label>
 				  	<input type="text" class="form-control" name="kode_pos" placeholder={{ alamat_kode_pos }}>
 				</div>
-				{{/alamat_seller}}
+				{{/alamat_buyer}}
 				<input type="submit" name="mit" class="btn btn-primary" value="Save">
 				<button type="button" onclick="cancel()" class="btn btn-success">Cancel</button>
 			</div>
@@ -83,10 +75,10 @@
 <!-- /.content-wrapper -->
 
 
-{{#profile_seller}}
+{{#profile_buyer}}
 <script>
   function cancel(){
 	window.location.href = '/seller/profile/{{ id_user }}';
   }
 </script>
-{{/profile_seller}}
+{{/profile_buyer}}

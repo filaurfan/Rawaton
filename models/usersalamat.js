@@ -6,13 +6,30 @@ var AlamatSchema = mongoose.Schema({
 	    type: mongoose.Schema.Types.ObjectId,
 	    ref: 'User'
 	},
-	alamat_user: {
-		jalan: String,
-		kota: String,
-		kabupaten: String,
-		kecamatan: String,
-		provinsi: String,
-		kode_pos: Number 
+	no_telp_kantor:{
+		type: String,
+		unique: true
+	},
+	nama_toko:{
+		type: String
+	},
+	alamat_jalan:{
+		type: String
+	},
+	alamat_kecamatan:{
+		type: String
+	},
+	alamat_kota:{
+		type: String
+	},
+	alamat_kabupaten:{
+		type: String
+	},	
+	alamat_provinsi:{
+		type: String
+	},
+	alamat_kode_pos:{
+		type: String
 	}
 });
 
