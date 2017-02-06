@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var multer = require('multer');
-var upload = multer({ dest : 'public/uploads/'});
+var upload = multer({ dest: 'D:/jandoik/'});
 
 var Product = require('../models/product');
 var User = require('../models/users');
@@ -28,12 +28,8 @@ router.get('/dashboard/:id_user', ensureAuthenticated, function(req, res){
     }	
 });
 
-//yang ditampilkan adalah profile seller dengan semua element di disable.
-//akses profile seller : masalah adalah ketika user hanya mengetikkan /seller/profile di url
-//option satu redirect ke /seller/profile/:username
 router.get('/profile/:id_user', ensureAuthenticated, function(req, res){
 	var _id = req.params.id_user;
-	// var profile = "";
 	console.log(_id);
 	if (_id) {
 		User.findOne({ _id: _id }, function(err, user) {
@@ -94,16 +90,13 @@ router.get('/pemesanan/:id_user', ensureAuthenticated, function(req, res){
     }	
 });
 
-//yang ditampilkan adalah profile seller dengan semua element di dienable.
-//akses edit profile seller : masalah adalah ketika user hanya mengetikkan /seller/profile/update di url
-//option satu redirect ke /seller/profile/update/:username
 router.get('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 	var _id = req.params.id_user;
 	console.log(_id);
 	if (_id) {
 		User.findOne({ _id: _id }, function(err, user) {
-	        Profile.findOne({ id_user: _id }, function(err, profile) {
-	        	Alamat.findOne({ id_user: _id }, function(err, alamat){
+	        Profile.findOne({ id_user: user._id }, function(err, profile) {
+	        	Alamat.findOne({ id_user: user._id }, function(err, alamat){
 	        		if(user.role == "seller"){
 		        		console.log(user);
 		    	        res.render('sellerpengaturan', {users: user, profile_seller: profile, alamat_seller: alamat, layout: 'layout_user'});
@@ -119,12 +112,8 @@ router.get('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
     }
 });
 
-//melakukan edit pada profile : masalah ada pada ketika kita hanya mengedit pada table profile 
-//apakah pada table seller akan ikut berubah dengan asumsi bahwa table profile memiliki relasi ke table seller
-//melakukan edit pada profile : masalah ada pada menginputkan data ke database
-//option satu cari cara menginputkan data relasi
+//masalah ada pada database alamat
 router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
-
 	var _id = req.params.id_user;
 	var newnama_seller = req.body.nama_seller;
 	var newno_telp_seller = req.body.no_telp_seller;
@@ -135,37 +124,84 @@ router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 	var newprovinsi = req.body.provinsi;
 	var newkode_pos = req.body.kode_pos;
 
-	Profile.findOne({id_user: _id}, function(err, profile){
-		if (!err) {
-			Profile.update({id_user : _id}, { $set: {nama_user: newnama_seller, no_telp_user: newno_telp_seller}}, function(err) {
-				if(err){
-					console.log(err);
+	User.findOne({ _id: _id}, function(err, user){
+		if (user.role == "seller") {
+			var newnama_toko = req.body.nama_toko;
+			var newno_telp_kantor = req.body.no_telp_kantor;
+			Profile.findOne({id_user: _id}, function(err, profile){
+				if (!err) {
+					Profile.update({id_user : _id}, { $set: {
+						nama_user: newnama_seller, 
+						no_telp_user: newno_telp_seller
+					}}, function(err) {
+						if(err){
+							console.log(err);
+						}
+						console.log("you are profile update now");
+					});
 				}
-				console.log("you are profile update now");
 			});
-		}
-	});
-	Alamat.findOne({id_user: _id}, function(err, alamat){
-		if (!err) {
-			Alamat.update({_id : alamat._id}, { $set: {'alamat_seller.jalan': newjalan,
-		'alamat_seller.kota': newkota,
-		'alamat_seller.kabupaten': newkabupaten,
-		'alamat_seller.kecamatan': newkecamatan,
-		'alamat_seller.provinsi': newprovinsi,
-		'alamat_seller.kode_pos': newkode_pos}}, function(err) {
-				if(err){
-					console.log(err);
+			Alamat.findOne({id_user: _id}, function(err, alamat){
+				if (!err) {
+					Alamat.update({_id : alamat._id}, { $set: {
+						no_telp_kantor: newno_telp_kantor,
+						nama_toko: newnama_toko,
+						alamat_jalan: newjalan,
+						alamat_kecamatan: newkecamatan,
+						alamat_kota: newkota,
+						alamat_kabupaten: newkabupaten,
+						alamat_provinsi: newprovinsi,
+						alamat_kode_pos: newkode_pos
+					}}, function(err) {
+						if(err){
+							console.log(err);
+						}
+						console.log("you are alamat update now");
+					});
 				}
-				console.log("you are alamat update now");
 			});
+			return res.redirect('/seller/pengaturan/'+_id);
+			req.flash('success_msg', 'You are registered and can now login');
+
+		}else if(user.role == "buyer"){
+			Profile.findOne({id_user: _id}, function(err, profile){
+				if (!err) {
+					Profile.update({id_user : _id}, { $set: {
+						nama_user: newnama_seller, 
+						no_telp_user: newno_telp_seller
+					}}, function(err) {
+						if(err){
+							console.log(err);
+						}
+						console.log("you are profile update now");
+					});
+				}
+			});
+			Alamat.findOne({id_user: _id}, function(err, alamat){
+				if (!err) {
+					Alamat.update({_id : alamat._id}, { $set: {
+						alamat_jalan: newjalan,
+						alamat_kecamatan: newkecamatan,
+						alamat_kota: newkota,
+						alamat_kabupaten: newkabupaten,
+						alamat_provinsi: newprovinsi,
+						alamat_kode_pos: newkode_pos
+					}}, function(err) {
+						if(err){
+							console.log(err);
+						}
+						console.log("you are alamat update now");
+					});
+				}
+			});
+			return res.redirect('/seller/pengaturan/'+_id);
+			req.flash('success_msg', 'You are registered and can now login');
+		}else{
+
 		}
-	});
-	return res.redirect('/seller/pengaturan/'+_id);
-	req.flash('success_msg', 'You are registered and can now login');
+	});	
 });
 
-//akses list product sellers :
-//option satu
 router.get('/product/list/:id_user', ensureAuthenticated, function(req, res, next){
 	var _id = req.params.id_user;
 	User.findOne({ _id: _id }, function(err, user) {
@@ -211,7 +247,6 @@ router.get('/product/all', function(req, res){
 	}
 });
 
-//untuk menampilkan halaman input barang pada sisi seller
 router.get('/product/input/:id_user', ensureAuthenticated, function(req, res){
 	var _id = req.params.id_user;
 	User.findOne({ _id: _id }, function(err, user) {
@@ -230,6 +265,7 @@ router.get('/product/input/:id_user', ensureAuthenticated, function(req, res){
 });
 
 //untuk menginputkan barang pada table products
+//masalah ada  ketika user tidak mengklik pada combobox category
 router.post('/product/input/:id_user', upload.any(), ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 	var name_product = req.body.name_product;
