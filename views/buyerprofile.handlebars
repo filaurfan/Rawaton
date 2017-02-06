@@ -1,27 +1,54 @@
-
-
-
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-    {{#profile_buyer}}
-      <h1>{{ id_user }}</h1>
-      <h1>{{ nama_user }}</h1>
-      <h1>{{ no_telp_user }}</h1>
-    {{/profile_buyer}}
-    
-    {{#alamat_buyer}}
-      <h1>{{ id_user }}</h1>
-      <h1>{{ alamat_user.jalan }}</h1>
-      <h1>{{ alamat_user.kota }}</h1>
-      <h1>{{ alamat_user.kabupaten }}</h1>
-      <h1>{{ alamat_user.kecamatan }}</h1>
-      <h1>{{ alamat_user.provinsi }}</h1>
-      <h1>{{ alamat_user.kode_pos }}</h1>
-    {{/alamat_buyer}}
-
+        <h1>Profile</h1>
+        {{#profile_buyer}}
+        <ol class="breadcrumb">
+            <li><a href="/seller/dashboard/{{ id_user }}"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Profile</li>
+        </ol>
+        {{/profile_buyer}}
     </section>
 
-  </div>
-  <!-- /.content-wrapper -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+        <div class="col-md-12">
+            {{#profile_buyer}}
+            <!-- Profile Image -->
+                <div class="box-body box-profile">
+                    <img class="profile-user-img img-responsive img-circle" src="../../dist/img/user4-128x128.jpg" alt="User profile picture">
+                    <h3 class="profile-username text-center">{{ nama_user }}</h3>
+                </div>
+            <!-- /.box-body -->
+            {{/profile_buyer}}
+            <!-- About Me Box -->
+            <div class="col-md-12 box-body">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">About Me</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <strong><i class="fa fa-envelope margin-r-5"></i> Email</strong>
+                        {{#alamat_buyer}}
+                        <p class="text-muted">{{ alamat_user.jalan }}, {{ alamat_user.kecamatan }}, {{ alamat_user.kota }}, {{ alamat_user.kabupaten }}, {{ alamat_user.provinsi }}, {{ alamat_user.kode_pos }}</p>
+                        {{/alamat_buyer}}
+                        <hr><strong><i class="fa  fa-phone margin-r-5"></i></strong>
+                        {{#profile_buyer}}
+                        <p class="text-muted">{{ no_telp_user }}</p>
+                        {{/profile_buyer}}
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+        <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->

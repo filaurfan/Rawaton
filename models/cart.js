@@ -9,6 +9,9 @@ var CartSchema = mongoose.Schema({
   	tanggal_buat: {
       type : Date,
       default: Date.now
+    },
+    status: {
+    	type: String
     }
 });
 

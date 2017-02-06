@@ -7,6 +7,7 @@ var flash = require('connect-flash');
 var Users = require('../models/users');
 var Profile = require('../models/usersprofile');
 var Alamat = require('../models/usersalamat');
+var Online	= require('../models/online');
 
 // Register
 router.get('/register', ensureAuthenticated, function(req, res){
@@ -15,11 +16,11 @@ router.get('/register', ensureAuthenticated, function(req, res){
 
 // Register User
 router.post('/register', function(req, res){
-	var username = req.body.username;
-	var password = req.body.password;
+	var newusername = req.body.username;
+	var newpassword = req.body.password;
 	var password2 = req.body.password2;
-	var email = req.body.email;
-	var role = req.body.role;
+	var newemail = req.body.email;
+	var newrole = req.body.role;
 	
 	// Validation
 	req.checkBody('role', 'Role is required').notEmpty();
@@ -36,51 +37,76 @@ router.post('/register', function(req, res){
 			errors:errors
 		});
 	} else {
-		var newUser = new Users({
-			username: username,
-			password: password,
-			email: email,
-			role: role
-		});
-		Users.createUser(newUser, function(err){
-			if (!err) {
-				Users.findOne({username: username}, function(err, user){
-					var newProfile = new Profile({
-						id_user: user._id,
-						nama_user: "",
-						no_telp_user: ""
+		Users.findOne({username: newusername}, function(err, username){
+			if (!username) {
+			Users.findOne({email: newemail}, function(err, email){
+				if (!email) {
+					var newUser = new Users({
+						username: newusername,
+						password: newpassword,
+						email: newemail,
+						role: newrole
 					});
-					var newAlamat = new Alamat({
-						id_user: user._id,
-						"alamat_user.jalan": "",
-						"alamat_user.kota": "",
-						"alamat_user.kabupaten": "",
-						"alamat_user.kecamatan": "",
-						"alamat_user.provinsi": "",
-						"alamat_user.kode_pos": ""
-					});
-					Profile.create(newProfile, function(err){
-						if (err) {
-							console.log(err);
-						}
-						else {
-							console.log('berhasil menyimpan');
-						}
-					});
-					Alamat.create(newAlamat, function(err){
-						if (err) {
-							console.log(err);
-						}
-						else {
-							console.log('berhasil menyimpan');
-						}
-					});
-				});
-				res.redirect('/users/login');
+					Users.createUser(newUser, function(err){
+						if (!err) {
+							Users.findOne({username: newusername}, function(err, user){
+								var newProfile = new Profile({
+									id_user: user._id,
+									nama_user: "",
+									no_telp_user: ""
+								});
+								var newAlamat = new Alamat({
+									id_user: user._id,
+									"alamat_user.jalan": "",
+									"alamat_user.kota": "",
+									"alamat_user.kabupaten": "",
+									"alamat_user.kecamatan": "",
+									"alamat_user.provinsi": "",
+									"alamat_user.kode_pos": ""
+								});
+								var createonline = new Online({
+									id_user: user._id,
+									status: "Offline",
+									online: new Date()
+								});
+								Online.create(createonline, function(err) {
+						    		if(err){
+						    			console.log(err);
+						    		}
+									console.log('berhasil menyimpan');
+						        });
+								Profile.create(newProfile, function(err){
+									if (err) {
+										console.log(err);
+									}
+									else {
+										console.log('berhasil menyimpan');
+									}
+								});
+								Alamat.create(newAlamat, function(err){
+									if (err) {
+										console.log(err);
+									}
+									else {
+										console.log('berhasil menyimpan');
+									}
+								});
+							});
+						}else{
+							throw err;
+						}			
+					});		
+				}else{
+					consol.log("email sudah ada");
+					res.redirect('/users/register');
+				}
+			});
 			}else{
-				throw err;
-			}			
-		});		
+				console.log("username sama");
+				res.redirect('/users/register');
+			}
+			res.redirect('/users/login');
+		});
 	}
 });
 
@@ -122,22 +148,66 @@ router.get('/login', ensureAuthenticated, function(req, res){
 });
 
 //ketika login bagaimana caranya bisa masuk sesuai dengan role
-router.post('/login', passport.authenticate('local-login', {failureRedirect:'/users/login',failureFlash: true}),
-	function(req, res) {
+router.post('/login', passport.authenticate('local-login', {failureRedirect:'/users/login',failureFlash: true}), function(req, res) {
 		var username = req.body.username;
 
 		Users.findOne({ username: username}, function(err, user){
 			var id = user._id;
-			res.redirect('/' + id);
+			req.session.id_user = user._id;
+			console.log(req.session.id_user);
+			if (!err) {
+				Online.findOne({id_user: id}, function(err, online){
+					if (online) {
+						Online.update({_id : online._id}, { $set: {status: "Online", online: new Date()}}, function(err) {
+				    		if(err){
+				    			console.log(err);
+				    		}
+				    		console.log("you are online now");
+							res.redirect('/' + id);
+
+				        });
+					}else if(!Online){
+						var createonline = new Online({
+							id_user: id,
+							status: "Online",
+							online: new Date()
+						});
+						Online.create(createonline, function(err) {
+				    		if(err){
+				    			console.log(err);
+				    		}
+							res.redirect('/' + id);
+				        });
+					}else{
+
+					}
+				});
+			}
 		});
 });
 
 router.get('/logout', function(req, res){
+	var id_user = req.session.id;
 	req.logout();
 
 	req.flash('success_msg', 'You are logged out');
 
 	res.redirect('/users/login');
+	req.session.destroy();
+
+	Online.findOne({id_user: id_user}, function(err, online){
+		if (online) {
+			Online.update({_id : online._id}, {$set: {status: "Offline", Offline: new Date()}}, function(err) {
+	  			if(err){
+					console.log(err);
+				}
+				console.log("you are offline now");
+				res.redirect('/' + id);
+			});
+		}else{
+
+		}
+	});
 });
 
 function ensureAuthenticated(req, res, next){

@@ -3,6 +3,8 @@ var router = express.Router();
 
 var Product = require('../models/product');
 var User = require('../models/users');
+var SellerProfile = require('../models/usersprofile');
+var SellerAlamat = require('../models/usersalamat');
 
 router.get('/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
@@ -27,12 +29,12 @@ router.get('/:id_user', ensureAuthenticated, function(req, res){
 
 router.get('/', function(req, res){
 	if(req.isAuthenticated()){
-		var id_user = req.body.id;
+		var id_user = req.session.id_user;
 		res.redirect('/' + id_user);
 	} else {
 		Product
 		.find({})
-		.limit(8)
+		.limit(4)
 		.sort({'created_at': -1})
 		.exec(function(err, product) {
 		    if(!err) {
@@ -44,7 +46,7 @@ router.get('/', function(req, res){
 	}
 });
 
-router.get('/category/:otomotif/:id_user', ensureAuthenticated, function(req, res){
+router.get('/category/otomotif/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 	var category = req.params.otomotif;
 	Product
@@ -67,7 +69,7 @@ router.get('/category/:otomotif/:id_user', ensureAuthenticated, function(req, re
 router.get('/category/:otomotif', function(req, res){
 	var category = req.params.otomotif;
 	if(req.isAuthenticated()){
-		var id_user = req.body.id;
+		var id_user = req.session.id_user;
 		res.redirect('/category/otomotif/' + id_user);
 	} else {
 		Product
@@ -83,7 +85,7 @@ router.get('/category/:otomotif', function(req, res){
 	}
 });
 
-router.get('/category/:smartphone/:id_user', ensureAuthenticated, function(req, res){
+router.get('/category/smartphone/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 	var category = req.params.smartphone;
 	Product
@@ -106,7 +108,7 @@ router.get('/category/:smartphone/:id_user', ensureAuthenticated, function(req, 
 router.get('/category/:smartphone', function(req, res){
 	var category = req.params.smartphone;
 	if(req.isAuthenticated()){
-		var id_user = req.body.id;
+		var id_user = req.session.id_user;
 		res.redirect('/category/smartphone/' + id_user);
 	} else {
 		Product
@@ -122,7 +124,7 @@ router.get('/category/:smartphone', function(req, res){
 	}
 });
 
-router.get('/category/:fashion/:id_user', ensureAuthenticated, function(req, res){
+router.get('/category/fashion/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 	var category = req.params.fashion;
 	Product
@@ -144,7 +146,7 @@ router.get('/category/:fashion/:id_user', ensureAuthenticated, function(req, res
 router.get('/category/:fashion', function(req, res){
 	var category = req.params.fashion;
 	if(req.isAuthenticated()){
-		var id_user = req.body.id;
+		var id_user = req.session.id_user;
 		res.redirect('/category/fashion/' + id_user);
 	} else {
 		Product
@@ -163,43 +165,71 @@ router.get('/category/:fashion', function(req, res){
 router.get('/product/:id_product/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 	var id_product = req.params.id_product;
-	Product.find().sort({created_at: 1}).limit(4).exec(function(err, products) {
-		Product.findOne({ _id: id_product }, function(err, product) {
-			if(!err){
-				User
-		    	.findOne({_id : id_user})
-		    	.exec(function(err, user) {
-		    		return res.render('preview', {products: products, product : product, users: user});
-		    	});
-			} else {
-			    return res.render('500');
-			}	       		
-		});
+	Product.find({}).limit(4).sort({'created_at': -1}).exec(function(err, allproducts) {
+	   	if(!err){
+			Product.findOne({ _id: id_product }, function(err, product) {
+			    if(!err){
+			    	SellerProfile.findOne({ id_user: product.id_User }, function(err, sellerProfile){
+			    		if(!err){
+				    		SellerAlamat.findOne({ id_user: product.id_User }, function(err, sellerAlamat){
+				    			if(!err){
+				    				User.findOne({_id : id_user}).exec(function(err, user) {
+							    		return res.render('preview', {products: allproducts, sellerprofile: sellerProfile, selleralamat: sellerAlamat, product: product, users: user});
+							    	});
+				    			} else {
+							        return res.render('500');
+							    }
+				    		});
+			    		}
+			    	});
+			    } else {
+			        return res.render('500');
+			    }	       		
+			});
+		}
 	});
 });
 
 router.get('/product/:id_product', function(req, res){
 	var id_product = req.params.id_product;
 	if(req.isAuthenticated()){
-		var id_user = req.body.id;
+		var id_user = req.session.id_user;
 		res.redirect('/product/'+ id_product +'/' + id_user);
 	} else {
-	    Product.find().sort({created_at: 1}).limit(4).exec(function(err, products) {
-			Product.findOne({ _id: id_product }, function(err, product) {
-			    if(!err){
-			    	res.render('preview', {products: products, product : product});
-			    } else {
-			        return res.render('500');
-			    }	       		
-			});
+	    Product
+	    .find({})
+	    .limit(4)
+	    .sort({'created_at': -1})
+	    .exec(function(err, allproducts) {
+	    	if(!err){
+				Product.findOne({ _id: id_product }, function(err, product) {
+				    if(!err){
+				    	SellerProfile.findOne({ id_user: product.id_User }, function(err, sellerProfile){
+				    		if(!err){
+					    		SellerAlamat.findOne({ id_user: product.id_User }, function(err, sellerAlamat){
+					    			if(!err){
+					    				console.log(sellerProfile);
+					    				console.log(sellerAlamat);
+					    				return res.render('preview', {products: allproducts, sellerprofile: sellerProfile, selleralamat: sellerAlamat, product: product});
+					    			} else {
+								        return res.render('500');
+								    }
+					    		});
+				    		}
+				    	});
+				    } else {
+				        return res.render('500');
+				    }	       		
+				});
+			}
 		});
 	}
 });
 
 // Get Homepage
 router.get('/cart', ensureAuthenticated, function(req, res){
-	var id_user = req.body.id;
-	res.redirect('/cart/list/'+ id);
+	var id_user = req.session.id_user;
+	res.redirect('/cart/list/'+ id_user);
 });
 
 router.get('/about', function(req, res){

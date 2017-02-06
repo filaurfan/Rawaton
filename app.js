@@ -10,6 +10,9 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
+var multer = require('multer');
+var upload = multer({ dest : 'public/uploads/'});
+var favicon = require('serve-favicon');
 
 mongoose.connect('mongodb://filaurfan:rawaton123@ds131109.mlab.com:31109/rawaton');  //---> loginapp
 var db = mongoose.connection;
@@ -23,6 +26,7 @@ var cart = require('./routes/cart');
 // Init App
 var app = express();
 
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
 // View Engine
 app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', exphbs({defaultLayout:'layout'}));
