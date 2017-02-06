@@ -46,115 +46,81 @@ router.get('/', function(req, res){
 	}
 });
 
-router.get('/category/otomotif/:id_user', ensureAuthenticated, function(req, res){
+router.get('/category/:category/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
-	var category = req.params.otomotif;
-	Product
-	.find({category_product : category})
-	.sort({'created_at': -1})
-	.exec(function(err, product) {
-	    if(!err) {
-	    	User
-	    	.findOne({_id : id_user})
-	    	.exec(function(err, user) {
-	    		return res.render('productotomotif', {products: product, users: user});
-	    	});
-	       	
-	    } else {
-	        return res.render('500');
-	    }
-    });
+	var category = req.params.category;
+
+	if (category == "otomotif") {
+		Product.find({category_product : category}).sort({'created_at': -1}).exec(function(err, product) {
+		    if(!err) {
+		    	User
+		    	.findOne({_id : id_user})
+		    	.exec(function(err, user) {
+		    		return res.render('productotomotif', {products: product, users: user});
+		    	});
+		       	
+		    } else {
+		        return res.render('500');
+		    }
+	    });
+	}else if (category == "smartphone") {
+		Product.find({category_product : category}).sort({'created_at': -1}).exec(function(err, product) {
+		    if(!err) {
+		    	User
+		    	.findOne({_id : id_user})
+		    	.exec(function(err, user) {
+		    		return res.render('productsmartphone', {products: product, users: user});
+		    	});
+		       	
+		    } else {
+		        return res.render('500');
+		    }
+	    });
+	}else if (category == "fashion") {
+		Product.find({category_product : category}).sort({'created_at': -1}).exec(function(err, product) {
+		    if(!err) {
+		    	User
+		    	.findOne({_id : id_user})
+		    	.exec(function(err, user) {
+		    		return res.render('productfashion', {products: product, users: user});
+		    	});	       	
+		    } else {
+		        return res.render('500');
+		    }
+	    });
+	}else{
+
+	}	
 });
 
-router.get('/category/:otomotif', function(req, res){
-	var category = req.params.otomotif;
+router.get('/category/:category', function(req, res){
+	var category = req.params.category;
 	if(req.isAuthenticated()){
 		var id_user = req.session.id_user;
-		res.redirect('/category/otomotif/' + id_user);
+		if (category == "otomotif") {
+			res.redirect('/category/otomotif/' + id_user);
+		}else if (category == "smartphone") {
+			res.redirect('/category/smartphone/' + id_user);
+		}else if (category == "fashion") {
+		   	res.redirect('/category/fashion/' + id_user);
+		}else{
+		    		
+		}
 	} else {
 		Product
 		.find({category_product : category})
 		.sort({'created_at': -1})
 		.exec(function(err, product) {
 		    if(!err) {
-		       	return res.render('productotomotif', {products: product});
-		    } else {
-		        return res.render('500');
-		    }
-	    });
-	}
-});
+		    	if (category == "otomotif") {
+		    		return res.render('productotomotif', {products: product});
+		    	}else if (category == "smartphone") {
+		    		return res.render('productsmartphone', {products: product});
+		    	}else if (category == "fashion") {
+		    		return res.render('productfashion', {products: product});
+		    	}else{
 
-router.get('/category/smartphone/:id_user', ensureAuthenticated, function(req, res){
-	var id_user = req.params.id_user;
-	var category = req.params.smartphone;
-	Product
-	.find({category_product : category})
-	.sort({'created_at': -1})
-	.exec(function(err, product) {
-	    if(!err) {
-	    	User
-	    	.findOne({_id : id_user})
-	    	.exec(function(err, user) {
-	    		return res.render('productsmartphone', {products: product, users: user});
-	    	});
-	       	
-	    } else {
-	        return res.render('500');
-	    }
-    });
-});
-
-router.get('/category/:smartphone', function(req, res){
-	var category = req.params.smartphone;
-	if(req.isAuthenticated()){
-		var id_user = req.session.id_user;
-		res.redirect('/category/smartphone/' + id_user);
-	} else {
-		Product
-		.find({category_product: category})
-		.sort({'created_at': -1})
-		.exec(function(err, product) {
-		    if(!err) {
-		       	return res.render('productsmartphone', {products: product});
-		    } else {
-		        return res.render('500');
-		    }
-	    });
-	}
-});
-
-router.get('/category/fashion/:id_user', ensureAuthenticated, function(req, res){
-	var id_user = req.params.id_user;
-	var category = req.params.fashion;
-	Product
-	.find({category_product : category})
-	.sort({'created_at': -1})
-	.exec(function(err, product) {
-	    if(!err) {
-	    	User
-	    	.findOne({_id : id_user})
-	    	.exec(function(err, user) {
-	    		return res.render('productfashion', {products: product, users: user});
-	    	});	       	
-	    } else {
-	        return res.render('500');
-	    }
-    });
-});
-
-router.get('/category/:fashion', function(req, res){
-	var category = req.params.fashion;
-	if(req.isAuthenticated()){
-		var id_user = req.session.id_user;
-		res.redirect('/category/fashion/' + id_user);
-	} else {
-		Product
-		.find({category_product: category})
-		.sort({'created_at': -1})
-		.exec(function(err, product) {
-		    if(!err) {
-		       	return res.render('productfashion', {products: product});
+		    	}
 		    } else {
 		        return res.render('500');
 		    }

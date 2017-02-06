@@ -102,8 +102,8 @@ router.get('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 	console.log(_id);
 	if (_id) {
 		User.findOne({ _id: _id }, function(err, user) {
-	        Profile.findOne({ id_user: _id }, function(err, profile) {
-	        	Alamat.findOne({ id_user: _id }, function(err, alamat){
+	        Profile.findOne({ id_user: user._id }, function(err, profile) {
+	        	Alamat.findOne({ id_user: user._id }, function(err, alamat){
 	        		if(user.role == "seller"){
 		        		console.log(user);
 		    	        res.render('sellerpengaturan', {users: user, profile_seller: profile, alamat_seller: alamat, layout: 'layout_user'});
@@ -212,6 +212,7 @@ router.get('/product/all', function(req, res){
 });
 
 //untuk menampilkan halaman input barang pada sisi seller
+
 router.get('/product/input/:id_user', ensureAuthenticated, function(req, res){
 	var _id = req.params.id_user;
 	User.findOne({ _id: _id }, function(err, user) {
@@ -230,7 +231,7 @@ router.get('/product/input/:id_user', ensureAuthenticated, function(req, res){
 });
 
 //untuk menginputkan barang pada table products
-router.post('/product/input/:id_user', upload.any(), ensureAuthenticated, function(req, res){
+router.post('/product/input/:id_user', upload.single('req.body.picture_product'), ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 	var name_product = req.body.name_product;
 	var category_product = req.body.category_product;

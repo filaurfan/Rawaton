@@ -53,7 +53,15 @@ router.post('/register', function(req, res){
 								var newProfile = new Profile({
 									id_user: user._id,
 									nama_user: "",
-									no_telp_user: ""
+									no_telp_user: Math.random()
+								});
+								Profile.create(newProfile, function(err){
+									if (err) {
+										console.log(err);
+									}
+									else {
+										console.log('berhasil menyimpan');
+									}
 								});
 								var newAlamat = new Alamat({
 									id_user: user._id,
@@ -63,6 +71,14 @@ router.post('/register', function(req, res){
 									"alamat_user.kecamatan": "",
 									"alamat_user.provinsi": "",
 									"alamat_user.kode_pos": ""
+								});
+								Alamat.create(newAlamat, function(err){
+									if (err) {
+										console.log(err);
+									}
+									else {
+										console.log('berhasil menyimpan');
+									}
 								});
 								var createonline = new Online({
 									id_user: user._id,
@@ -75,22 +91,6 @@ router.post('/register', function(req, res){
 						    		}
 									console.log('berhasil menyimpan');
 						        });
-								Profile.create(newProfile, function(err){
-									if (err) {
-										console.log(err);
-									}
-									else {
-										console.log('berhasil menyimpan');
-									}
-								});
-								Alamat.create(newAlamat, function(err){
-									if (err) {
-										console.log(err);
-									}
-									else {
-										console.log('berhasil menyimpan');
-									}
-								});
 							});
 						}else{
 							throw err;
