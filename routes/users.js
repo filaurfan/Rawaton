@@ -7,6 +7,7 @@ var flash = require('connect-flash');
 var Users = require('../models/users');
 var Profile = require('../models/usersprofile');
 var Alamat = require('../models/usersalamat');
+var Online	= require('../models/online');
 
 // Register
 router.get('/register', ensureAuthenticated, function(req, res){
@@ -122,31 +123,70 @@ router.get('/login', ensureAuthenticated, function(req, res){
 });
 
 //ketika login bagaimana caranya bisa masuk sesuai dengan role
-router.post('/login', passport.authenticate('local-login', {failureRedirect:'/users/login',failureFlash: true}),
-	function(req, res) {
+router.post('/login', passport.authenticate('local-login', {failureRedirect:'/users/login',failureFlash: true}), function(req, res) {
 		var username = req.body.username;
 
 		Users.findOne({ username: username}, function(err, user){
+			var id = user._id;
+			req.session.id_user = user._id;
 			if (!err) {
-				var id = user._id;
-				console.log(user._id);
-				console.log(id);
-				req.session.id_user = user._id;
-				console.log(req.session.id_user);
-				// localStorage.setItem('id_user', id);
+				Online.findOne({id_user: id}, function(err, online){
+					if (online) {
+						var updateonline = new Online({
+							status: Online,
+							online: new Date();
+						});
+						Online.update({_id : online._id}, {$set: updateonline}, function(err) {
+				    		if(err){
+				    			console.log(err);
+				    		}
+							res.redirect('/' + id);
+				        });
+					}else if(!Online){
+						var createonline = new Online({
+							id_user: id;
+							status: Online,
+							online: new Date();
+						});
+						Online.create(createonline, function(err) {
+				    		if(err){
+				    			console.log(err);
+				    		}
+							res.redirect('/' + id);
+				        });
+					}else{
 
-				res.redirect('/' + id);
+					}
+				});				
 			}
 		});
 });
 
 router.get('/logout', function(req, res){
+	var id_user = req.session.id;
 	req.logout();
 
 	req.flash('success_msg', 'You are logged out');
 
 	res.redirect('/users/login');
 	req.session.destroy();
+
+	Online.findOne({id_user: id_user}, function(err, online){
+		if (online) {
+			var updateonline = new Online({
+				status: Offline,
+				Offline: new Date();
+			});
+			Online.update({_id : online._id}, {$set: updateonline}, function(err) {
+	  			if(err){
+					console.log(err);
+				}
+				res.redirect('/' + id);
+			});
+		}else{
+
+		}
+	});
 });
 
 function ensureAuthenticated(req, res, next){
