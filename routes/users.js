@@ -37,51 +37,65 @@ router.post('/register', function(req, res){
 			errors:errors
 		});
 	} else {
-		var newUser = new Users({
-			username: username,
-			password: password,
-			email: email,
-			role: role
-		});
-		Users.createUser(newUser, function(err){
-			if (!err) {
-				Users.findOne({username: username}, function(err, user){
-					var newProfile = new Profile({
-						id_user: user._id,
-						nama_user: "",
-						no_telp_user: ""
+		Users.findOne({username: username}, function(err, username){
+			if (!username) {
+			Users.findOne({email: email}, function(err, email){
+				if (!email) {
+					var newUser = new Users({
+						username: username,
+						password: password,
+						email: email,
+						role: role
 					});
-					var newAlamat = new Alamat({
-						id_user: user._id,
-						"alamat_user.jalan": "",
-						"alamat_user.kota": "",
-						"alamat_user.kabupaten": "",
-						"alamat_user.kecamatan": "",
-						"alamat_user.provinsi": "",
-						"alamat_user.kode_pos": ""
-					});
-					Profile.create(newProfile, function(err){
-						if (err) {
-							console.log(err);
-						}
-						else {
-							console.log('berhasil menyimpan');
-						}
-					});
-					Alamat.create(newAlamat, function(err){
-						if (err) {
-							console.log(err);
-						}
-						else {
-							console.log('berhasil menyimpan');
-						}
-					});
-				});
-				res.redirect('/users/login');
+					Users.createUser(newUser, function(err){
+						if (!err) {
+							Users.findOne({username: username}, function(err, user){
+								var newProfile = new Profile({
+									id_user: user._id,
+									nama_user: "",
+									no_telp_user: ""
+								});
+								var newAlamat = new Alamat({
+									id_user: user._id,
+									"alamat_user.jalan": "",
+									"alamat_user.kota": "",
+									"alamat_user.kabupaten": "",
+									"alamat_user.kecamatan": "",
+									"alamat_user.provinsi": "",
+									"alamat_user.kode_pos": ""
+								});
+								Profile.create(newProfile, function(err){
+									if (err) {
+										console.log(err);
+									}
+									else {
+										console.log('berhasil menyimpan');
+									}
+								});
+								Alamat.create(newAlamat, function(err){
+									if (err) {
+										console.log(err);
+									}
+									else {
+										console.log('berhasil menyimpan');
+									}
+								});
+							});
+							res.redirect('/users/login');
+						}else{
+							throw err;
+						}			
+					});		
+				}else{
+					consol.log("email sudah ada");
+					res.redirect('/users/register');
+				}
+			});
 			}else{
-				throw err;
-			}			
-		});		
+				console.log("username sama");
+				res.redirect('/users/register');
+			}
+		});
 	}
 });
 
@@ -157,7 +171,7 @@ router.post('/login', passport.authenticate('local-login', {failureRedirect:'/us
 					}else{
 
 					}
-				});				
+				});
 			}
 		});
 });
