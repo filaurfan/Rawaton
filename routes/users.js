@@ -16,11 +16,11 @@ router.get('/register', ensureAuthenticated, function(req, res){
 
 // Register User
 router.post('/register', function(req, res){
-	var username = req.body.username;
-	var password = req.body.password;
+	var newusername = req.body.username;
+	var newpassword = req.body.password;
 	var password2 = req.body.password2;
-	var email = req.body.email;
-	var role = req.body.role;
+	var newemail = req.body.email;
+	var newrole = req.body.role;
 	
 	// Validation
 	req.checkBody('role', 'Role is required').notEmpty();
@@ -37,19 +37,19 @@ router.post('/register', function(req, res){
 			errors:errors
 		});
 	} else {
-		Users.findOne({username: username}, function(err, username){
+		Users.findOne({username: newusername}, function(err, username){
 			if (!username) {
-			Users.findOne({email: email}, function(err, email){
+			Users.findOne({email: newemail}, function(err, email){
 				if (!email) {
 					var newUser = new Users({
-						username: username,
-						password: password,
-						email: email,
-						role: role
+						username: newusername,
+						password: newpassword,
+						email: newemail,
+						role: newrole
 					});
 					Users.createUser(newUser, function(err){
 						if (!err) {
-							Users.findOne({username: username}, function(err, user){
+							Users.findOne({username: newusername}, function(err, user){
 								var newProfile = new Profile({
 									id_user: user._id,
 									nama_user: "",
@@ -64,6 +64,17 @@ router.post('/register', function(req, res){
 									"alamat_user.provinsi": "",
 									"alamat_user.kode_pos": ""
 								});
+								var createonline = new Online({
+									id_user: user._id,
+									status: "Offline",
+									online: new Date()
+								});
+								Online.create(createonline, function(err) {
+						    		if(err){
+						    			console.log(err);
+						    		}
+									console.log('berhasil menyimpan');
+						        });
 								Profile.create(newProfile, function(err){
 									if (err) {
 										console.log(err);
@@ -81,7 +92,6 @@ router.post('/register', function(req, res){
 									}
 								});
 							});
-							res.redirect('/users/login');
 						}else{
 							throw err;
 						}			
@@ -95,6 +105,7 @@ router.post('/register', function(req, res){
 				console.log("username sama");
 				res.redirect('/users/register');
 			}
+			res.redirect('/users/login');
 		});
 	}
 });
@@ -143,24 +154,23 @@ router.post('/login', passport.authenticate('local-login', {failureRedirect:'/us
 		Users.findOne({ username: username}, function(err, user){
 			var id = user._id;
 			req.session.id_user = user._id;
+			console.log(req.session.id_user);
 			if (!err) {
 				Online.findOne({id_user: id}, function(err, online){
 					if (online) {
-						var updateonline = new Online({
-							status: Online,
-							online: new Date();
-						});
-						Online.update({_id : online._id}, {$set: updateonline}, function(err) {
+						Online.update({_id : online._id}, { $set: {status: "Online", online: new Date()}}, function(err) {
 				    		if(err){
 				    			console.log(err);
 				    		}
+				    		console.log("you are online now");
 							res.redirect('/' + id);
+
 				        });
 					}else if(!Online){
 						var createonline = new Online({
-							id_user: id;
-							status: Online,
-							online: new Date();
+							id_user: id,
+							status: "Online",
+							online: new Date()
 						});
 						Online.create(createonline, function(err) {
 				    		if(err){
@@ -187,14 +197,11 @@ router.get('/logout', function(req, res){
 
 	Online.findOne({id_user: id_user}, function(err, online){
 		if (online) {
-			var updateonline = new Online({
-				status: Offline,
-				Offline: new Date();
-			});
-			Online.update({_id : online._id}, {$set: updateonline}, function(err) {
+			Online.update({_id : online._id}, {$set: {status: "Offline", Offline: new Date()}}, function(err) {
 	  			if(err){
 					console.log(err);
 				}
+				console.log("you are offline now");
 				res.redirect('/' + id);
 			});
 		}else{

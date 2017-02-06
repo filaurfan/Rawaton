@@ -12,7 +12,7 @@ var OnlineSchema = mongoose.Schema({
 	online: {
 	    type : Date,
 	    default: Date.now
-	}
+	},
 	offline: {
 	    type : Date,
 	    default: Date.now

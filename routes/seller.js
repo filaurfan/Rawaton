@@ -123,47 +123,41 @@ router.get('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 //apakah pada table seller akan ikut berubah dengan asumsi bahwa table profile memiliki relasi ke table seller
 //melakukan edit pada profile : masalah ada pada menginputkan data ke database
 //option satu cari cara menginputkan data relasi
-router.post('/pengaturan/:id_user', upload.any(), ensureAuthenticated, function(req, res){
+router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 
 	var _id = req.params.id_user;
-	var nama_seller = req.body.nama_seller;
-	var no_telp_seller = req.body.no_telp_seller;
-	var jalan = req.body.jalan;
-	var kota = req.body.kota;
-	var kabupaten = req.body.kabupaten;
-	var kecamatan = req.body.kecamatan;
-	var provinsi = req.body.provinsi;
-	var kode_pos = req.body.kode_pos;
+	var newnama_seller = req.body.nama_seller;
+	var newno_telp_seller = req.body.no_telp_seller;
+	var newjalan = req.body.jalan;
+	var newkota = req.body.kota;
+	var newkabupaten = req.body.kabupaten;
+	var newkecamatan = req.body.kecamatan;
+	var newprovinsi = req.body.provinsi;
+	var newkode_pos = req.body.kode_pos;
 
-	var profileup = new Profile({
-		id_user: _id, 
-		nama_seller: nama_seller,
-		no_telp_seller: no_telp_seller		    
-	});
-	var alamatup = new Alamat({
-		id_user: _id,
-		"alamat_seller.jalan": jalan,
-		"alamat_seller.kota": kota,
-		"alamat_seller.kabupaten": kabupaten,
-		"alamat_seller.kecamatan": kecamatan,
-		"alamat_seller.provinsi": provinsi,
-		"alamat_seller.kode_pos": kode_pos
-	});
-	
-	Profile.findOneAndUpdate({ id_user: _id }, profileup, function(err) {  
-		if (err) {
-			console.log(err);
-		}
-		else {
-			console.log('berhasil menyimpan');
+	Profile.findOne({id_user: _id}, function(err, profile){
+		if (!err) {
+			Profile.update({id_user : _id}, { $set: {nama_user: newnama_seller, no_telp_user: newno_telp_seller}}, function(err) {
+				if(err){
+					console.log(err);
+				}
+				console.log("you are profile update now");
+			});
 		}
 	});
-	Alamat.findOneAndUpdate({ id_user: _id }, alamatup, function(err) {  
-		if (err) {
-			console.log(err);
-		}
-		else {
-			console.log('berhasil menyimpan');
+	Alamat.findOne({id_user: _id}, function(err, alamat){
+		if (!err) {
+			Alamat.update({_id : alamat._id}, { $set: {'alamat_seller.jalan': newjalan,
+		'alamat_seller.kota': newkota,
+		'alamat_seller.kabupaten': newkabupaten,
+		'alamat_seller.kecamatan': newkecamatan,
+		'alamat_seller.provinsi': newprovinsi,
+		'alamat_seller.kode_pos': newkode_pos}}, function(err) {
+				if(err){
+					console.log(err);
+				}
+				console.log("you are alamat update now");
+			});
 		}
 	});
 	return res.redirect('/seller/pengaturan/'+_id);
@@ -340,25 +334,20 @@ router.post('/product/update/:id_product/:id_user', ensureAuthenticated, functio
 	req.checkBody('picture_product', 'Gambar Barang is required').notEmpty();
 
     if (id_product) {
-    	var product = new Product({
-		    name_product: name_product,
-		    id_User: id_user,
-		    category_product: category_product,
-		    price_product: price_product,
-		    entity_product: entity_product,
-		    description_product: description_product,
-		    picture_product: picture_product,
-		    created_at: created_at
-		});
 		User.findOne({ _id: id_user }, function(err, user) {
         	if(user.role == "seller"){
 			    if(!err) {
-			    	Product.update({_id : id_product}, {$set: product}, function(err, product) {
+			    	Product.update({_id : id_product}, {$set: {name_product: name_product,
+				    id_User: id_user,
+				    category_product: category_product,
+				    price_product: price_product,
+				    entity_product: entity_product,
+				    description_product: description_product,
+				    picture_product: picture_product,
+				    created_at: created_at}}, function(err, product) {
 			    		if(err){
 			    			console.log(err);
 			    		}
-			        	console.log(id_product);
-			            console.log(product);
 			            return res.redirect('/seller/product/list/'+id_user);
 			        });	
 			    } else {

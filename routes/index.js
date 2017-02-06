@@ -46,7 +46,7 @@ router.get('/', function(req, res){
 	}
 });
 
-router.get('/category/:otomotif/:id_user', ensureAuthenticated, function(req, res){
+router.get('/category/otomotif/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 	var category = req.params.otomotif;
 	Product
@@ -85,7 +85,7 @@ router.get('/category/:otomotif', function(req, res){
 	}
 });
 
-router.get('/category/:smartphone/:id_user', ensureAuthenticated, function(req, res){
+router.get('/category/smartphone/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 	var category = req.params.smartphone;
 	Product
@@ -124,7 +124,7 @@ router.get('/category/:smartphone', function(req, res){
 	}
 });
 
-router.get('/category/:fashion/:id_user', ensureAuthenticated, function(req, res){
+router.get('/category/fashion/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 	var category = req.params.fashion;
 	Product
