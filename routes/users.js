@@ -34,7 +34,7 @@ router.post('/register', function(req, res){
 
 	if(errors){
 		res.render('homeregister',{
-			errors:errors
+			errors:errors, layout: 'layout_login'
 		});
 	} else {
 		Users.findOne({username: newusername}, function(err, username){

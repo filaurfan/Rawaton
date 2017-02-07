@@ -2,11 +2,11 @@
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
-	  	<h1>Product</h1>
+	  	<h1>Produk</h1>
 	  	{{#users}} 
 	  	<ol class="breadcrumb">
-			<li><a href="/seller/dashboard/{{ _id }}"><i class="fa fa-dashboard"></i> Home</a></li>
-			<li class="active">Product</li>
+			<li><a href="/seller/dashboard/{{ _id }}"><i class="fa fa-dashboard"></i> Beranda</a></li>
+			<li class="active">Produk</li>
 	  	</ol>
 		{{/users}}
 	</section>
@@ -14,23 +14,24 @@
 	<!-- Main content -->
 	<section class="content">
 	  	{{#users}}
-	  	<p><a href="/seller/product/input/{{ _id }}" class="btn btn-primary">Add New</a></p>
+	  	<p><a href="/seller/product/input/{{ _id }}" class="btn btn-primary">Tambah</a></p>
 	  	{{/users}}
 
 	  	<div class="table-responsive">
 		 	<table class="table table-bordered table-hover table-striped">
-				<caption>List Data Barang</caption>
+				<caption>Daftar Data Barang</caption>
 				<thead>
 				  	<tr>
 						<th width="50px">No</th>
-						<th width="100px">Image</th>
+						<th width="100px">Gambar</th>
 						<th width="150px">Nama</th>
-						<th width="150px">Category</th>
-						<th width="150px">Price</th>
-						<th width="10px">Entity</th>
-						<th width="500px">Descryption</th>
+						<th width="150px">Kategory</th>
+						<th width="150px">Harga</th>
+						<th width="10px">Jumlah</th>
+						<th width="500px">Deskripsi</th>
 						<th width="500px" hidden="hidden">Created at</th>
-						<th width="80px">Action</th>
+						<th width="80px">Ubah</th>
+						<th width="80px">Hapus</th>
 				  	</tr>
 				</thead>
 				<tbody>
@@ -45,7 +46,8 @@
 						<td hidden="hidden">{{ created_at }}</td>
 						<td>
 							<a class="btn btn-warning btn-xs" href='/seller/product/update/{{ _id }}/{{ id_User }}' ><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
-
+						</td>
+						<td>
 							<a onClick="return confirm('Anda yakin ingin menghapus data ini?')" href='/seller/product/delete/{{ _id }}/{{ id_User }}' class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
 						</td>
 				 	</tr>

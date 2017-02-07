@@ -3,11 +3,11 @@
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
-		<h1>Add Product</h1>
+		<h1>Tambah Produk</h1>
 		<ol class="breadcrumb">
-		  <li><a href="/seller/dashboard/{{ _id }}"><i class="fa fa-dashboard"></i> Home</a></li>
-		  <li><a href="/seller/product/list/{{ _id }}">Product</a></li>
-		  <li class="active">Add Product</li>
+		  <li><a href="/seller/dashboard/{{ _id }}"><i class="fa fa-dashboard"></i> Beranda</a></li>
+		  <li><a href="/seller/product/list/{{ _id }}">Produk</a></li>
+		  <li class="active">Tambah</li>
 		</ol>
 	</section>
 
@@ -15,11 +15,11 @@
 	<section class="content">
 	<form method="post" action="/seller/product/input/{{ _id }}">
 		<div class="form-group">
-			<label for="name_product">Name</label>
+			<label for="name_product">Nama</label>
 			<input type="text" class="form-control" name="name_product" id="name_product">
 		</div>
 		<div class="form-group">
-			<label for="category">Category</label>
+			<label for="category">Kategori</label>
 			<select class="form-control" onclick="displayResult(this.value)" name="category" id="category">
 				<option name="category" ></option>
 				<option name="category" value="otomotif">Otomotif</option>
@@ -29,23 +29,23 @@
 			<input type="hidden" name="category_product" id="category_product" value="" />
 		</div>
 		<div class="form-group">
-			<label for="price_product">Price</label>
+			<label for="price_product">Harga</label>
 			<input type="text" class="form-control"  name="price_product" id="price_product">
 		</div>
 		<div class="form-group">
-			<label for="entity_product">Entity</label>
+			<label for="entity_product">Jumlah</label>
 			<input type="text" class="form-control" name="entity_product" id="entity_product">
 		</div>
 		<div class="form-group">
-			<label for="description_product">Descryption</label>
+			<label for="description_product">Deskripsi</label>
 			<textarea rows="5" name="description_product" id="description_product" class="form-control"></textarea>
 		</div>
 		<div class="form-group">
-			<label for="picture_product">Image</label>
+			<label for="picture_product">Gambar</label>
 			<input type="file" name="picture_product" id="picture_product"><br>
 		</div>
-		<input type="submit" name="mit" class="btn btn-primary" value="Submit">
-		<button type="reset" onclick="cancel()" class="btn btn-success">Cancel</button>
+		<input type="submit" name="mit" class="btn btn-primary" value="Tambah">
+		<button type="reset" onclick="cancel()" class="btn btn-success">Batal</button>
 	</form> 
 	</section>
 </div>
