@@ -5,7 +5,7 @@
 	  	<h1>Pengaturan</h1>
 	  	{{#profile_seller}}
 	  	<ol class="breadcrumb">
-			<li><a href="/seller/dashboard/{{ id_user }}"><i class="fa fa-dashboard"></i> Home</a></li>
+			<li><a href="/seller/dashboard/{{ id_user }}"><i class="fa fa-dashboard"></i> Beranda</a></li>
 			<li class="active">Pengaturan</li>
 	  	</ol>
 	  	{{/profile_seller}}
@@ -29,48 +29,48 @@
 				{{#profile_seller}}
 				<div class="form-group">
 				  	<label for="fn">Nama</label>
-				  	<input type="text" class="form-control" name="nama_seller" placeholder={{ nama_user }}>
+				  	<input type="text" class="form-control" name="nama_seller" value={{ nama_user }}>
 				</div>
 				<div class="form-group">
-				  	<label for="fn">No Telp.</label>
-				  	<input type="text" class="form-control" name="no_telp_seller" placeholder={{ no_telp_user }}>
+				  	<label for="fn">No HP</label>
+				  	<input type="text" class="form-control" name="no_telp_seller" value={{ no_telp_user }}>
 				</div>
 				{{/profile_seller}}
 				{{#alamat_seller}}
 				<div class="form-group">
 				  	<label for="fn">Nama Toko</label>
-				  	<input type="text" class="form-control" name="nama_toko" placeholder={{ nama_toko }}>
+				  	<input type="text" class="form-control" name="nama_toko" value={{ nama_toko }}>
 				</div>
 				<div class="form-group">
 				  	<label for="fn">Nomor Telp. Toko</label>
-				  	<input type="text" class="form-control" name="no_telp_kantor" placeholder={{ no_telp_kantor }}>
+				  	<input type="text" class="form-control" name="no_telp_kantor" value={{ no_telp_kantor }}>
 				</div>
 				<div class="form-group">
 				  	<label for="fn">Alamat</label>
-				  	<input type="text" class="form-control" name="jalan" placeholder={{ alamat_jalan }}>
+				  	<input type="text" class="form-control" name="jalan" value={{ alamat_jalan }}>
 				</div>
 				<div class="form-group">
 				  	<label for="fn">Kecamatan</label>
-				  	<input type="text" class="form-control" name="kecamatan" placeholder={{ alamat_kecamatan }}>
+				  	<input type="text" class="form-control" name="kecamatan" value={{ alamat_kecamatan }}>
 				</div>
 				<div class="form-group">
 				  	<label for="fn">Kota</label>
-				  	<input type="text" class="form-control" name="kota" placeholder={{ alamat_kota }}>
+				  	<input type="text" class="form-control" name="kota" value={{ alamat_kota }}>
 				</div>
 				<div class="form-group">
 				  	<label for="fn">Kabupaten</label>
-				  	<input type="text" class="form-control" name="kabupaten" placeholder={{ alamat_kabupaten }}>
+				  	<input type="text" class="form-control" name="kabupaten" value={{ alamat_kabupaten }}>
 				</div>
 				<div class="form-group">
 				  	<label for="fn">Provinsi</label>
-				  	<input type="text" class="form-control" name="provinsi" placeholder={{ alamat_provinsi }}>
+				  	<input type="text" class="form-control" name="provinsi" value={{ alamat_provinsi }}>
 				</div>
 				<div class="form-group">
 				  	<label for="fn">Kode Pos</label>
-				  	<input type="text" class="form-control" name="kode_pos" placeholder={{ alamat_kode_pos }}>
+				  	<input type="text" class="form-control" name="kode_pos" value={{ alamat_kode_pos }}>
 				</div>
 				{{/alamat_seller}}
-				<input type="submit" name="mit" class="btn btn-primary" value="Save">
+				<input type="submit" name="mit" class="btn btn-primary" value="Simpan">
 				<button type="button" onclick="cancel()" class="btn btn-success">Cancel</button>
 			</div>
 			<!-- /.col -->

@@ -5,15 +5,14 @@
             <ul id="b-nav" class="topbar-nav">
                {{#if user}}
                   {{#users}}
-                     <li role="presentation"><a href="/{{ _id }}">Dashboard</a></li>
+                     <!-- <li role="presentation"><a href="/{{ _id }}">Dashboard</a></li> -->
                      <li role="presentation" name= "username"><a href="/seller/dashboard/{{ _id }}">{{ username }}</a></li>
-                     <li role="presentation"><a href="/users/logout">Logout</a></li>
+                     <li role="presentation"><a href="/users/logout">Keluar</a></li>
                      <input type="hidden" name="id" id="id" value={{ _id }} />
                   {{/users}}
                {{else}}
-                     <li class="border-left"><a href="/cart">Cart</a></li>
-                     <li class="dropdown-single border-left"><a href="/users/register">Ragister</a></li>
-                     <li class="dropdown dropdown-right border-both" id="iframe-login"><a href="/users/login">Login</a></li>
+                     <li class="dropdown-single border-left"><a href="/users/register">Daftar</a></li>
+                     <li class="dropdown dropdown-right border-both" id="iframe-login"><a href="/users/login">Masuk</a></li>
                {{/if}}
                   <ul class="dropdown-menu dropdown-basic" role="menu" aria-labelledby="dropdownMenu" id="accounts-menu">
                      <li><input type="hidden" id="accounts-url" name="accounts_url" value="https://accounts.tokopedia.com/login"><iframe id="iframe-accounts" src="#"></iframe>

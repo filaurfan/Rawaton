@@ -160,7 +160,7 @@ router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 					});
 				}
 			});
-			return res.redirect('/seller/pengaturan/'+_id);
+			return res.redirect('/seller/profile/'+_id);
 			req.flash('success_msg', 'You are registered and can now login');
 
 		}else if(user.role == "buyer"){
@@ -194,7 +194,7 @@ router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 					});
 				}
 			});
-			return res.redirect('/seller/pengaturan/'+_id);
+			return res.redirect('/seller/profile/'+_id);
 			req.flash('success_msg', 'You are registered and can now login');
 		}else{
 
@@ -224,15 +224,15 @@ router.get('/product/list/:id_user', ensureAuthenticated, function(req, res, nex
 router.get('/product/all/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 	Product.find().sort({created_at: 1}).exec(function(err, products) {
-			if(!err){
-				User
-		    	.findOne({_id : id_user})
-		    	.exec(function(err, user) {
-		    		return res.render('productall', {products: products, users: user});
-		    	});
-			} else {
-			    return res.render('500');
-			}
+		if(!err){
+			User
+		   	.findOne({_id : id_user})
+		    .exec(function(err, user) {
+		    	return res.render('productall', {products: products, users: user});
+		    });
+		} else {
+		    return res.render('500');
+		}
 	});
 });
 
