@@ -25,7 +25,11 @@
 							<div class="features_list">
 								<p>{{ description_product }}</p>		
 							</div>
-							<a href="#" class="button">Beli Sekarang</a>
+							<input type="hidden" name="harga" value={{ price_product }}>
+				    		<input type="hidden" name="jumlah" value=1>
+							<form class="form-horizontal" method="post" action="/cart/add/{{ _id }}">
+      							<button type="submit" class="button" >Beli Sekarang</button>
+							</form>
 					    </div>			               
 						<div class="clear"></div>				
 				   	</div>	
@@ -53,7 +57,12 @@
 				<a href="/product/{{ _id }}"><img src='/uploads/{{ picture_product }}'></a><h2>{{ name_product }}</h2>
 				<div class="price-details">
 				    <div class="price-number"><p><span class="rupees">Rp.{{ price_product }}</span></p></div>
-					<div class="add-cart"><h4><a href="#">Tambah Ke Keranjang</a></h4></div>
+				    
+					<form class="form-horizontal" method="post" action="/cart/add/{{ _id }}">
+						<input type="hidden" name="harga" value={{ price_product }}>
+					    <input type="hidden" name="jumlah" value=1>
+      					<button type="submit" class="add-cart" >Tambah Ke Keranjang</button>
+					</form>
 					<div class="clear"></div>
 				</div>	 
 			</div>

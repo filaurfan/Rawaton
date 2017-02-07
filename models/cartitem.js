@@ -10,6 +10,18 @@ var CartItemSchema = mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Product'
     },
+    nama_product: {
+      type: String
+    },
+    nama_seller: {
+      type: String
+    },
+    gambar_item:{
+      type : String
+    },
+    jumlah: {
+      type : Number
+    },
     harga_nego: {
       type : Number
     },

@@ -12,6 +12,9 @@ var CartSchema = mongoose.Schema({
     },
     status: {
     	type: String
+    },
+    total_harga:{
+      type: Number
     }
 });
 
