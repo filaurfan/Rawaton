@@ -6,6 +6,7 @@ var User = require('../models/users');
 var SellerProfile = require('../models/usersprofile');
 var SellerAlamat = require('../models/usersalamat');
 var Cart = require('../models/cart');
+var Online = require('../models/online');
 
 router.get('/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
@@ -134,7 +135,11 @@ router.get('/product/:id_product/:id_user', ensureAuthenticated, function(req, r
 				    		SellerAlamat.findOne({ id_user: product.id_User }, function(err, sellerAlamat){
 				    			if(!err){
 				    				User.findOne({_id : id_user}).exec(function(err, user) {
-							    		return res.render('preview', {products: allproducts, sellerprofile: sellerProfile, selleralamat: sellerAlamat, product: product, users: user});
+				    					if (!err) {
+				    						Online.findOne({id_user: product.id_User}, function(err, online){
+						    					return res.render('preview', {products: allproducts, sellerprofile: sellerProfile, selleralamat: sellerAlamat, product: product, onlines: online, users: user});
+						    				});	
+				    					}				    					
 							    	});
 				    			} else {
 							        return res.render('500');
@@ -168,9 +173,11 @@ router.get('/product/:id_product', function(req, res){
 				    		if(!err){
 					    		SellerAlamat.findOne({ id_user: product.id_User }, function(err, sellerAlamat){
 					    			if(!err){
-					    				console.log(sellerProfile);
-					    				console.log(sellerAlamat);
-					    				return res.render('preview', {products: allproducts, sellerprofile: sellerProfile, selleralamat: sellerAlamat, product: product});
+					    				Online.findOne({id_user: product.id_User}, function(err, online){
+					    					console.log(sellerProfile);
+					    					console.log(sellerAlamat);
+					    					return res.render('preview', {products: allproducts, sellerprofile: sellerProfile, selleralamat: sellerAlamat, product: product, onlines: online});
+					    				});					    				
 					    			} else {
 								        return res.render('500');
 								    }

@@ -8,7 +8,7 @@ var Users = require('../models/users');
 var Profile = require('../models/usersprofile');
 var Alamat = require('../models/usersalamat');
 var Online	= require('../models/online');
-
+var Cart = require('../models/cart');
 // Register
 router.get('/register', ensureAuthenticated, function(req, res){
 	res.render('homeregister', {layout: 'layout_login'});
@@ -157,6 +157,30 @@ router.post('/login', passport.authenticate('local-login', {failureRedirect:'/us
 			req.session.id_user = user._id;
 			console.log(req.session.id_user);
 			if (!err) {
+				if (user.role == "buyer") {
+					Cart.findOne({ id_user: id, status: "belum"}, function(err, cart){
+						if(cart) {
+					    	req.session.id_cart = cart._id;
+					    } else {
+					    	var cart = new Cart({
+			      				id_user: id,
+			      				tanggal_buat: new Date(),
+			      				status: "belum"
+			      			});
+			      			Cart.create(cart ,function(err) {  
+								if (err) {
+									Cart.findOne({ id_user: id, status: "belum"}, function(err, cart){
+										req.session.id_cart = cart._id;
+									});
+									console.log(err);
+								}
+								else {
+									console.log('berhasil menyimpan');
+								}
+							});
+					    }
+					});
+				}
 				Online.findOne({id_user: id}, function(err, online){
 					if (online) {
 						Online.update({_id : online._id}, { $set: {status: "Online", online: new Date()}}, function(err) {
@@ -188,13 +212,12 @@ router.post('/login', passport.authenticate('local-login', {failureRedirect:'/us
 });
 
 router.get('/logout', function(req, res){
-	var id_user = req.session.id;
+	var id_user = req.session.id_user;
 	req.logout();
 
 	req.flash('success_msg', 'You are logged out');
 
-	res.redirect('/users/login');
-	req.session.destroy();
+	
 
 	Online.findOne({id_user: id_user}, function(err, online){
 		if (online) {
@@ -203,12 +226,13 @@ router.get('/logout', function(req, res){
 					console.log(err);
 				}
 				console.log("you are offline now");
-				res.redirect('/' + id);
 			});
 		}else{
 
 		}
 	});
+	req.session.destroy();
+	res.redirect('/users/login');	
 });
 
 function ensureAuthenticated(req, res, next){

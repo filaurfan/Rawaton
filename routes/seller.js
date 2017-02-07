@@ -238,7 +238,7 @@ router.get('/product/all/:id_user', ensureAuthenticated, function(req, res){
 
 router.get('/product/all', function(req, res){
 	if(req.isAuthenticated()){
-		var id_user = req.session.id;
+		var id_user = req.session.id_user;
 		res.redirect('/seller/product/all/' + id_user);
 	} else {
 	    Product.find({}).sort({created_at: 1}).exec(function(err, products) {

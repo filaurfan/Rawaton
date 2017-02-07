@@ -54,9 +54,9 @@
 							</ul>
 						</div>
 						<div class="share-desc">
-							<div class="button">
-								<span><a href="#">Beli</a></span>
-							</div>	&nbsp&nbsp&nbsp&nbsp&nbsp
+							<form class="form-horizontal" method="post" action="/cart/add/{{ _id }}">
+		      					<button type="submit" class="add-cart" >Tambah Ke Keranjang</button>
+							</form>&nbsp&nbsp&nbsp&nbsp&nbsp
 							<div class="button">
 								<span><a href="#">Nego</a></span>
 							</div>				
@@ -87,22 +87,29 @@
 						<a href="/product/{{ _id }}"><img src='/uploads/{{ picture_product }}'></a><h2>{{ name_product }}</h2>
 						<div class="price-details">
 						    <div class="price-number"><p><span class="rupees">Rp.{{ price_product }}</span></p></div>
-							<div class="add-cart"><h4><a href="#">Tambah Ke Keranjang</a></h4></div>
+							<form class="form-horizontal" method="post" action="/cart/add/{{ _id }}">
+		      					<button type="submit" class="add-cart" >Tambah Ke Keranjang</button>
+							</form>
 							<div class="clear"></div>
 						</div>	 
 					</div>
 					{{/each}}
 				</div>
     		</div>
-    		<table>
     		{{#sellerprofile}}
     		{{/sellerprofile}}
-    		{{#selleralamat}}
-    		{{/selleralamat}}
+
     		{{#users}}
     		{{/users}}
+    		<table>    		
 		    	<tr><th><h3>INFORMASI TOKO</h3></th></tr>
-    			<tr><td><h3>ONLINE<img src="images/Indomobile.jpg" alt=""></h3></td></tr>
+		    	{{#selleralamat}}
+	    		<tr><td><h3>{{ nama_toko }}</h3></td></tr>
+	    		<tr><td><h5>{{ no_telp_kantor }}</h5></td></tr>
+	    		{{/selleralamat}}
+	    		{{#onlines}}
+    			<tr><td><h3>{{status}}<img src="images/Indomobile.jpg" alt=""></h3></td></tr>
+    			{{/onlines}}
    			</table>
  		</div>
  	</div>
