@@ -41,25 +41,22 @@
 					{{#product}}
 					<div class="desc span_3_of_2">
 						<h1>{{ name_product }}</h1>
-						<p><h3>{{ description_product }}</h3></p>					
+						<p align="justify">{{ description_product }}</p>					
 						<div class="price">
+							<input type="hidden" name="harga" value={{ price_product }}>
 							<p><h2>Harga: <span>Rp {{ price_product }}</span></h2></p>
 						</div>
 						<div class="available">
-							<p>Jumlah Tersedia :</p>
-							<ul>
-								<li>JUMLAH:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<select>
-									<option>{{ entity_product }}</option>
-								</select></li>
-							</ul>
+							Jumlah Tersedia : {{ entity_product }} <br>
+							Masukkan Jumlah yang ingin di pesan : <input type="number" name="jumlah" min=1 max={{ entity_product }}>
 						</div>
 						<div class="share-desc">
 							<form class="form-horizontal" method="post" action="/cart/add/{{ _id }}">
 		      					<button type="submit" class="add-cart" >Tambah Ke Keranjang</button>
-							</form>&nbsp&nbsp&nbsp&nbsp&nbsp
-							<div class="button">
-								<span><a href="#">Nego</a></span>
-							</div>				
+							</form>
+							<form class="form-horizontal" method="post" action="/cart/nego/{{ _id }}">
+		      					<button type="submit" class="add-cart" >Nego</button>
+							</form>				
 							<div class="clear"></div>
 						</div>
 					</div>
@@ -114,3 +111,12 @@
  		</div>
  	</div>
 </div>
+
+<script type="text/javascript">
+	function kali() {
+		a=eval(form.angka1.value);
+		b=eval(form.angka2.value);
+		c=a*b
+		form.total.value = c;
+	}
+</script>

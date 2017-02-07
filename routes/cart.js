@@ -49,7 +49,8 @@ router.post('/add/:id_product', ensureAuthenticated, function(req, res){
 	var harga = req.body.harga;
 	var jumlah = req.body.jumlah;
 	var tanggal_pesan = new Date();
-
+	var hargaakhir = harga*jumlah;
+	console.log(hargaakhir);
 	User.findOne({ _id: id_user }, function(err, user) {
        	if(user.role == "buyer"){
         	Product.findOne({ _id : id_product}, function(err, product){
@@ -63,7 +64,7 @@ router.post('/add/:id_product', ensureAuthenticated, function(req, res){
 				      			nama_seller: alamat.nama_toko,
 				      			gambar_item: product.picture_product,
 				      			jumlah: jumlah,
-				      			harga_nego: harga,
+				      			harga_nego: hargaakhir,
 				      			tanggal_pesan: tanggal_pesan
 				      		});
 						    CartItem.create(item, function(err){
