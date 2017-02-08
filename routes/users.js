@@ -165,7 +165,8 @@ router.post('/login', passport.authenticate('local-login', {failureRedirect:'/us
 					    	var cart = new Cart({
 			      				id_user: id,
 			      				tanggal_buat: new Date(),
-			      				status: "belum"
+			      				status: "belum",
+			      				total_harga : 0
 			      			});
 			      			Cart.create(cart ,function(err) {  
 								if (err) {

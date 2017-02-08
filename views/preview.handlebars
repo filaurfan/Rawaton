@@ -13,6 +13,7 @@
 	});
 </script>
   
+<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.9.0/math.min.js"></script>
 
 <div class="main">
     <div class="content">
@@ -42,16 +43,20 @@
 					<div class="desc span_3_of_2">
 						<h1>{{ name_product }}</h1>
 						<p align="justify">{{ description_product }}</p>					
-						<div class="price">
-							<input type="hidden" name="harga" value={{ price_product }}>
-							<p><h2>Harga: <span>Rp {{ price_product }}</span></h2></p>
+						<div class="price">							
+							<p>Harga: <span>Rp 
+								<input type="number" name="price" value="{{ price_product }}" disabled="disabled">
+							</span><small>/buah</small></p>
+							<p>Harga: Rp <input type="number" name="hargaakhir" id="hargaakhir" value="" disabled="disabled"> </p>
 						</div>
 						<div class="available">
 							Jumlah Tersedia : {{ entity_product }} <br>
-							Masukkan Jumlah yang ingin di pesan : <input type="number" name="jumlah" min=1 max={{ entity_product }}>
+							
 						</div>
 						<div class="share-desc">
 							<form class="form-horizontal" method="post" action="/cart/add/{{ _id }}">
+								Masukkan Jumlah yang ingin di pesan : <input type="number" onclick="displayResult(this.value)" name="jumlah" id="jumlah" min=1 max={{ entity_product }}>
+								<input type="hidden" name="harga" value={{ price_product }}>
 		      					<button type="submit" class="add-cart" >Tambah Ke Keranjang</button>
 							</form>
 							<form class="form-horizontal" method="post" action="/cart/nego/{{ _id }}">
@@ -113,10 +118,10 @@
 </div>
 
 <script type="text/javascript">
-	function kali() {
-		a=eval(form.angka1.value);
-		b=eval(form.angka2.value);
-		c=a*b
-		form.total.value = c;
-	}
+  function displayResult(jumlah){ 
+  	var hargaa =  document.getElementById("price").value;
+  	var jumlaah = document.getElementById("jumlah").value;
+  	var total = math.multiply(hargaa, jumlaah);
+    document.getElementById("hargaakhir").value=total; 
+  }
 </script>

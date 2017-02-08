@@ -25,7 +25,7 @@
                             <th width="10px">No</th>
                             <th width="100px">Gambar</th>
                             <th width="150px">Nama Barang</th>
-                            <th width="150px">Penjual</th>
+                            <th width="150px">Nama Toko</th>
                             <th width="10px">Jumlah</th>
                             <th width="50px">Harga</th>
                             <th width="10px">Hapus</th>
@@ -52,7 +52,9 @@
                         <td>Total</td>
                         <td></td>
                         <td></td>
-                        <td>Rp. 7.000.000</td>
+                        {{#carts}}
+                        <td>Rp. {{total_harga}}</td>
+                        {{/carts}}
                         <td></td>
                     </tbody>
                 </table>

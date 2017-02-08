@@ -7,6 +7,7 @@ var Alamat = require('../models/usersalamat');
 var Profile = require('../models/usersprofile');
 var Cart = require('../models/cart');
 var CartItem = require('../models/cartitem');
+var math = require('mathjs');
 
 //akses list cart buyer :
 //option satu
@@ -49,31 +50,39 @@ router.post('/add/:id_product', ensureAuthenticated, function(req, res){
 	var harga = req.body.harga;
 	var jumlah = req.body.jumlah;
 	var tanggal_pesan = new Date();
-	var hargaakhir = harga*jumlah;
-	console.log(hargaakhir);
+	var hargaakhir = math.multiply(harga, jumlah);
+
 	User.findOne({ _id: id_user }, function(err, user) {
        	if(user.role == "buyer"){
-        	Product.findOne({ _id : id_product}, function(err, product){
+        	Product.findOne({ _id: id_product}, function(err, product){
 				if(product) {
 					Alamat.findOne({ id_user: product.id_User }, function(err, alamat){
 						if (alamat) {
-							var item = new CartItem({
-				      			id_cart: id_cart,
-				      			id_product: id_product,
-				      			nama_product: product.name_product,
-				      			nama_seller: alamat.nama_toko,
-				      			gambar_item: product.picture_product,
-				      			jumlah: jumlah,
-				      			harga_nego: hargaakhir,
-				      			tanggal_pesan: tanggal_pesan
-				      		});
-						    CartItem.create(item, function(err){
-						    	if (!err) {
-						    		res.redirect('/product/'+id_product+'/'+id_user);
-						    	}else{
-						    		return res.render('500');
-						    	}
-						    });
+							Cart.findOne({_id : id_cart}, function(err, cart){
+								var total = cart.total_harga + hargaakhir;
+								Cart.update({_id: id_cart}, {$set: {total_harga : total}}, function(err){
+					      			if(err){
+						    			console.log(err);
+						    		}
+					      		});
+					      		var item = new CartItem({
+					      			id_cart: id_cart,
+					      			id_product: id_product,
+					      			nama_product: product.name_product,
+					      			nama_seller: alamat.nama_toko,
+					      			gambar_item: product.picture_product,
+					      			jumlah: jumlah,
+					      			harga_nego: hargaakhir,
+					      			tanggal_pesan: tanggal_pesan
+					      		});				
+							    CartItem.create(item, function(err){
+							    	if (!err) {
+							    		res.redirect('/cart/list/'+id_user);
+							    	}else{
+							    		return res.render('500');
+							    	}
+							    });
+							});
 						}
 					});
 				}
@@ -88,21 +97,36 @@ router.post('/add/:id_product', ensureAuthenticated, function(req, res){
 
 router.get('/delete/:id_cartitem', ensureAuthenticated, function(req, res){
 	var id_cartitem = req.params.id_cartitem;
+	var id_cart = req.session.id_cart;
 	var id_user = req.session.id_user;
 	if (id_cartitem) {
 		User.findOne({ _id: id_user }, function(err, user) {
         	if(user.role == "buyer"){
 			    if(!err) {
-			    	CartItem.remove({_id : id_cartitem}, function(err) {
-			        	if(!err) {
-				          	console.log('Removed Product');
-				          	return res.redirect('/cart/list/'+id_user);
-				        } else {
-				          	res.statusCode = 500;
-				          	console.log('Internal error(%d): %s',res.statusCode,err.message);
-				         	return res.send({ error: 'Server error' });
-				        }
-			        });		
+			    	Cart.findOne({_id : id_cart}, function(err, cart){
+			    		if(!err) {
+			    			CartItem.findOne({_id: id_cartitem}, function(err, item){
+			    				if(!err){
+			    					var total = cart.total_harga - item.harga_nego;
+									Cart.update({_id: id_cart}, {$set: {total_harga : total}}, function(err){
+								      	if(err){
+									    	console.log(err);
+									    }
+								    });
+								    CartItem.remove({_id : id_cartitem}, function(err) {
+							        	if(!err) {
+								          	console.log('Removed Product');
+								          	return res.redirect('/cart/list/'+id_user);
+								        } else {
+								          	res.statusCode = 500;
+								          	console.log('Internal error(%d): %s',res.statusCode,err.message);
+								         	return res.send({ error: 'Server error' });
+								        }
+							        });	
+			    				}
+			    			});
+			    		}
+					});			    		
 			    } else {
 			       	return res.render('500');
 			    }
