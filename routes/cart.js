@@ -1,13 +1,102 @@
 var express = require('express');
 var router = express.Router();
-
+var math = require('mathjs');
 var Product = require('../models/product');
 var User = require('../models/users');
 var Alamat = require('../models/usersalamat');
 var Profile = require('../models/usersprofile');
 var Cart = require('../models/cart');
 var CartItem = require('../models/cartitem');
-var math = require('mathjs');
+var AlamatPengiriman = require('../models/cartalamat');
+
+router.get('/pembayaran/:id_user', ensureAuthenticated, function(req, res, next){
+	var id_buyer = req.params.id_user;
+	var id_cart = req.session.id_cart;
+	console.log(id_buyer);
+	if (id_buyer) {
+        User.findOne({ _id: id_buyer }, function(err, user) {
+        	if(user.role == "buyer"){
+          		res.render('cartpembayaran', {users: user, alamats: alamat, profiles: profile, layout: 'layout_buyer'});
+        	}else if(user.role == "seller"){
+        		
+        	}else{
+
+        	}
+        });
+    }	
+});
+
+
+router.get('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
+	var id_buyer = req.params.id_user;
+	var id_cart = req.session.id_cart;
+	console.log(id_buyer);
+	if (id_buyer) {
+        User.findOne({ _id: id_buyer }, function(err, user) {
+        	if(user.role == "buyer"){
+          		Alamat.findOne({ id_user: id_buyer }, function(err, alamat){
+          			if (!err) {
+          				Profile.findOne({id_user: id_buyer}, function(err, profile){
+          					if (!err) {
+          						console.log(user);
+    	        				res.render('cartalamatpemesan', {users: user, alamats: alamat, profiles: profile, layout: 'layout_buyer'});
+          					}
+          				});
+          			}
+          		});
+        	}else if(user.role == "seller"){
+        		
+        	}else{
+
+        	}
+        });
+    }	
+});
+
+router.post('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
+	var id_buyer = req.params.id_user;
+	var id_cart = req.session.id_cart;
+	var nama_penerima = req.body.nama_penerima;
+	var no_telp_penerima = req.body.no_telp_penerima;
+	var alamat_jalan_penerima = req.body.alamat_jalan_penerima;
+	var alamat_kecamatan_penerima = req.body.alamat_kecamatan_penerima;
+	var alamat_kota_penerima = req.body.alamat_kota_penerima;
+	var alamat_kabupaten_penerima = req.body.alamat_kabupaten_penerima;
+	var alamat_provinsi_penerima = req.body.alamat_provinsi_penerima;
+	var alamat_kode_pos_penerima = req.body.alamat_kode_pos_penerima;
+
+
+	console.log(id_buyer);
+	if (id_buyer) {
+        User.findOne({ _id: id_buyer }, function(err, user) {
+        	if(user.role == "buyer"){
+          		var alamatpengiriman = new AlamatPengiriman({
+					id_pembelian: id_buyer,
+					nama_penerima: nama_penerima,
+					no_telp_penerima: no_telp_penerima,
+					alamat_jalan_penerima: alamat_jalan_penerima,
+					alamat_kecamatan_penerima: alamat_kecamatan_penerima,
+					alamat_kota_penerima: alamat_kota_penerima,
+					alamat_kabupaten_penerima: alamat_kabupaten_penerima,
+					alamat_provinsi_penerima: alamat_provinsi_penerima,
+					alamat_kode_pos_penerima: alamat_kode_pos_penerima
+				});
+				AlamatPengiriman.create(alamatpengiriman, function(err){
+					if (!err) {
+						res.redirect('/cart/pembayaran/'+id_buyer);
+					}else{
+						res.redirect('/çart/checkout/'+id_buyer);
+					}
+				});
+        	}else if(user.role == "seller"){
+        		
+        	}else{
+
+        	}
+        });
+    }	
+});
+
 
 //akses list cart buyer :
 //option satu
@@ -15,10 +104,10 @@ router.get('/list/:id_user', ensureAuthenticated, function(req, res, next){
 	var _id = req.params.id_user;
 	var id_cart = req.session.id_cart;
 	var tanggal_buat = new Date();
-	console.log(_id);
-	if (_id) {
-        User.findOne({ _id: _id }, function(err, user) {
-        	if(user.role == "buyer"){
+		
+	User.findOne({ _id: _id }, function(err, user) {
+		if (!err) {
+			if(user.role == "buyer"){
         		Cart.findOne({ _id: id_cart}, function(err, cart){
 				    if(cart) {
 				    	CartItem.find({ id_cart: cart._id}, function(err, item){
@@ -37,8 +126,8 @@ router.get('/list/:id_user', ensureAuthenticated, function(req, res, next){
         	}else{
 
         	}
-        });
-    }
+		}        	
+    });
 });
 
 //untuk menginputkan product ke cart jadi posisi buyer berada di localhost:3000/

@@ -11,6 +11,8 @@ var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 var favicon = require('serve-favicon');
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 mongoose.connect('mongodb://filaurfan:rawaton123@ds131109.mlab.com:31109/rawaton');  //---> loginapp
 var db = mongoose.connection;
@@ -69,6 +71,25 @@ app.use(expressValidator({
     };
   }
 }));
+
+// users = [];
+// app.io.on('connection', function(socket){
+//   console.log('A user connected');
+//   socket.on('setUsername', function(data){
+//     console.log(data);
+//     if(users.indexOf(data) > -1){
+//       socket.emit('userExists', data + ' username is taken! Try some other username.');
+//     }
+//     else{
+//       users.push(data);
+//       socket.emit('userSet', {username: data});
+//     }
+//   });
+//   socket.on('msg', function(data){
+//       //Send message to everyone
+//       io.sockets.emit('newmsg', data);
+//   })
+// });
 
 // Global Vars
 app.use(function (req, res, next) {
