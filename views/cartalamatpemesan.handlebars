@@ -6,7 +6,7 @@
 
   <div class="register-box-body">
     <p class="login-box-msg">Alamat Pengiriman Barang</p>
-{{#profiles}}
+    {{#profiles}}
     <form action="/cart/checkout/{{ id_user }}" method="post">
     
       <div class="form-group has-feedback">
@@ -49,7 +49,9 @@
         </div>
         <!-- /.col -->
         <div class="col-xs-4">&nbsp&nbsp&nbsp&nbsp&nbsp
-        <button type="submit" class="btn btn-info"><a href="/cart/checkout/{{ id_user }}">simpan</button></a>
+        <form class="form-horizontal" method="post" action="/cart/checkout/{{ id_user }}">
+          <button type="submit" class="add-cart" >simpan</button>
+        </form>
         </div>
         <!-- /.col -->
       </div>

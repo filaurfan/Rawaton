@@ -2,9 +2,11 @@ var express = require('express');
 var router = express.Router();
 var math = require('mathjs');
 var Product = require('../models/product');
+
 var User = require('../models/users');
 var Alamat = require('../models/usersalamat');
 var Profile = require('../models/usersprofile');
+
 var Cart = require('../models/cart');
 var CartItem = require('../models/cartitem');
 var AlamatPengiriman = require('../models/cartalamat');
@@ -16,7 +18,7 @@ router.get('/pembayaran/:id_user', ensureAuthenticated, function(req, res, next)
 	if (id_buyer) {
         User.findOne({ _id: id_buyer }, function(err, user) {
         	if(user.role == "buyer"){
-          		res.render('cartpembayaran', {users: user, alamats: alamat, profiles: profile, layout: 'layout_buyer'});
+          		res.render('cartpembayaran', {users: user, layout: 'layout_buyer'});
         	}else if(user.role == "seller"){
         		
         	}else{
@@ -26,6 +28,58 @@ router.get('/pembayaran/:id_user', ensureAuthenticated, function(req, res, next)
     }	
 });
 
+router.post('/pembayaran/:id_user', ensureAuthenticated, function(req, res, next){
+	var id_buyer = req.params.id_user;
+	var id_cart = req.session.id_cart;
+	var tanggal_selesai = new Date();
+
+	console.log(id_buyer);
+	if (id_buyer) {
+        User.findOne({ _id: id_buyer }, function(err, user) {
+        	if(user.role == "buyer"){
+        		Cart.update({_id: id_cart}, {$set: {status : "sudah", tanggal_selesai: tanggal_selesai}}, function(err){
+					if(!err){
+						delete req.session.id_cart;
+
+					}
+				});
+        		Cart.findOne({ status: "belum", id_user: id_buyer}, function(err, cart){
+					if(cart) {
+						req.session.id_cart = cart._id;
+						res.redirect('/seller/pemesanan/'+id_buyer);
+					} else if (!cart) {
+						var cart = new Cart({
+				      		id_user: id_buyer,
+				      		tanggal_buat: new Date(),
+				      		status: "belum",
+				      		total_harga : 0
+				      	});
+				      	Cart.create(cart ,function(err) {  
+							if (!err) {
+								console.log('berhasil menyimpan');
+							}
+							else {
+								console.log(err);
+							}
+						});
+						Cart.findOne({ id_user: id_buyer, status: "belum"}, function(err, cart2){
+							if (cart2) {
+								req.session.id_cart = cart2._id;
+								res.redirect('/seller/pemesanan/'+id_buyer);
+							}
+						});
+					}else{
+
+					}
+				});
+        	}else if(user.role == "seller"){
+        		
+        	}else{
+
+        	}
+        });
+    }	
+});
 
 router.get('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
 	var id_buyer = req.params.id_user;
@@ -71,7 +125,8 @@ router.post('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
         User.findOne({ _id: id_buyer }, function(err, user) {
         	if(user.role == "buyer"){
           		var alamatpengiriman = new AlamatPengiriman({
-					id_pembelian: id_buyer,
+					id_pembelian: id_cart,
+					id_buyer: id_buyer,
 					nama_penerima: nama_penerima,
 					no_telp_penerima: no_telp_penerima,
 					alamat_jalan_penerima: alamat_jalan_penerima,
@@ -85,7 +140,8 @@ router.post('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
 					if (!err) {
 						res.redirect('/cart/pembayaran/'+id_buyer);
 					}else{
-						res.redirect('/çart/checkout/'+id_buyer);
+						console.log(err);
+						res.redirect('/cart/checkout/'+id_buyer);
 					}
 				});
         	}else if(user.role == "seller"){
@@ -148,29 +204,31 @@ router.post('/add/:id_product', ensureAuthenticated, function(req, res){
 					Alamat.findOne({ id_user: product.id_User }, function(err, alamat){
 						if (alamat) {
 							Cart.findOne({_id : id_cart}, function(err, cart){
-								var total = cart.total_harga + hargaakhir;
-								Cart.update({_id: id_cart}, {$set: {total_harga : total}}, function(err){
-					      			if(err){
-						    			console.log(err);
-						    		}
-					      		});
-					      		var item = new CartItem({
-					      			id_cart: id_cart,
-					      			id_product: id_product,
-					      			nama_product: product.name_product,
-					      			nama_seller: alamat.nama_toko,
-					      			gambar_item: product.picture_product,
-					      			jumlah: jumlah,
-					      			harga_nego: hargaakhir,
-					      			tanggal_pesan: tanggal_pesan
-					      		});				
-							    CartItem.create(item, function(err){
-							    	if (!err) {
-							    		res.redirect('/cart/list/'+id_user);
-							    	}else{
-							    		return res.render('500');
-							    	}
-							    });
+								if (cart) {
+									var total = cart.total_harga + hargaakhir;
+									Cart.update({_id: id_cart}, {$set: {total_harga : total}}, function(err){
+						      			if(err){
+							    			console.log(err);
+							    		}
+						      		});
+						      		var item = new CartItem({
+						      			id_cart: id_cart,
+						      			id_product: id_product,
+						      			nama_product: product.name_product,
+						      			nama_seller: alamat.nama_toko,
+						      			gambar_item: product.picture_product,
+						      			jumlah: jumlah,
+						      			harga_nego: hargaakhir,
+						      			tanggal_pesan: tanggal_pesan
+						      		});				
+								    CartItem.create(item, function(err){
+								    	if (!err) {
+								    		res.redirect('/cart/list/'+id_user);
+								    	}else{
+								    		return res.render('500');
+								    	}
+								    });
+								}
 							});
 						}
 					});

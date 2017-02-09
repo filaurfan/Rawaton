@@ -156,12 +156,12 @@ router.post('/login', passport.authenticate('local-login', {failureRedirect:'/us
 			var id = user._id;
 			req.session.id_user = user._id;
 			console.log(req.session.id_user);
-			if (!err) {
+			if (user) {
 				if (user.role == "buyer") {
 					Cart.findOne({ id_user: id, status: "belum"}, function(err, cart){
 						if(cart) {
 					    	req.session.id_cart = cart._id;
-					    } else {
+					    } else if (!cart){
 					    	var cart = new Cart({
 			      				id_user: id,
 			      				tanggal_buat: new Date(),
@@ -169,16 +169,21 @@ router.post('/login', passport.authenticate('local-login', {failureRedirect:'/us
 			      				total_harga : 0
 			      			});
 			      			Cart.create(cart ,function(err) {  
-								if (err) {
-									Cart.findOne({ id_user: id, status: "belum"}, function(err, cart){
-										req.session.id_cart = cart._id;
-									});
-									console.log(err);
+								if (!err) {
+									console.log('berhasil menyimpan cart');
 								}
 								else {
-									console.log('berhasil menyimpan');
+									console.log('error bro');
 								}
 							});
+							Cart.findOne({ id_user: id, status: "belum"}, function(err, cart2){
+								if (cart2) {
+									req.session.id_cart = cart2._id;
+									console.log("session cart ini haduh"+ req.session.id_cart);
+								}
+							});
+					    }else{
+
 					    }
 					});
 				}

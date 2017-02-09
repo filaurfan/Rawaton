@@ -15,6 +15,10 @@ var CartSchema = mongoose.Schema({
     },
     total_harga:{
       type: Number
+    },
+    tanggal_selesai:{
+      type : Date,
+      default: Date.now
     }
 });
 
