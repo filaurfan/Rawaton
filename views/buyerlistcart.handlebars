@@ -1,3 +1,39 @@
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        function setUsername(){
+            socket.emit('setUsername', document.getElementById('name').value);
+        };
+        var user;
+        socket.on('userExists', function(data){
+            document.getElementById('error-container').innerHTML = data;
+        });
+        socket.on('userSet', function(data){
+            user = data.username;
+            document.body.innerHTML = '<input type="text" id="message">\
+            <button type="button" name="button" onclick="sendMessage()">Send</button>\
+            <div id="message-container"></div>';
+        });
+        function sendMessage(){
+            var msg = document.getElementById('message').value;
+            if(msg){
+                socket.emit('msg', {message: msg, user: user});
+            }
+        }
+        socket.on('newmsg', function(data){
+            if(user){
+                document.getElementById('message-container').innerHTML += '<div><b>' + data.user + '</b>: ' + data.message + '</div>'
+            }
+        })
+    </script>
+
+        <div id="error-container"></div>
+        <input id="name" type="text" name="name" value="" placeholder="Enter your name!">
+        <button type="button" name="button" onclick="setUsername()">Let me chat!</button>
+
+
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -18,14 +54,14 @@
         </div>
         <div class="col-md-12 box-body">
             <div class="table">
-                <table class="table table-bordered table-hover table-striped">
+                <table class="table table-bordered table-hover table-striped" >
                     <thead>
                         <tr>
                             <th width="5px"><input type="CHECKBOX" name="pilih_all"></th>
                             <th width="10px">No</th>
                             <th width="100px">Gambar</th>
                             <th width="150px">Nama Barang</th>
-                            <th width="150px">Penjual</th>
+                            <th width="150px">Nama Toko</th>
                             <th width="10px">Jumlah</th>
                             <th width="50px">Harga</th>
                             <th width="10px">Hapus</th>
@@ -52,16 +88,31 @@
                         <td>Total</td>
                         <td></td>
                         <td></td>
-                        <td>Rp. 7.000.000</td>
+                        {{#carts}}
+                        <div>
+                        <td id="total"></td>
+                        </div>
+                        {{/carts}}
                         <td></td>
                     </tbody>
                 </table>
             <div class="col-md-8"></div>
-                <input type="submit" name="mit" class="btn btn-success" value="nego">
-                <input type="submit" name="mit" class="btn btn-info" value="checkout">
+                {{#carts}}
+                <input type="submit" name="mit" class="btn btn-success" value="NEGO">
+                <a href="/cart/checkout/{{ id_user }}" class="add-cart">
+                    <span class="btn btn-info" aria-hidden="true">CHECKOUT</span>
+                </a>
+                {{/carts}}
             </div>
         </div>
     </section>
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+{{#carts}}
+<script type="text/javascript">
+    var number = {{total_harga}};
+    document.getElementById("total").innerHTML = "Rp. "+number.toLocaleString();
+</script>
+{{/carts}}
+

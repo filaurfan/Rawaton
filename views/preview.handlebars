@@ -12,7 +12,10 @@
 		});
 	});
 </script>
-  
+ 
+
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.9.0/math.min.js"></script>
 
 <div class="main">
     <div class="content">
@@ -41,25 +44,23 @@
 					{{#product}}
 					<div class="desc span_3_of_2">
 						<h1>{{ name_product }}</h1>
-						<p><h3>{{ description_product }}</h3></p>					
-						<div class="price">
-							<p><h2>Harga: <span>Rp {{ price_product }}</span></h2></p>
-						</div>
-						<div class="available">
-							<p>Jumlah Tersedia :</p>
-							<ul>
-								<li>JUMLAH:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<select>
-									<option>{{ entity_product }}</option>
-								</select></li>
-							</ul>
-						</div>
+						<p align="justify">{{ description_product }}</p>					
+						<div class="price"  id="pricee" disabled="disabled"></div>
+						<div class="price"  id="hargaakhir" disabled="disabled"></div>
+						<button id="button" onclick="message()" class="pull-right">Check Harga</button>
+						<div class="available">Jumlah Tersedia : {{ entity_product }} <br></div>
 						<div class="share-desc">
+
 							<form class="form-horizontal" method="post" action="/cart/add/{{ _id }}">
-		      					<button type="submit" class="add-cart" >Tambah Ke Keranjang</button>
-							</form>&nbsp&nbsp&nbsp&nbsp&nbsp
-							<div class="button">
-								<span><a href="#">Nego</a></span>
-							</div>				
+								Masukkan Jumlah yang ingin di pesan : 
+								<input type="number" onchange="data.set(this.value)" name="jumlah" id="jumlah" min=1 max={{ entity_product }}>
+								
+								<input type="hidden" name="harga" value={{ price_product }}>
+		      					<button type="submit" class="add-cart" id="addtocart">Tambah Ke Keranjang</button>
+							</form>
+							<form class="form-horizontal" method="post" action="/cart/nego/{{ _id }}">
+		      					<button type="submit" class="add-cart" >Nego</button>
+							</form>				
 							<div class="clear"></div>
 						</div>
 					</div>
@@ -114,3 +115,27 @@
  		</div>
  	</div>
 </div>
+
+
+{{#product}}
+<script type="text/javascript">
+    var number = {{price_product}};
+    document.getElementById("pricee").innerHTML = "<p><span>Harga Rp. "+number.toLocaleString()+"</span>/buah</p>";
+    document.getElementById("addtocart").disabled = true;
+		var data = {
+            number: '0', //The initial value if no input or change
+            set: function(val) {
+                this.number = val;
+                document.getElementById("addtocart").disabled = false;
+            }
+        };
+
+    	function message() {
+        	var hargaa =  {{price_product}};
+		  	var jumlaah = data.number;
+		  	var total = math.multiply(hargaa, jumlaah);
+        	console.log(hargaa);
+            document.getElementById("hargaakhir").innerHTML = "<p><span>Harga Rp. "+total.toLocaleString()+"</span></p>"; 
+        }
+</script>
+{{/product}}

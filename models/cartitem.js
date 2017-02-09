@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-
+require('mongoose-big-decimal')(mongoose);
 // User profile Schema
 var CartItemSchema = mongoose.Schema({
     id_cart: {

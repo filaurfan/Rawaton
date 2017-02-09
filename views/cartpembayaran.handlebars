@@ -1,0 +1,31 @@
+<div class="content-wrapper">
+<!-- Main content -->
+<section class="content">
+
+    <center><a href="index.html"><img src="/images/logo.png"></center></a>
+	<h3><center>Silahkan melakukan pembayaran melalui bank berikut</h3></center>
+    <table width="100%" border="10px">
+        <tr width="80%">
+            <td><img src="/images/bni.png" class="img-thumbnail" alt="Cinque Terre" width="254" height="436" style="float:left;" /></td>
+            <td><h3>NAMA    : RAWATON</h3>
+            <h3>NO. REK : 029.878.175.6</h3></td>
+        </tr>
+        <tr width="80%">
+            <td><img src="/images/bri.png" class="img-thumbnail" alt="Cinque Terre"/></td>
+            <td><h3>NAMA    : RAWATON</h3>
+            <h3>NO. REK : 5886.0110.0589.600</h3></td>
+        </tr>
+        <tr width="80%">
+            <td><img src="/images/mandiri.png" class="img-thumbnail" alt="Cinque Terre" width="254" height="436" style="float:left;" /></td>
+            <td><h3>NAMA    : RAWATON</h3>
+            <h3>NO. REK : 900.000.960.107.8</h3></td>
+        </tr>
+    </table>  
+    {{#users}} 
+        <form class="form-horizontal" method="post" action="/cart/pembayaran/{{ _id }}">
+          <button type="submit" class="pull-right">Selesai</button>
+        </form>
+        {{/users}}
+</section>
+</div>
+			

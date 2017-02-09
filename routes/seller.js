@@ -7,6 +7,64 @@ var Product = require('../models/product');
 var User = require('../models/users');
 var Profile = require('../models/usersprofile');
 var Alamat = require('../models/usersalamat');
+var Cart = require('../models/cart');
+var CartItem = require('../models/cartitem');
+var AlamatPengiriman = require('../models/cartalamat');
+
+//akses dashboar seller : masalah adalah apa yang di tampilkan di dashboard seller
+//option satu jumlah order, permintaan nego
+router.get('/pemesanan/:id_user', ensureAuthenticated, function(req, res){
+	var _id = req.params.id_user;
+	console.log(_id);
+	if (_id) {
+        User.findOne({ _id: _id }, function(err, user) {
+        	if(user.role == "seller"){
+        		console.log(user);
+    	        res.render('sellerpemesanan', {users: user, layout: 'layout_user'});
+        	}else if(user.role == "buyer"){
+        		Cart.find({id_user: _id, status: "sudah"}, function(err, cart){
+        			if (cart) {
+        				console.log(user);
+    	        		res.render('buyerpemesanan', {users: user, carts: cart, layout: 'layout_buyer'});
+        			}
+        		});
+        	}else{
+
+        	}
+        });
+    }	
+});
+
+//akses dashboar seller : masalah adalah apa yang di tampilkan di dashboard seller
+//option satu jumlah order, permintaan nego
+router.get('/listpemesanan/:id_user/:id_cart', ensureAuthenticated, function(req, res){
+	var _id = req.params.id_user;
+	var id_cart= req.params.id_cart;
+	console.log(_id);
+	if (_id) {
+        User.findOne({ _id: _id }, function(err, user) {
+        	if(user.role == "seller"){
+        		console.log(user);
+    	        res.render('sellerpemesanan', {users: user, layout: 'layout_user'});
+        	}else if(user.role == "buyer"){
+        		Cart.find({_id : id_cart}, function(err, cart){
+        			if (cart) {
+        				CartItem.find({id_cart: id_cart}, function(err, item){
+        					if (item) {
+        						AlamatPengiriman.findOne({id_pembelian: id_cart}, function(err, alamat){
+        							console.log(user);
+   		 	        				res.render('buyerlistpemesanan', {users: user, carts: cart, alamats: alamat, items: item, layout: 'layout_buyer'});
+        						});
+        					}
+        				});        				
+        			}
+        		});
+        	}else{
+
+        	}
+        });
+    }	
+});
 
 //akses dashboar seller : masalah adalah apa yang di tampilkan di dashboard seller
 //option satu jumlah order, permintaan nego
@@ -63,26 +121,6 @@ router.get('/pesan/:id_user', ensureAuthenticated, function(req, res){
         	}else if(user.role == "buyer"){
         		console.log(user);
     	        res.render('buyerpesan', {users: user, layout: 'layout_buyer'});
-        	}else{
-
-        	}
-        });
-    }	
-});
-
-//akses dashboar seller : masalah adalah apa yang di tampilkan di dashboard seller
-//option satu jumlah order, permintaan nego
-router.get('/pemesanan/:id_user', ensureAuthenticated, function(req, res){
-	var _id = req.params.id_user;
-	console.log(_id);
-	if (_id) {
-        User.findOne({ _id: _id }, function(err, user) {
-        	if(user.role == "seller"){
-        		console.log(user);
-    	        res.render('sellerpemesanan', {users: user, layout: 'layout_user'});
-        	}else if(user.role == "buyer"){
-        		console.log(user);
-    	        res.render('buyerpemesanan', {users: user, layout: 'layout_buyer'});
         	}else{
 
         	}

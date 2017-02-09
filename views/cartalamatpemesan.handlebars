@@ -1,0 +1,66 @@
+
+<div class="register-box">
+  <div class="register-logo">
+      <a href="index.html"><img src="/images/logo_2.png"></a>
+  </div>
+
+  <div class="register-box-body">
+    <p class="login-box-msg">Alamat Pengiriman Barang</p>
+    {{#profiles}}
+    <form action="/cart/checkout/{{ id_user }}" method="post">
+    
+      <div class="form-group has-feedback">
+        <input type="text" class="form-control" name="nama_penerima" placeholder="Nama Penerima" value={{ nama_user }}>
+        <span class="form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="text" class="form-control" name="no_telp_penerima" placeholder="No Telp." value={{ no_telp_user }}>
+        <span class="form-control-feedback"></span>
+      </div>
+    {{/profiles}}
+    {{#alamats}}
+      <div class="form-group has-feedback">
+        <input type="text" class="form-control" name="alamat_jalan_penerima" placeholder="Alamat" value={{ alamat_jalan }}>
+        <span class="form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="text" class="form-control" name="alamat_kecamatan_penerima" placeholder="Kecamatan" value={{ alamat_kecamatan }}>
+        <span class="form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="text" class="form-control" name="alamat_kota_penerima" placeholder="Kota" value={{ alamat_kota }}>
+        <span class="form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="text" class="form-control" name="alamat_kabupaten_penerima" placeholder="Kabupaten" value={{ alamat_kabupaten }}>
+        <span class="form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="text" class="form-control" name="alamat_provinsi_penerima" placeholder="Provinsi" value={{ alamat_provinsi }}>
+        <span class="form-control-feedback"></span>
+      </div>     
+      <div class="form-group has-feedback">
+        <input type="text" class="form-control" name="alamat_kode_pos_penerima" placeholder="Kode Pos" value={{ alamat_kode_pos }}>
+        <span class="form-control-feedback"></span>
+      </div>
+      <div class="row">
+        <div class="col-xs-8">
+
+        </div>
+        <!-- /.col -->
+        <div class="col-xs-4">&nbsp&nbsp&nbsp&nbsp&nbsp
+        <form class="form-horizontal" method="post" action="/cart/checkout/{{ id_user }}">
+          <button type="submit" class="add-cart" >simpan</button>
+        </form>
+        </div>
+        <!-- /.col -->
+      </div>
+      {{/alamats}}
+    </form>
+
+
+ 
+  </div>
+  <!-- /.form-box -->
+</div>
+<!-- /.register-box -->

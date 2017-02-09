@@ -1,3 +1,4 @@
+
 <div class="wrap">
 <div class="header_slide">
 	<div class="header_bottom_left">				
@@ -22,9 +23,6 @@
 						<div class="slider-text">
 		                    <!-- <h1>Clearance<br><span>SALE</span></h1>
 		                    <h2>UPTo 20% OFF</h2> -->
-							<div class="features_list">
-								<p>{{ description_product }}</p>		
-							</div>
 							<input type="hidden" name="harga" value={{ price_product }}>
 				    		<input type="hidden" name="jumlah" value=1>
 							<form class="form-horizontal" method="post" action="/cart/add/{{ _id }}">
@@ -56,8 +54,7 @@
 			<div class="grid_1_of_4 images_1_of_4">
 				<a href="/product/{{ _id }}"><img src='/uploads/{{ picture_product }}'></a><h2>{{ name_product }}</h2>
 				<div class="price-details">
-				    <div class="price-number"><p><span class="rupees">Rp.{{ price_product }}</span></p></div>
-				    
+				    <div class="price-number"><p><span class="rupees">Rp.{{ price_product }}</span></p></div>				    
 					<form class="form-horizontal" method="post" action="/cart/add/{{ _id }}">
 						<input type="hidden" name="harga" value={{ price_product }}>
 					    <input type="hidden" name="jumlah" value=1>
@@ -70,3 +67,13 @@
 		</div>
   	</div>
  </div>
+
+<script type="text/javascript">
+{{#products}}
+function myFunction() {
+	var desc = {{ description_product }};
+	var res = desc.substr(0, 100);
+	document.getElementById("demo").innerHTML = res;
+}
+{{/products}}
+</script>
