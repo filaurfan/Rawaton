@@ -4,14 +4,17 @@ var mongoose = require('mongoose');
 var AlamatPengirimanSchema = mongoose.Schema({
 	id_pembelian: {
 	    type: mongoose.Schema.Types.ObjectId,
-	    ref: 'Pembelian'
+	    ref: 'Cart'
+	},
+	id_buyer: {
+	    type: mongoose.Schema.Types.ObjectId,
+	    ref: 'User'
 	},
 	nama_penerima:{
 		type: String
 	},
 	no_telp_penerima:{
-		type: String,
-		unique: true
+		type: String
 	},
 	alamat_jalan_penerima:{
 		type: String

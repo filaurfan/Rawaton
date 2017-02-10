@@ -52,10 +52,9 @@
 	    <div class="section group">
 	    	{{#each products}}
 			<div class="grid_1_of_4 images_1_of_4">
-				<a href="/product/{{ _id }}"><img src='/uploads/{{ picture_product }}'></a><h2>{{ name_product }}</h2>
+				<a href="/product/{{ _id }}"><img style='height: 100%; width: 100%; object-fit: contain' src='/uploads/{{ picture_product }}'></a><h2>{{ name_product }}</h2>
 				<div class="price-details">
-				    <div class="price-number"><p><span class="rupees">Rp.{{ price_product }}</span></p></div>
-				    
+				    <div class="price-number"><p><span class="rupees">Rp.{{ price_product }}</span></p></div>				    
 					<form class="form-horizontal" method="post" action="/cart/add/{{ _id }}">
 						<input type="hidden" name="harga" value={{ price_product }}>
 					    <input type="hidden" name="jumlah" value=1>

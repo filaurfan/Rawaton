@@ -19,53 +19,36 @@
             <caption>List Data Pemesanan</caption>
               <thead>
                 <tr>
-                  <th width="10px">No</th>
-                  <th width="50px">Tanggal</th>
-                  <th width="100px">Nama Pemesan</th>
-                  <th width="150px">Nama Barang</th>
-                  <th width="10px">Jumlah</th>
-                  <th width="100px">Harga</th>
-                  <th width="10px">Bayar</th>
-                  <th width="120px">Keterangan</th>
-                  <th width="150px">Alamat Pengiriman</th>
-                  <th width="50px">Action</th>
+                  <th width="20%">No</th>
+                  <th width="20%">Tanggal Buat</th>
+                  <th width="20%">Total Harga</th>
+                  <th width="20%">Status</th>
+                  <th width="20%">Tanggal Selesai</th>
                 </tr>
               </thead>
+              {{#each carts}}
               <tbody>
-                  <td>1</td>
-                  <td>27/1/2017</td>
-                  <td>Sri Wahyuningtyas</td>
-                  <td>Sony Xperia XZ</td>
-                  <td>1</td>
-                  <td>Rp. 7.500.000</td>
-                  <td>Belum</td>
-                  <td>Belum dikirim</td>
-                  <td>Jl. Cendrawasih Gg.Beras no 69</td>
+                  <td>{{ _id }}</td>
+                  <td>{{ tanggal_buat }}</td>
+                  <td>{{ total_harga }}</td>
+                  <td>{{ status }}</td>
+                  <td>{{ tanggal_selesai }}</td>
                   <td>
-                    <a href="ket_pemesanan.html" class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
-                    <a onClick="return confirm('Anda yakin ingin menghapus data ini?')" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                    <a href="/seller/listpemesanan/{{ id_user }}/{{ _id }}" class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
                   </td>
               </tbody>
-              <tbody>
-                  <td>2</td>
-                  <td>28/1/2017</td>
-                  <td>Adi Wijanarko</td>
-                  <td>Iphone 5s</td>
-                  <td>1</td>
-                  <td>Rp. 2.500.000</td>
-                  <td>Sudah</td>
-                  <td>Sudah dikirim
-                  </td>
-                  <td>Jl. Cendrawasih Gg.Beras no 69</td>
-                  <td>
-                    <a href="ket_pemesanan.html" class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
-                    <a onClick="return confirm('Anda yakin ingin menghapus data ini?')" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
-                  </td>
-              </tbody>
-
+              {{/each}}
           </table>
         </div>
     </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+  {{#each carts}}
+  <script type="text/javascript">
+        var currDay = {{ tanggal_buat }}.getDay();
+        var currMonth = {{ tanggal_buat }}.getMonth();
+        var currYear = {{ tanggal_buat }}.getYear();
+        
+  </script>
+ {{/each}}

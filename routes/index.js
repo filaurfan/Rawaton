@@ -1,3 +1,4 @@
+
 var express = require('express');
 var router = express.Router();
 
@@ -13,11 +14,19 @@ router.get('/:id_user', ensureAuthenticated, function(req, res){
 
 	Product.find({}).limit(4).sort({'created_at': -1}).exec(function(err, product) {
 	    if(!err) {
-	    	User.findOne({_id : id_user}).exec(function(err, user) {
+	    	User.findOne({ _id : id_user }).exec(function(err, user) {
 	    		if(!err){
-	    			Cart.findOne({id_user: id_user}, function(err, cart){
-	    				return res.render('index', {products: product, users: user, carts: cart});
-	    			});
+	    			if (user.role == "buyer") {
+	    				Cart.findOne({id_user: id_user, status: "belum"}, function(err, cart){
+		    				req.session.id_cart = cart._id;
+		    				console.log("session cart ini haduh"+ req.session.id_cart);
+		    				return res.render('index', {products: product, users: user, carts: cart});
+		    			});
+	    			}else{
+	    				Cart.findOne({id_user: id_user}, function(err, cart){
+		    				return res.render('index', {products: product, users: user, carts: cart});
+		    			});
+	    			}	    			
 	    		}
 	    	});	       	
 	    } else {
