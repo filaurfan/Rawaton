@@ -13,7 +13,8 @@ var mongoose = require('mongoose');
 var favicon = require('serve-favicon');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-
+var multer = require('multer');
+var fs = require('fs');
 mongoose.connect('mongodb://filaurfan:rawaton123@ds131109.mlab.com:31109/rawaton');  //---> loginapp
 var db = mongoose.connection;
 

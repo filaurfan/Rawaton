@@ -161,6 +161,7 @@ router.post('/login', passport.authenticate('local-login', {failureRedirect:'/us
 					Cart.findOne({ id_user: id, status: "belum"}, function(err, cart){
 						if(cart) {
 					    	req.session.id_cart = cart._id;
+					    	console.log("ini session kalo udah punya cart sebelumnya"+req.session.id_cart);
 					    } else if (!cart){
 					    	var cart = new Cart({
 			      				id_user: id,
@@ -175,13 +176,7 @@ router.post('/login', passport.authenticate('local-login', {failureRedirect:'/us
 								else {
 									console.log('error bro');
 								}
-							});
-							Cart.findOne({ id_user: id, status: "belum"}, function(err, cart2){
-								if (cart2) {
-									req.session.id_cart = cart2._id;
-									console.log("session cart ini haduh"+ req.session.id_cart);
-								}
-							});
+							});							
 					    }else{
 
 					    }
@@ -222,8 +217,6 @@ router.get('/logout', function(req, res){
 	req.logout();
 
 	req.flash('success_msg', 'You are logged out');
-
-	
 
 	Online.findOne({id_user: id_user}, function(err, online){
 		if (online) {

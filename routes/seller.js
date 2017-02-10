@@ -1,7 +1,10 @@
 var express = require('express');
 var router = express.Router();
+
 var multer = require('multer');
-var upload = multer({ dest: 'D:/jandoik/'});
+var upload = multer({ dest: 'public/uploads'});
+var uploadproduct = upload.single('picture_product');
+var fs = require('fs');
 
 var Product = require('../models/product');
 var User = require('../models/users');
@@ -304,14 +307,14 @@ router.get('/product/input/:id_user', ensureAuthenticated, function(req, res){
 
 //untuk menginputkan barang pada table products
 //masalah ada  ketika user tidak mengklik pada combobox category
-router.post('/product/input/:id_user', upload.any(), ensureAuthenticated, function(req, res){
+router.post('/product/input/:id_user', uploadproduct, ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 	var name_product = req.body.name_product;
 	var category_product = req.body.category_product;
 	var price_product = req.body.price_product;
 	var entity_product = req.body.entity_product;
 	var description_product = req.body.description_product;
-	var picture_product = req.body.picture_product;
+	var picture_product = req.file.originalname;
 	var created_at = new Date();
 
 	// Validation
@@ -320,15 +323,21 @@ router.post('/product/input/:id_user', upload.any(), ensureAuthenticated, functi
 	req.checkBody('price_product', 'Harga Barang is not valid').notEmpty();
 	req.checkBody('entity_product', 'Stock Barang is required').notEmpty();
 	req.checkBody('description_product', 'Deskripsi Barang is required').notEmpty();
-	req.checkBody('picture_product', 'Gambar Barang is required').notEmpty();
+	// req.checkBody('picture_product', 'Gambar Barang is required').notEmpty();
+
+	var tmp_path = req.file.path;
+	var target_path = 'public/uploads/' + req.file.originalname;
+	fs.renameSync(tmp_path, target_path);
 
 	var errors = req.validationErrors();
 
 	if(errors){
-		res.render('sellerinputproduct',{
-			errors: errors,
-			layout: 'layout_user'
-		});
+		console.log("error boy");
+		res.redirect('/seller/product/input/'+id_user);
+		// res.render('sellerinputproduct',{
+		// 	errors: errors,
+		// 	layout: 'layout_user'
+		// });
 	} else {
 	    var product = new Product({
 		    name_product: name_product,
@@ -341,26 +350,29 @@ router.post('/product/input/:id_user', upload.any(), ensureAuthenticated, functi
 		    created_at: created_at
 		});
 		User.findOne({ _id: id_user }, function(err, user) {
-			if(user.role == "seller"){
-			    if(!err) {
-			    	Product.create(product, function(err) {  
-					    if (err) {
-					        console.log(err);
-					    }
-					    else {
-					        console.log('berhasil menyimpan');
-					    }
-					});
-					return res.redirect('/seller/product/list/'+ id_user);
-					req.flash('success_msg', 'You are registered and can now login');					
-			    } else {
-			       	return res.render('500');
-			    }
-			}else if(user.role == "buyer"){
+			console.log('Érr '+err)
+			console.log(user)
 
-			}else{
+			if (!err) {
+				if(user.role == "seller"){
+				    	Product.create(product, function(err) {  
+						    if (err) {
+						        console.log(err);
+						    }
+						    else {
+						        console.log('berhasil menyimpan');
+								req.flash('success_msg', 'You are registered and can now login');					
+						        res.redirect('/seller/product/list/'+ id_user);
+						    }
+						});						
 
-			}		
+				}else if(user.role == "buyer"){
+
+				}else{
+
+				}		
+			} 
+
 	    });		
 	}
 });
