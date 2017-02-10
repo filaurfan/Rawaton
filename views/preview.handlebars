@@ -34,9 +34,11 @@
 						<div id="container">
 						   	<div id="products_example">
 							<div id="products">
+							{{#product}}
 								<div class="slides_container">
-									<a href="index.html" target="_blank"><img src="images/Samsung-Galaxy-C7-Pro.jpg" alt=" " /></a>
+									<a><img style='height: 100%; width: 100%; object-fit: contain' src="/uploads/{{ picture_product }}" alt="learn more" /></a>
 								</div>
+							{{/product}}
 							</div>
 							</div>
 						</div>
@@ -85,7 +87,7 @@
    		   		<div class="section group">
 			    	{{#each products}}
 					<div class="grid_1_of_4 images_1_of_4">
-						<a href="/product/{{ _id }}"><img src='/uploads/{{ picture_product }}'></a><h2>{{ name_product }}</h2>
+						<a href="/product/{{ _id }}"><img style='height: 100%; width: 100%; object-fit: contain' src='/uploads/{{ picture_product }}'></a><h2>{{ name_product }}</h2>
 						<div class="price-details">
 						    <div class="price-number"><p><span class="rupees">Rp.{{ price_product }}</span></p></div>
 							<form class="form-horizontal" method="post" action="/cart/add/{{ _id }}">

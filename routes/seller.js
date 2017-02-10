@@ -4,6 +4,7 @@ var router = express.Router();
 var multer = require('multer');
 var upload = multer({ dest: 'public/uploads'});
 var uploadproduct = upload.single('picture_product');
+var uploadprofile = upload.single('picture_profile');
 var fs = require('fs');
 
 var Product = require('../models/product');
@@ -22,13 +23,17 @@ router.get('/pemesanan/:id_user', ensureAuthenticated, function(req, res){
 	if (_id) {
         User.findOne({ _id: _id }, function(err, user) {
         	if(user.role == "seller"){
-        		console.log(user);
-    	        res.render('sellerpemesanan', {users: user, layout: 'layout_user'});
+        		Profile.findOne({id_user: _id}, function(err, profile){
+        			console.log(user);
+    	        	res.render('sellerpemesanan', {users: user, profile_seller: profile, layout: 'layout_user'});
+        		});        		
         	}else if(user.role == "buyer"){
         		Cart.find({id_user: _id, status: "sudah"}, function(err, cart){
         			if (cart) {
-        				console.log(user);
-    	        		res.render('buyerpemesanan', {users: user, carts: cart, layout: 'layout_buyer'});
+        				Profile.findOne({id_user: _id}, function(err, profile){
+		        			console.log(user);
+		    	        	res.render('buyerpemesanan', {users: user, carts: cart, profile_buyer: profile, layout: 'layout_buyer'});
+		        		});
         			}
         		});
         	}else{
@@ -154,7 +159,7 @@ router.get('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 });
 
 //masalah ada pada database alamat
-router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
+router.post('/pengaturan/:id_user', uploadprofile, ensureAuthenticated, function(req, res){
 	var _id = req.params.id_user;
 	var newnama_seller = req.body.nama_seller;
 	var newno_telp_seller = req.body.no_telp_seller;
@@ -164,6 +169,11 @@ router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 	var newkecamatan = req.body.kecamatan;
 	var newprovinsi = req.body.provinsi;
 	var newkode_pos = req.body.kode_pos;
+	var newgambaruser = req.file.originalname;
+
+	var tmp_path = req.file.path;
+	var target_path = 'public/uploads/' + req.file.originalname;
+	fs.renameSync(tmp_path, target_path);
 
 	User.findOne({ _id: _id}, function(err, user){
 		if (user.role == "seller") {
@@ -172,6 +182,7 @@ router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 			Profile.findOne({id_user: _id}, function(err, profile){
 				if (!err) {
 					Profile.update({id_user : _id}, { $set: {
+						gambar_user: newgambaruser,
 						nama_user: newnama_seller, 
 						no_telp_user: newno_telp_seller
 					}}, function(err) {
@@ -208,6 +219,7 @@ router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 			Profile.findOne({id_user: _id}, function(err, profile){
 				if (!err) {
 					Profile.update({id_user : _id}, { $set: {
+						gambar_user: newgambaruser,
 						nama_user: newnama_seller, 
 						no_telp_user: newno_telp_seller
 					}}, function(err) {

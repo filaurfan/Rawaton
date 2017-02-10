@@ -7,6 +7,9 @@ var ProfileSchema = mongoose.Schema({
 	    type: mongoose.Schema.Types.ObjectId,
 	    ref: 'User'
 	},
+	gambar_user: {
+		type: String
+	},
 	nama_user: {
 		type: String
 	},
