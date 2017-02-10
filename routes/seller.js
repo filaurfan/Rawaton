@@ -1,8 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var multer = require('multer');
-var upload = multer({ dest: 'D:/jandoik/'});
 
+var multer = require('multer');
+var upload = multer({ dest: 'public/uploads'});
+var uploadproduct = upload.single('picture_product');
+
+var fs = require('fs');
 var Product = require('../models/product');
 var User = require('../models/users');
 var Profile = require('../models/usersprofile');
@@ -266,7 +269,7 @@ router.get('/product/input/:id_user', ensureAuthenticated, function(req, res){
 
 //untuk menginputkan barang pada table products
 //masalah ada  ketika user tidak mengklik pada combobox category
-router.post('/product/input/:id_user', upload.any(), ensureAuthenticated, function(req, res){
+router.post('/product/input/:id_user', uploadproduct, ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 	var name_product = req.body.name_product;
 	var category_product = req.body.category_product;
@@ -283,14 +286,31 @@ router.post('/product/input/:id_user', upload.any(), ensureAuthenticated, functi
 	req.checkBody('entity_product', 'Stock Barang is required').notEmpty();
 	req.checkBody('description_product', 'Deskripsi Barang is required').notEmpty();
 	req.checkBody('picture_product', 'Gambar Barang is required').notEmpty();
+	var tmp_path = req.file.path;
+	var target_path = 'public/uploads/' + req.files.originalname;
+	fs.renameSync(tmp_path, target_path);
 
+	// var src = fs.createReadStream(tmp_path);
+	// var dest = fs.createWriteStream(target_path);
+	// src.pipe(dest);
+
+	// fs.unlinkSync(tmp_path);
 	var errors = req.validationErrors();
 
 	if(errors){
-		res.render('sellerinputproduct',{
-			errors: errors,
-			layout: 'layout_user'
-		});
+		User.findOne({ _id: id_user }, function(err, user) {
+			if(user.role == "seller"){
+			    if(!err) {
+			    	res.render('sellerinputproduct',{users: user, errors: errors, layout: 'layout_user' });		
+			    } else {
+			       	return res.render('500');
+			    }
+			}else if(user.role == "buyer"){
+
+			}else{
+
+			}		
+	    });		
 	} else {
 	    var product = new Product({
 		    name_product: name_product,

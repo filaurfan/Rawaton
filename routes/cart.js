@@ -8,6 +8,7 @@ var Profile = require('../models/usersprofile');
 var Cart = require('../models/cart');
 var CartItem = require('../models/cartitem');
 var AlamatPengiriman = require('../models/cartalamat');
+var Pembayaran = require('../models/cartpembayaran');
 
 router.get('/pembayaran/:id_user', ensureAuthenticated, function(req, res, next){
 	var id_buyer = req.params.id_user;
@@ -26,6 +27,23 @@ router.get('/pembayaran/:id_user', ensureAuthenticated, function(req, res, next)
     }	
 });
 
+router.post('/pembayaran/:id_user', ensureAuthenticated, function(req, res, next){
+	var id_buyer = req.params.id_user;
+	var id_cart = req.session.id_cart;
+	console.log(id_buyer);
+	if (id_buyer) {
+        User.findOne({ _id: id_buyer }, function(err, user) {
+        	if(user.role == "buyer"){
+          		
+
+        	}else if(user.role == "seller"){
+        		
+        	}else{
+
+        	}
+        });
+    }	
+});
 
 router.get('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
 	var id_buyer = req.params.id_user;
