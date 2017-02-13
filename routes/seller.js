@@ -62,8 +62,12 @@ router.get('/listpemesanan/:id_user/:id_cart', ensureAuthenticated, function(req
         				CartItem.find({id_cart : id_cart, id_seller: _id}, function(err, item){
         					if (item) {
         						AlamatPengiriman.findOne({id_pembelian: id_cart}, function(err, alamat){
-        							console.log(user);
-   		 	        				res.render('sellerlistpemesanan', {users: user, carts: cart, alamats: alamat, items: item, layout: 'layout_user'});
+        							if (alamat) {
+        								Profile.findOne({id_user: _id}, function(err, profile){
+						        			console.log(user);
+   		 	        						res.render('sellerlistpemesanan', {users: user, carts: cart, alamats: alamat, profile_seller: profile, items: item, layout: 'layout_user'});
+						        		});
+        							}
         						});
         					}
         				});        				
@@ -75,8 +79,12 @@ router.get('/listpemesanan/:id_user/:id_cart', ensureAuthenticated, function(req
         				CartItem.find({id_cart: id_cart}, function(err, item){
         					if (item) {
         						AlamatPengiriman.findOne({id_pembelian: id_cart}, function(err, alamat){
-        							console.log(user);
-   		 	        				res.render('buyerlistpemesanan', {users: user, carts: cart, alamats: alamat, items: item, layout: 'layout_buyer'});
+        							if (alamat) {
+        								Profile.findOne({id_user: _id}, function(err, profile){
+						        			console.log(user);
+   		 	        						res.render('buyerlistpemesanan', {users: user, carts: cart, alamats: alamat, profile_buyer: profile, items: item, layout: 'layout_buyer'});
+						        		});
+        							}
         						});
         					}
         				});        				
@@ -356,7 +364,7 @@ router.post('/product/input/:id_user', uploadproduct, ensureAuthenticated, funct
 	var target_path = 'public/uploads/' + req.file.originalname;
 	fs.renameSync(tmp_path, target_path);
 
-	// fs.unlinkSync(tmp_path);
+	fs.unlinkSync(tmp_path);
 	var errors = req.validationErrors();
 
 	if(errors){
