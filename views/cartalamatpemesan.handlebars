@@ -6,7 +6,7 @@
 
   <div class="register-box-body">
     <p class="login-box-msg">Alamat Pengiriman Barang</p>
-    {{#profiles}}
+    {{#profiles_buyer}}
     <form action="/cart/checkout/{{ id_user }}" method="post">
     
       <div class="form-group has-feedback">
@@ -17,7 +17,7 @@
         <input type="text" class="form-control" name="no_telp_penerima" placeholder="No Telp." value={{ no_telp_user }}>
         <span class="form-control-feedback"></span>
       </div>
-    {{/profiles}}
+    {{/profiles_buyer}}
     {{#alamats}}
       <div class="form-group has-feedback">
         <input type="text" class="form-control" name="alamat_jalan_penerima" placeholder="Alamat" value={{ alamat_jalan }}>
