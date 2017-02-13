@@ -154,7 +154,7 @@ router.get('/pesan/:id_user', ensureAuthenticated, function(req, res){
         	}else if(user.role == "buyer"){
         		Profile.findOne({id_user: _id}, function(err, profile){
 					console.log(user);
-					res.render('buyerpesan', {users: user, profile_seller: profile, layout: 'layout_buyer'});
+					res.render('buyerpesan', {users: user, profile_buyer: profile, layout: 'layout_buyer'});
 				});
         	}else{
 

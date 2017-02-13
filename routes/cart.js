@@ -268,7 +268,7 @@ router.get('/list/:id_user', ensureAuthenticated, function(req, res, next){
 				    			Profile.findOne({id_user: _id}, function(err, profile){
 		          					if (!err) {
 		          						console.log(user);
-		    	        				res.render('buyerlistcart', {users: user, carts: cart, items: item, profiles_buyer: profile, layout: 'layout_buyer'});
+		    	        				res.render('buyerlistcart', {users: user, carts: cart, items: item, profile_buyer: profile, layout: 'layout_buyer'});
 		          					}
 		          				});
 				    		}else{

@@ -15,13 +15,15 @@
 	
 	<section class="content">
 	{{#profile_buyer}}
-	<form method="post" action="/seller/pengaturan/{{ id_user }}">
+	<form method="post" action="/seller/pengaturan/{{ id_user }}" enctype="multipart/form-data">
 	{{/profile_buyer}}
 		<div class="row">
 			<div class="col-md-3">
-				  <img class="profile-user-img img-responsive img-circle" src="../../dist/img/user4-128x128.jpg" alt="User profile picture">
+				 {{#profile_seller}}
+				  <img class="profile-user-img img-responsive img-circle" src='/uploads/{{ gambar_user }}'>
+				  {{/profile_seller}}
 				  <div class="form-group">
-					<input type="file" id="image" name="image"><br>
+					<input type="file" id="picture_profile" name="picture_profile"><br>
 				  </div>
 			</div>
 			<!-- /.col -->
