@@ -1,0 +1,221 @@
+<script type="text/javascript">
+    $(function(){
+        $('#products').slides({
+            preload: true,
+            preloadImage: '/images/loading.gif',
+            effect: 'slide, fade',
+            crossfade: true,
+            slideSpeed: 350,
+            fadeSpeed: 500,
+            generateNextPrev: true,
+            generatePagination: false
+        });
+    });
+</script>
+ 
+
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.9.0/math.min.js"></script>
+
+<div class="main">
+    <div class="content">
+        <div class="content_top">
+            <div class="back-links">
+            {{#product}}
+                <p><a href="/">Beranda</a> >>>> <a href="/category/{{category_product}}">{{category_product}}</a></p>
+            {{/product}}
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="section group">
+            <div class="cont-desc span_1_of_2">
+                <div class="product-details">               
+                    <div class="grid images_3_of_2">
+                        <div id="container">
+                            <div id="products_example">
+                            <div id="products">
+                            {{#product}}
+                                <div class="slides_container">
+                                    <a><img style='height: 100%; width: 100%; object-fit: contain' src="/uploads/{{ picture_product }}" alt="learn more" /></a>
+                                </div>
+                            {{/product}}
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{#product}}
+                    <div class="desc span_3_of_2">
+                        <h1>{{ name_product }}</h1>
+                        <p align="justify">{{ description_product }}</p>                    
+                        <div class="price"  id="pricee" disabled="disabled"></div>
+                        <div class="price"  id="hargaakhir" disabled="disabled"></div>
+                        <button id="button" onclick="message()" class="pull-right">Check Harga</button>
+                        <div class="available">Jumlah Tersedia : {{ entity_product }} <br></div>
+                        <div class="share-desc">
+
+                            <form class="form-horizontal" method="post" action="/cart/add/{{ _id }}">
+                                Masukkan Jumlah yang ingin di pesan : 
+                                <input type="number" onchange="data.set(this.value)" name="jumlah" id="jumlah" min=1 max={{ entity_product }}>
+                                
+                                <input type="hidden" name="harga" value={{ price_product }}>
+                                <button type="submit" class="add-cart" id="addtocart">Tambah Ke Keranjang</button>
+                            </form>
+                            <form class="form-horizontal" method="post" action="/cart/nego/{{ _id }}">
+                                <button type="submit" class="add-cart" >Nego</button>
+                            </form>             
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                    {{/product}}
+                    <div class="clear"></div>
+                </div>
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#horizontalTab').easyResponsiveTabs({
+                            type: 'default', //Types: default, vertical, accordion           
+                            width: 'auto', //auto or any width like 600px
+                            fit: true   // 100% fit in a container
+                        });
+                    });
+                </script>       
+            </div>
+            {{#sellerprofile}}
+            {{/sellerprofile}}
+
+            {{#users}}
+            {{/users}}
+            <table>         
+                <tr><th><h3>INFORMASI TOKO</h3></th></tr>
+                {{#sellerprofile}}
+                <img src="/uploads/{{ gambar_user }}" alt="">
+                {{/sellerprofile}}
+                {{#selleralamat}}
+                <tr><td><h3>{{ nama_toko }}</h3></td></tr>
+                <tr><td><h5>{{ no_telp_kantor }}</h5></td></tr>
+                {{/selleralamat}}
+                {{#onlines}}
+                <tr><td><h3>{{status}}</h3></td></tr>
+                {{/onlines}}
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{{#product}}
+<script type="text/javascript">
+    var number = {{price_product}};
+    document.getElementById("pricee").innerHTML = "<p><span>Harga Rp. "+number.toLocaleString()+"</span>/buah</p>";
+    document.getElementById("addtocart").disabled = true;
+        var data = {
+            number: '0', //The initial value if no input or change
+            set: function(val) {
+                this.number = val;
+                document.getElementById("addtocart").disabled = false;
+            }
+        };
+
+        function message() {
+            var hargaa =  {{price_product}};
+            var jumlaah = data.number;
+            var total = math.multiply(hargaa, jumlaah);
+            console.log(hargaa);
+            document.getElementById("hargaakhir").innerHTML = "<p><span>Harga Rp. "+total.toLocaleString()+"</span></p>"; 
+        }
+</script>
+{{/product}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        function setUsername(){
+            socket.emit('setUsername', document.getElementById('name').value);
+        };
+        var user;
+        socket.on('userExists', function(data){
+            document.getElementById('error-container').innerHTML = data;
+        });
+        socket.on('userSet', function(data){
+            user = data.username;
+            document.body.innerHTML = '<input type="text" id="message">\
+            <button type="button" name="button" onclick="sendMessage()">Send</button>\
+            <div id="message-container"></div>';
+        });
+        function sendMessage(){
+            var msg = document.getElementById('message').value;
+            if(msg){
+                socket.emit('msg', {message: msg, user: user});
+            }
+        }
+        socket.on('newmsg', function(data){
+            if(user){
+                document.getElementById('message-container').innerHTML += '<div><b>' + data.user + '</b>: ' + data.message + '</div>'
+            }
+        })
+    </script>
+
+        <div id="error-container"></div>
+        <input id="name" type="text" name="name" value="" placeholder="Enter your name!">
+        <button type="button" name="button" onclick="setUsername()">Let me chat!</button>
+

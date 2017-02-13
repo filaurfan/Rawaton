@@ -33,9 +33,8 @@ router.post('/register', function(req, res){
 	var errors = req.validationErrors();
 
 	if(errors){
-		res.render('homeregister',{
-			errors:errors, layout: 'layout_login'
-		});
+		console.log("error boy");
+		res.redirect('/users/register');
 	} else {
 		Users.findOne({username: newusername}, function(err, username){
 			if (!username) {

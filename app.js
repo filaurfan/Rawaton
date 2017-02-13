@@ -23,7 +23,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var seller = require('./routes/seller');
 var cart = require('./routes/cart');
-
+var chat = require('./routes/chat');
 
 // Init App
 var app = express();
@@ -109,6 +109,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/seller', seller);
 app.use('/cart', cart);
+app.use('/chat', chat);
 
 // Set Port
 app.set('port', (process.env.PORT || 3000));

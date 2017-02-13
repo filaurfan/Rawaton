@@ -11,6 +11,39 @@ var Cart = require('../models/cart');
 var CartItem = require('../models/cartitem');
 var AlamatPengiriman = require('../models/cartalamat');
 
+router.post('/konfirmasipembayaran/:id_user/:id_cart', ensureAuthenticated, function(req, res){
+	var id_seller = req.params.id_user;
+	var id_cart = req.params.id_cart;
+	var tanggal_pembayaran = req.body.tanggal_pembayaran;
+	var status_pembayaran = req.body.status_pembayaran;
+
+	Cart.update({ _id: id_cart, id_seller: id_seller}, {$set:{ 
+		tanggal_pembayaran: tanggal_pembayaran, 
+		status_pembayaran: status_pembayaran}
+	}, function(err){
+		if (!err) {
+			res.redirect('/seller/listpemesanan/'+id_seller+'/'+id_cart);
+		}
+	});
+});
+
+router.post('/konfirmasipengiriman/:id_user/:id_cart', ensureAuthenticated, function(req, res){
+	var id_seller = req.params.id_user;
+	var id_cart = req.params.id_cart;
+	var tanggal_pengiriman = req.body.tanggal_pengiriman;
+	var status_pengiriman = req.body.status_pengiriman;
+
+	Cart.update({ _id: id_cart, id_seller: id_seller}, {$set:{ 
+		tanggal_pengiriman: tanggal_pengiriman, 
+		status_pengiriman: status_pengiriman}
+	}, function(err){
+		if (!err) {
+			res.redirect('/seller/listpemesanan/'+id_seller+'/'+id_cart);
+		}
+	});
+});
+
+
 router.get('/pembayaran/:id_user', ensureAuthenticated, function(req, res, next){
 	var id_buyer = req.params.id_user;
 	var id_cart = req.session.id_cart;
@@ -32,12 +65,18 @@ router.post('/pembayaran/:id_user', ensureAuthenticated, function(req, res, next
 	var id_buyer = req.params.id_user;
 	var id_cart = req.session.id_cart;
 	var tanggal_selesai = new Date();
-
+	var tanggal_pembayaran = new Date();
 	console.log(id_buyer);
 	if (id_buyer) {
         User.findOne({ _id: id_buyer }, function(err, user) {
         	if(user.role == "buyer"){
-        		Cart.update({_id: id_cart}, {$set: {status : "sudah", tanggal_selesai: tanggal_selesai}}, function(err){
+        		Cart.update({_id: id_cart}, {$set: {
+        			status : "sudah", 
+        			tanggal_selesai: tanggal_selesai,
+        			status_pembayaran: "belum di konfirmasi",
+				    tanggal_pembayaran: tanggal_pembayaran
+        			}
+        		}, function(err){
 					if(!err){
 						delete req.session.id_cart;
 
@@ -81,16 +120,17 @@ router.post('/pembayaran/:id_user', ensureAuthenticated, function(req, res, next
     }	
 });
 
+
 router.get('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
-	var id_buyer = req.params.id_user;
+	var id_user = req.params.id_user;
 	var id_cart = req.session.id_cart;
-	console.log(id_buyer);
-	if (id_buyer) {
-        User.findOne({ _id: id_buyer }, function(err, user) {
+	console.log(id_user);
+	if (id_user) {
+        User.findOne({ _id: id_user }, function(err, user) {
         	if(user.role == "buyer"){
-          		Alamat.findOne({ id_user: id_buyer }, function(err, alamat){
+          		Alamat.findOne({ id_user: id_user }, function(err, alamat){
           			if (!err) {
-          				Profile.findOne({id_user: id_buyer}, function(err, profile){
+          				Profile.findOne({id_user: id_user}, function(err, profile){
           					if (!err) {
           						console.log(user);
     	        				res.render('cartalamatpemesan', {users: user, alamats: alamat, profiles: profile, layout: 'layout_buyer'});
@@ -119,9 +159,22 @@ router.post('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
 	var alamat_provinsi_penerima = req.body.alamat_provinsi_penerima;
 	var alamat_kode_pos_penerima = req.body.alamat_kode_pos_penerima;
 
+	req.checkBody('nama_penerima', 'nama_penerima is required').notEmpty();
+	req.checkBody('no_telp_penerima', 'no_telp_penerima is required').notEmpty();
+	req.checkBody('alamat_jalan_penerima', 'alamat_jalan_penerima is not valid').notEmpty();
+	req.checkBody('alamat_kecamatan_penerima', 'alamat_kecamatan_penerima is required').notEmpty();
+	req.checkBody('alamat_kota_penerima', 'alamat_kota_penerima is required').notEmpty();
+	req.checkBody('alamat_kabupaten_penerima', 'alamat_kabupaten_penerima do not match').notEmpty();
+	req.checkBody('alamat_provinsi_penerima', 'alamat_provinsi_penerima is required').notEmpty();
+	req.checkBody('alamat_kode_pos_penerima', 'alamat_kode_pos_penerima do not match').notEmpty();
+
+	var errors = req.validationErrors();
 
 	console.log(id_buyer);
-	if (id_buyer) {
+	if(errors){
+		console.log("error boy");
+		res.redirect('/cart/checkout/'+id_buyer);
+	} else {
         User.findOne({ _id: id_buyer }, function(err, user) {
         	if(user.role == "buyer"){
           		var alamatpengiriman = new AlamatPengiriman({
@@ -138,6 +191,14 @@ router.post('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
 				});
 				AlamatPengiriman.create(alamatpengiriman, function(err){
 					if (!err) {
+						console.log("berhasil menyimpan alamat pengiriman");
+					}else{
+						console.log(err);
+						res.redirect('/cart/checkout/'+id_buyer);
+					}
+				});
+				Cart.update({ _id: id_cart }, { $set: {status_pengiriman: "belum di konfirmasi", tanggal_pengiriman: ""}}, function(err){
+					if (!err) {
 						res.redirect('/cart/pembayaran/'+id_buyer);
 					}else{
 						console.log(err);
@@ -152,7 +213,6 @@ router.post('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
         });
     }	
 });
-
 
 //akses list cart buyer :
 //option satu
@@ -206,7 +266,7 @@ router.post('/add/:id_product', ensureAuthenticated, function(req, res){
 							Cart.findOne({_id : id_cart}, function(err, cart){
 								if (cart) {
 									var total = cart.total_harga + hargaakhir;
-									Cart.update({_id: id_cart}, {$set: {total_harga : total}}, function(err){
+									Cart.update({_id: id_cart}, {$set: {total_harga : total, id_seller: product.id_User}}, function(err){
 						      			if(err){
 							    			console.log(err);
 							    		}
@@ -214,6 +274,7 @@ router.post('/add/:id_product', ensureAuthenticated, function(req, res){
 						      		var item = new CartItem({
 						      			id_cart: id_cart,
 						      			id_product: id_product,
+						      			id_seller: product.id_User,
 						      			nama_product: product.name_product,
 						      			nama_seller: alamat.nama_toko,
 						      			gambar_item: product.picture_product,
