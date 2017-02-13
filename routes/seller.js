@@ -147,11 +147,15 @@ router.get('/pesan/:id_user', ensureAuthenticated, function(req, res){
 	if (_id) {
         User.findOne({ _id: _id }, function(err, user) {
         	if(user.role == "seller"){
-        		console.log(user);
-    	        res.render('sellerpesan', {users: user, layout: 'layout_user'});
+        		Profile.findOne({id_user: _id}, function(err, profile){
+					console.log(user);
+					res.render('sellerpesan', {users: user, profile_seller: profile, layout: 'layout_user'});
+				});
         	}else if(user.role == "buyer"){
-        		console.log(user);
-    	        res.render('buyerpesan', {users: user, layout: 'layout_buyer'});
+        		Profile.findOne({id_user: _id}, function(err, profile){
+					console.log(user);
+					res.render('buyerpesan', {users: user, profile_seller: profile, layout: 'layout_buyer'});
+				});
         	}else{
 
         	}
@@ -284,7 +288,10 @@ router.get('/product/list/:id_user', ensureAuthenticated, function(req, res, nex
 		Product.find({id_User: _id}).sort({'created_at': 1}).exec(function(err, product){
 	      	if(user.role == "seller"){
 		        if(!err) {
-		        	res.render('sellerlistproduct', {users: user, products: product, layout: 'layout_user'});
+		        	Profile.findOne({id_user: _id}, function(err, profile){
+						console.log(user);
+						res.render('sellerlistproduct', {users: user, profile_seller: profile, products: product, layout: 'layout_user'});
+					});
 		      	} else {
 		        	return res.render('500');
 		      	}
@@ -328,7 +335,10 @@ router.get('/product/input/:id_user', ensureAuthenticated, function(req, res){
 	User.findOne({ _id: _id }, function(err, user) {
 		if(user.role == "seller"){
 		    if(!err) {
-		    	res.render('sellerinputproduct', {users: user, layout: 'layout_user'});
+		    	Profile.findOne({id_user: _id}, function(err, profile){
+		        	console.log(user);
+		    	    res.render('sellerinputproduct', {users: user, profile_seller: profile, layout: 'layout_user'});
+		        });
 		    } else {
 		       	return res.render('500');
 		    }
@@ -413,7 +423,12 @@ router.get('/product/update/:id_product/:id_user', ensureAuthenticated, function
         	if(user.role == "seller"){
 			    if(!err) {
 			    	Product.findOne({ _id: id_product}, function(err, product) {
-						res.render('sellerupdateproduct', {products: product, users: user, layout: 'layout_user'});
+			    		if (product) {
+			    			Profile.findOne({id_user: _id}, function(err, profile){
+					        	console.log(user);
+					    	    res.render('sellerupdateproduct', {users: user, profile_seller: profile, products: product, layout: 'layout_user'});
+					        });
+			    		}
 				    });					
 			    } else {
 			       	return res.render('500');

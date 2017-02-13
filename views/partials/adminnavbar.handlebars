@@ -22,8 +22,10 @@
           
             <!-- User Account: style can be found in dropdown.less -->
             <li class="dropdown user user-menu">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">                
-                    <img src="/admin/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                {{#profile_seller}}
+                  <img src='/uploads/{{ gambar_user }}' class="user-image" alt="User Image">
+                {{/profile_seller}}
                 {{#users}}
                     <span class="hidden-xs">{{ username }}</span>
                 {{/users}}
@@ -32,7 +34,9 @@
                 <ul class="dropdown-menu">
                 <!-- User image -->
                 <li class="user-header">
-                    <img src="/admin/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                    {{#profile_seller}}
+                      <img src='/uploads/{{ gambar_user }}' class="img-circle" alt="User Image">
+                    {{/profile_seller}}
                     {{#users}}
                         <p>{{ username }}<small>Member sejak {{ member_at }}</small></p>
                     {{/users}}
