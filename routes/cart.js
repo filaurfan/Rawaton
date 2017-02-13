@@ -21,11 +21,17 @@ router.get('/nego/:id_user', ensureAuthenticated, function(req, res){
 				    if(cart) {
 				    	CartItem.find({ id_cart: cart._id}, function(err, item){
 				    		if (!err) {
-				    			return res.render('buyerdetailnego', {users: user, carts: cart, items: item, layout: 'layout_buyer'});
+				    			Profile.findOne({id_user: id_user}, function(err, profile){
+				          			if (!err) {
+				          				console.log(user);
+				    	        		res.render('buyerdetailnego', {users: user, profiles_buyer : profile, carts: cart, items: item,  layout: 'layout_buyer'});
+				          			}
+				          		});
 				    		}else{
 				    			return res.render('500');
 				    		}
 				    	});
+
 				    } else {
 				    	console.log("Keranjang belum ada");
 				    }
@@ -78,7 +84,12 @@ router.get('/pembayaran/:id_user', ensureAuthenticated, function(req, res, next)
 	if (id_buyer) {
         User.findOne({ _id: id_buyer }, function(err, user) {
         	if(user.role == "buyer"){
-          		res.render('cartpembayaran', {users: user, layout: 'layout_buyer'});
+        		Profile.findOne({id_user: id_buyer}, function(err, profile){
+          			if (!err) {
+          				console.log(user);
+    	        		res.render('cartpembayaran', {users: user, profiles_buyer: profile,  layout: 'layout_buyer'});
+          			}
+          		});
         	}else if(user.role == "seller"){
         		
         	}else{
@@ -159,7 +170,7 @@ router.get('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
           				Profile.findOne({id_user: id_user}, function(err, profile){
           					if (!err) {
           						console.log(user);
-    	        				res.render('cartalamatpemesan', {users: user, alamats: alamat, profiles: profile, layout: 'layout_buyer'});
+    	        				res.render('cartalamatpemesan', {users: user, alamats: alamat, profiles_buyer: profile, layout: 'layout_buyer'});
           					}
           				});
           			}
@@ -254,7 +265,12 @@ router.get('/list/:id_user', ensureAuthenticated, function(req, res, next){
 				    if(cart) {
 				    	CartItem.find({ id_cart: cart._id}, function(err, item){
 				    		if (!err) {
-				    			return res.render('buyerlistcart', {users: user, carts: cart, items: item, layout: 'layout_buyer'});
+				    			Profile.findOne({id_user: _id}, function(err, profile){
+		          					if (!err) {
+		          						console.log(user);
+		    	        				res.render('buyerlistcart', {users: user, carts: cart, items: item, profiles_buyer: profile, layout: 'layout_buyer'});
+		          					}
+		          				});
 				    		}else{
 				    			return res.render('500');
 				    		}
