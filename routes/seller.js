@@ -4,8 +4,10 @@ var router = express.Router();
 var multer = require('multer');
 var upload = multer({ dest: 'public/uploads'});
 var uploadproduct = upload.single('picture_product');
-var fs = require('fs');
+var updateproduct = upload.single('update_picture_product');
+var uploadprofile = upload.single('picture_profile');
 
+var fs = require('fs');
 var Product = require('../models/product');
 var User = require('../models/users');
 var Profile = require('../models/usersprofile');
@@ -22,13 +24,21 @@ router.get('/pemesanan/:id_user', ensureAuthenticated, function(req, res){
 	if (_id) {
         User.findOne({ _id: _id }, function(err, user) {
         	if(user.role == "seller"){
-        		console.log(user);
-    	        res.render('sellerpemesanan', {users: user, layout: 'layout_user'});
+        		Cart.find({id_seller: _id, status: "sudah"}, function(err, cart){
+        			if (cart) {
+        				Profile.findOne({id_user: _id}, function(err, profile){
+		        			console.log(user);
+		    	        	res.render('sellerpemesanan', {users: user, carts: cart, profile_seller: profile, layout: 'layout_user'});
+		        		});
+        			}
+        		});     		
         	}else if(user.role == "buyer"){
         		Cart.find({id_user: _id, status: "sudah"}, function(err, cart){
         			if (cart) {
-        				console.log(user);
-    	        		res.render('buyerpemesanan', {users: user, carts: cart, layout: 'layout_buyer'});
+        				Profile.findOne({id_user: _id}, function(err, profile){
+		        			console.log(user);
+		    	        	res.render('buyerpemesanan', {users: user, carts: cart, profile_buyer: profile, layout: 'layout_buyer'});
+		        		});
         			}
         		});
         	}else{
@@ -47,8 +57,18 @@ router.get('/listpemesanan/:id_user/:id_cart', ensureAuthenticated, function(req
 	if (_id) {
         User.findOne({ _id: _id }, function(err, user) {
         	if(user.role == "seller"){
-        		console.log(user);
-    	        res.render('sellerpemesanan', {users: user, layout: 'layout_user'});
+        		Cart.find({_id : id_cart, id_seller: _id}, function(err, cart){
+        			if (cart) {
+        				CartItem.find({id_cart : id_cart, id_seller: _id}, function(err, item){
+        					if (item) {
+        						AlamatPengiriman.findOne({id_pembelian: id_cart}, function(err, alamat){
+        							console.log(user);
+   		 	        				res.render('sellerlistpemesanan', {users: user, carts: cart, alamats: alamat, items: item, layout: 'layout_user'});
+        						});
+        					}
+        				});        				
+        			}
+        		});
         	}else if(user.role == "buyer"){
         		Cart.find({_id : id_cart}, function(err, cart){
         			if (cart) {
@@ -154,7 +174,7 @@ router.get('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 });
 
 //masalah ada pada database alamat
-router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
+router.post('/pengaturan/:id_user', uploadprofile, ensureAuthenticated, function(req, res){
 	var _id = req.params.id_user;
 	var newnama_seller = req.body.nama_seller;
 	var newno_telp_seller = req.body.no_telp_seller;
@@ -164,6 +184,11 @@ router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 	var newkecamatan = req.body.kecamatan;
 	var newprovinsi = req.body.provinsi;
 	var newkode_pos = req.body.kode_pos;
+	var newgambaruser = req.file.originalname;
+
+	var tmp_path = req.file.path;
+	var target_path = 'public/uploads/' + req.file.originalname;
+	fs.renameSync(tmp_path, target_path);
 
 	User.findOne({ _id: _id}, function(err, user){
 		if (user.role == "seller") {
@@ -172,6 +197,7 @@ router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 			Profile.findOne({id_user: _id}, function(err, profile){
 				if (!err) {
 					Profile.update({id_user : _id}, { $set: {
+						gambar_user: newgambaruser,
 						nama_user: newnama_seller, 
 						no_telp_user: newno_telp_seller
 					}}, function(err) {
@@ -208,6 +234,7 @@ router.post('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 			Profile.findOne({id_user: _id}, function(err, profile){
 				if (!err) {
 					Profile.update({id_user : _id}, { $set: {
+						gambar_user: newgambaruser,
 						nama_user: newnama_seller, 
 						no_telp_user: newno_telp_seller
 					}}, function(err) {
@@ -329,15 +356,12 @@ router.post('/product/input/:id_user', uploadproduct, ensureAuthenticated, funct
 	var target_path = 'public/uploads/' + req.file.originalname;
 	fs.renameSync(tmp_path, target_path);
 
+	// fs.unlinkSync(tmp_path);
 	var errors = req.validationErrors();
 
 	if(errors){
 		console.log("error boy");
 		res.redirect('/seller/product/input/'+id_user);
-		// res.render('sellerinputproduct',{
-		// 	errors: errors,
-		// 	layout: 'layout_user'
-		// });
 	} else {
 	    var product = new Product({
 		    name_product: name_product,
@@ -350,22 +374,18 @@ router.post('/product/input/:id_user', uploadproduct, ensureAuthenticated, funct
 		    created_at: created_at
 		});
 		User.findOne({ _id: id_user }, function(err, user) {
-			console.log('Érr '+err)
-			console.log(user)
-
 			if (!err) {
 				if(user.role == "seller"){
-				    	Product.create(product, function(err) {  
-						    if (err) {
-						        console.log(err);
-						    }
-						    else {
-						        console.log('berhasil menyimpan');
-								req.flash('success_msg', 'You are registered and can now login');					
-						        res.redirect('/seller/product/list/'+ id_user);
-						    }
-						});						
-
+				    Product.create(product, function(err) {  
+						if (err) {
+						    console.log(err);
+						}
+						else {
+						    console.log('berhasil menyimpan');
+							req.flash('success_msg', 'You are registered and can now login');					
+						    res.redirect('/seller/product/list/'+ id_user);
+						}
+					});
 				}else if(user.role == "buyer"){
 
 				}else{
@@ -399,7 +419,7 @@ router.get('/product/update/:id_product/:id_user', ensureAuthenticated, function
     }
 });
 
-router.post('/product/update/:id_product/:id_user', ensureAuthenticated, function(req, res){
+router.post('/product/update/:id_product/:id_user', updateproduct, ensureAuthenticated, function(req, res){
 	var id_product = req.params.id_product;
 	var id_user = req.params.id_user;
 
@@ -408,7 +428,7 @@ router.post('/product/update/:id_product/:id_user', ensureAuthenticated, functio
 	var price_product = req.body.price_product;
 	var entity_product = req.body.entity_product;
 	var description_product = req.body.description_product;
-	var picture_product = req.body.picture_product;
+	var picture_product = req.file.originalname;
 	var created_at = new Date();
 
 	// Validation
@@ -417,9 +437,18 @@ router.post('/product/update/:id_product/:id_user', ensureAuthenticated, functio
 	req.checkBody('price_product', 'Harga Barang is not valid').notEmpty();
 	req.checkBody('entity_product', 'Stock Barang is required').notEmpty();
 	req.checkBody('description_product', 'Deskripsi Barang is required').notEmpty();
-	req.checkBody('picture_product', 'Gambar Barang is required').notEmpty();
+	// req.checkBody('picture_product', 'Gambar Barang is required').notEmpty();
 
-    if (id_product) {
+	var tmp_path = req.file.path;
+	var target_path = 'public/uploads/' + req.file.originalname;
+	fs.renameSync(tmp_path, target_path);
+
+	var errors = req.validationErrors();
+
+	if(errors){
+		console.log("error boy");
+		res.redirect('/seller/product/update/'+id_product+'/'+id_user);
+	} else {
 		User.findOne({ _id: id_user }, function(err, user) {
         	if(user.role == "seller"){
 			    if(!err) {
@@ -445,7 +474,7 @@ router.post('/product/update/:id_product/:id_user', ensureAuthenticated, functio
 
 			}
         });
-    }
+	}
 });
 
 router.get('/product/delete/:id_product/:id_user', ensureAuthenticated, function(req, res){

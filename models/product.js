@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 // Product Schema
 var ProductSchema = mongoose.Schema({
   id_User: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
   name_product: {
@@ -15,7 +15,7 @@ var ProductSchema = mongoose.Schema({
   price_product: {
     type: Number
   },
-  entity_product: {
+  quantity_product: {
     type: Number
   },
   description_product: {
