@@ -63,7 +63,9 @@
                 </table>
             <div class="col-md-8"></div>
                 {{#carts}}
-                <input type="submit" name="mit" class="btn btn-success" value="NEGO">
+                <a href="/cart/nego/{{ id_user }}" class="add-cart">
+                    <span class="btn btn-info" aria-hidden="true">NEGO</span>
+                </a>
                 <a href="/cart/checkout/{{ id_user }}" class="add-cart">
                     <span class="btn btn-info" aria-hidden="true">CHECKOUT</span>
                 </a>

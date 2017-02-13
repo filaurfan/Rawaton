@@ -36,7 +36,7 @@
                     {{#each items}}
                     <tbody>
                         <td>{{ id_product }} </td>
-                        <td><img class="profile-user-img img-responsive img-circle" src="../../{{ gambar_item }}"></td>
+                        <td><img class="profile-user-img img-responsive img-circle" src="/public/uploads/{{ gambar_item }}"></td>
                         <td>{{ nama_product }}</td>
                         <td>{{ nama_seller }}</td>
                         <td>{{ jumlah }}</td>
@@ -49,13 +49,11 @@
                         <td></td>
                         <td>Total</td>
                         <td></td>
-                        <td></td>
                         {{#carts}}
                         <div>
                         <td id="total"></td>
                         </div>
                         {{/carts}}
-                        <td></td>
                     </tbody>
                 </table>
         </div>
@@ -113,7 +111,7 @@
                     <tbody>
                         <!-- <td></td> -->
                     {{#carts}}
-                        <td name="tanggal_pembayaran">tanggal_pembayaran</td>
+                        <td name="tanggal_pembayaran">{{ tanggal_pembayaran }}</td>
                         <td><select class="form-control">
                           <option name="status_pembayaran" value="{{ status_pembayaran }}">{{ status_pembayaran }}</option>
                           <option name="status_pembayaran" value="blm_bayar">Belum Terbayar</option>
