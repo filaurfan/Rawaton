@@ -1,4 +1,3 @@
-
 var express = require('express');
 var router = express.Router();
 
@@ -9,6 +8,9 @@ var SellerAlamat = require('../models/usersalamat');
 var Cart = require('../models/cart');
 var Online = require('../models/online');
 
+var DumpCart = require('../models/dumpcart');
+var DumpCartItem = require('../models/DumpCartItem');
+
 router.get('/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 
@@ -18,9 +20,19 @@ router.get('/:id_user', ensureAuthenticated, function(req, res){
 	    		if(!err){
 	    			if (user.role == "buyer") {
 	    				Cart.findOne({id_user: id_user, status: "belum"}, function(err, cart){
-		    				req.session.id_cart = cart._id;
-		    				console.log("session cart ini haduh"+ req.session.id_cart);
-		    				return res.render('index', {products: product, users: user, carts: cart});
+		    				if (cart) {
+		    					req.session.id_cart = cart._id;
+		    					console.log("session cart ini haduh"+ req.session.id_cart);
+		    					DumpCart.findOne({ id_user: id_user, status: "belum"}, function(err, dumpcart){
+									if(dumpcart) {
+										req.session.id_dumpcart = dumpcart._id;
+										console.log("ini session kalo udah punya cart sebelumnya"+req.session.id_dumpcart);
+										return res.render('index', {products: product, users: user, carts: cart});
+									}else{
+
+									}
+								});
+		    				}
 		    			});
 	    			}else{
 	    				Cart.findOne({id_user: id_user}, function(err, cart){

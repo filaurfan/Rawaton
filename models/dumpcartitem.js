@@ -1,14 +1,10 @@
 var mongoose = require('mongoose');
 require('mongoose-big-decimal')(mongoose);
 // User profile Schema
-var CartItemSchema = mongoose.Schema({
+var DumpCartItemSchema = mongoose.Schema({
     id_cart: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Cart'
-    },
-    id_dumpitem:{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'DumpItem'
+      ref: 'DumpCart'
     },
     id_product: {
       type: mongoose.Schema.Types.ObjectId,
@@ -39,4 +35,4 @@ var CartItemSchema = mongoose.Schema({
     }
 });
 
-var Item = module.exports = mongoose.model('Item', CartItemSchema);
+var DumpItem = module.exports = mongoose.model('DumpItem', DumpCartItemSchema);

@@ -11,11 +11,11 @@ var MessageIsiSchema = mongoose.Schema({
 	},
 	isi_message: {
 	    type: String
-	}
+	},
 	tanggal_message: {
 	    type : Date,
 	    default: Date.now
-	}
+	},
 	status_message: {
 	    type: String
 	}

@@ -1,7 +1,8 @@
-<!-- 
+
 <script src="/socket.io/socket.io.js"></script>
 <script>
       var socket = io();
+      socket.on('message', function(data){document.write(data)});
         function setUsername(){
             socket.emit('setUsername', document.getElementById('name').value);
         };
@@ -9,11 +10,28 @@
         socket.on('userExists', function(data){
             document.getElementById('error-container').innerHTML = data;
         });
-        socket.on('userSet', function(data){
-            user = data.username;
-            document.body.innerHTML = '<input type="text" id="message">\
-            <button type="button" name="button" onclick="sendMessage()">Send</button>\
-            <div id="message-container"></div>';
+        socket.on('username', function(data){
+            var html = '';
+            for (var i = 0; i < data.length; i++) {
+                html == data[i]+"<br/>"
+            }
+            $users.html(html);
+        });
+
+        $messageForm.submit(function(e){
+            e.PreventDefault();
+            socket.emit('send message', $messageBox.val(), function(data){
+                $chat.append("<span class=error><b>"+ data +"</span><br/>")
+            });
+            $messageBox.val('');
+        });
+
+        socket.on('new message', function(data){
+            $chat.append("<span class=msg><b>"+ data.nick+": </b>"+ data.msg +"</span><br/>")
+        });
+
+        socket.on('whisper', function(data){
+            $chat.append("<span class=whisper><b>"+ data.nick+": </b>"+ data.msg +"</span><br/>")
         });
         function sendMessage(){
             var msg = document.getElementById('message').value;
@@ -21,12 +39,8 @@
                 socket.emit('msg', {message: msg, user: user});
             }
         }
-        socket.on('newmsg', function(data){
-            if(user){
-                document.getElementById('message-container').innerHTML += '<div><b>' + data.user + '</b>: ' + data.message + '</div>'
-            }
-        }
-</script> -->
+        
+</script>
 
 
 <!-- Content Wrapper. Contains page content -->
@@ -56,7 +70,8 @@
                             <th width="150px">Nama Barang</th>
                             <th width="150px">Nama Toko</th>
                             <th width="10px">Jumlah</th>
-                            <th width="50px">Harga</th>
+                            <th width="50px">Harga Awal</th>
+                            <th width="50px">Harga Nego</th>
                         </tr>
                     </thead>
                     {{#each items}}
@@ -66,7 +81,9 @@
                         <td>{{ nama_product }}</td>
                         <td>{{ nama_seller }}</td>
                         <td>{{ jumlah }}</td>
-                        <td>Rp. <input class="txt" type="text" name="txt" value="{{ harga_nego }}" /></td>
+                        <td>Rp. {{ harga_nego }}</td>
+                        <!-- <td>Rp. <input class="txt" type="text" name="txt" value="{{ harga_nego }}" /></td>  -->
+                        <td>RP. <input class="txt" type="number" name="txt" min=1 max={{ harga_nego }} value={{ harga_nego }} step="10000"></td>
                     </tbody>
                     {{/each}}
                     <tbody>
@@ -75,38 +92,57 @@
                         <td>Total</td>
                         <td></td>
                         <td></td>
+                        <td></td>
                         {{#carts}}
                         <div>
                         <td id="total"><span id="sum">0</span></td>
                         </div>
                         {{/carts}}
-                    </tbody>
-                    <tbody>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                        <td><div class="input-group pull-right"><button type="button" class="btn btn-success">Nego Harga</button></div></td>
+                        <td hidden="hidden"><input type="text" name="sumnego" id="sumnego" hidden="hidden"></td>
                     </tbody>
             </table>
+            {{#carts}}
+            <form method="post" action="/chat/update/{{ _id }}" name="form1" id="form1">
+                <input type="button" name="button" id="button" class="btn btn-success" value="Nego Harga" onclick="displayResult();">
+            </form>
+            {{/carts}}      
         </div>
     </div>
     </section>
     <section class="content">       
     
-    <div class="col-md-6"></div>
+    <div class="col-md-8"></div>
     <div class="col-md-4">
     {{#carts}}
         <center>
-            <a href="#" class="add-cart">
-                <span class="btn btn-primary" aria-hidden="true">Setuju</span>
+            <a href="#" class="add-cart" id="fafa">
+                <!-- <button type="button" class="btn btn-primary">Setuju</button> -->
             </a>
-            <a href="/cart/list/{{ id_user }}" class="add-cart">
-                <span class="btn btn-danger" aria-hidden="true">Batal</span>
+            <a href="/cart/list/{{ id_user }}" class="add-cart" id="fufu">
+                <!-- <button type="button" class="btn btn-danger">Batal</button> -->
             </a>
         </center>
     {{/carts}}
     </div>
+    {{#users}}
+    <input type="text" hidden="hidden" name="user" id="user" value="{{ role }}">
+    {{/users}}
+
+    <!-- ////////////////////////////////////////////////////////////////////////////////// -->
+    <div class="col-md-12">
+        <div class="clearfix"></div>
+            <p>Enter a Username:</p>
+            <p id="nickError"></p>
+            <form id="setNick">
+                <input type="text" name="nickname" id="nickname"></input>
+                <input type="submit"></input>
+            </form>
+        <div id="nickWrap"></div>
+
+        <div class="clearfix"></div>
+    </div>
+    <!-- //////////////////////////////////////////////////////////////////////////////// -->
+
 
     <div class="col-md-12">
     <div class="clearfix"></div>
@@ -131,14 +167,26 @@
         
         <div class="panel-footer">
             <div class="input-group">
-                <input id="m" type="text" class="form-control input-sm" placeholder="tulis pesan" autocomplete="off" />
+            {{#carts}}
+               
+                <div id="mm" name="mm">
+                    <input id="m" name="m" type="text" class="form-control input-sm" placeholder="tulis pesan" autocomplete="off" />              
+                </div>
+                
                 <span class="input-group-btn">
-                    <button class="btn btn-warning btn-sm" id="btn-chat">Kirim</button>
+                    <form method="post" action="#">
+                        <input type="submit" name="mit" class="btn btn-warning btn-sm" id="btn-chat" value="Kirim">
+                    </form>
                 </span>
+                <!-- <span class="input-group-btn" method="post" action="/chat/nego/{{ id_user }}/{{ id_seller }}/{{ _id }}"> -->
+                    <!-- <button class="btn btn-warning btn-sm" id="btn-chat">Kirim</button> -->
+                <!-- </span> -->
+                
+            {{/carts}}
             </div>
         </div>
         <!-- <ul id="messages"></ul> -->
-       <!--  <form action="">
+        <!--  <form action="">
             <input id="m" autocomplete="off" /><button>Send</button>
         </form> -->
         <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
@@ -160,9 +208,53 @@
     </section>
 </div>
 
+
+<script type="text/javascript">
+    var roleuser = document.getElementById("user").value;
+    console.log(roleuser);
+    if (roleuser == "buyer") {
+        // document.getElementById("fafa").innerHTML = "<button type=\"button\" class=\"btn btn-primary\" disabled=\"disabled\">Setuju</button>";
+        document.getElementById("fufu").innerHTML = " <button type=\"button\" class=\"btn btn-danger\">Batal</button>";
+    }else if (roleuser == "seller") {
+        document.getElementById("fafa").innerHTML = "<button type=\"button\" class=\"btn btn-primary\">Setuju</button>";
+        // document.getElementById("fufu").innerHTML = "<button type=\"button\" class=\"btn btn-danger\" disabled=\"disabled\">Batal</button>";
+    }      
+</script>
+
 {{#carts}}
 <script type="text/javascript">
-    var number = {{total_harga}};
+   
+    $(document).ready(function(){
+        $(".txt").each(function() {
+            $(this).keyup(function(){
+                calculateSum();
+            });
+        });
+    });
+
+    function calculateSum() {
+        var sum = 0;
+        $(".txt").each(function() {
+            if(!isNaN(this.value) && this.value.length!=0) {
+                sum += parseFloat(this.value);
+            }
+        });
+        document.getElementById("total").innerHTML = "Rp. <span id=\"sum\">"+sum.toLocaleString()+"</span>";
+        // $("#sum").html(sum.toFixed(2));
+    }
+
+
+    var number = {{ total_harga }};
     document.getElementById("total").innerHTML = "Rp. <span id=sum>"+number.toLocaleString()+"</span>";
+    
+    function displayResult(){         
+        var test =  $("#sum").html();
+        document.getElementById("sumnego").value=test;
+        var update =  document.getElementById("sumnego").value;
+        var message = "Rp."+update.toLocaleString()+" gimana bos aku mau harga segini";
+        document.getElementById("mm").innerHTML = "<input id=\"m\" name=\"m\" type=\"text\" class=\"form-control input-sm\" placeholder=\"tulis message\" autocomplete=\"off\" value= \""+message.toLocaleString()+"\">";
+        // document.getElementById('form1').submit();
+    }
+
 </script>
 {{/carts}}

@@ -6,13 +6,24 @@ var MessageSchema = mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 	    ref: 'User'
 	},
+	from_name:{
+		type: mongoose.Schema.Types.String,
+		ref: 'Profile'
+	},
 	to_id: {
 		type: mongoose.Schema.Types.ObjectId,
 	    ref: 'User'
 	},
+	id_cart:{
+		type: mongoose.Schema.Types.ObjectId,
+	    ref: 'DumpCart'
+	},
 	tanggal_message: {
 	    type : Date,
 	    default: Date.now
+	},
+	status_nego:{
+		type: String
 	}
 });
 
