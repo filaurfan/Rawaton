@@ -24,7 +24,7 @@ router.get('/nego/:id_user', ensureAuthenticated, function(req, res){
 				    			Profile.findOne({id_user: id_user}, function(err, profile){
 				          			if (!err) {
 				          				console.log(user);
-				    	        		res.render('buyerdetailnego', {users: user, profiles_buyer : profile, carts: cart, items: item,  layout: 'layout_buyer'});
+				    	        		return res.render('buyerdetailnego', {users: user, profile_buyer : profile, carts: cart, items: item,  layout: 'layout_buyer'});
 				          			}
 				          		});
 				    		}else{
@@ -268,7 +268,7 @@ router.get('/list/:id_user', ensureAuthenticated, function(req, res, next){
 				    			Profile.findOne({id_user: _id}, function(err, profile){
 		          					if (!err) {
 		          						console.log(user);
-		    	        				res.render('buyerlistcart', {users: user, carts: cart, items: item, profile_buyer: profile, layout: 'layout_buyer'});
+		    	        				return res.render('buyerlistcart', {users: user, carts: cart, items: item, profile_buyer: profile, layout: 'layout_buyer'});
 		          					}
 		          				});
 				    		}else{
