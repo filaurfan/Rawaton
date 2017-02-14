@@ -74,8 +74,6 @@ app.use(expressValidator({
   }
 }));
 
-
-
 // Global Vars
 app.use(function (req, res, next) {
   res.locals.success_msg = req.flash('success_msg');

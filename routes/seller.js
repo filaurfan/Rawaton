@@ -424,7 +424,7 @@ router.get('/product/update/:id_product/:id_user', ensureAuthenticated, function
 			    if(!err) {
 			    	Product.findOne({ _id: id_product}, function(err, product) {
 			    		if (product) {
-			    			Profile.findOne({id_user: _id}, function(err, profile){
+			    			Profile.findOne({id_user: id_user}, function(err, profile){
 					        	console.log(user);
 					    	    res.render('sellerupdateproduct', {users: user, profile_seller: profile, products: product, layout: 'layout_user'});
 					        });
