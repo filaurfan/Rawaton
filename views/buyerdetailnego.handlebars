@@ -50,7 +50,7 @@
                     <thead>
                         <tr>
                             <th width="10px">No</th>
-                            <th width="100px">Gambar</th>
+                            <!-- <th width="100px">Gambar</th> -->
                             <th width="150px">Nama Barang</th>
                             <th width="150px">Nama Toko</th>
                             <th width="10px">Jumlah</th>
@@ -60,15 +60,15 @@
                     {{#each items}}
                     <tbody>
                         <td>{{ id_product }} </td>
-                        <td><img class="profile-user-img img-responsive img-circle" src="../../{{ gambar_item }}"></td>
+                        <!-- <td><img class="profile-user-img img-responsive img-circle" src="../../{{ gambar_item }}"></td> -->
                         <td>{{ nama_product }}</td>
                         <td>{{ nama_seller }}</td>
                         <td>{{ jumlah }}</td>
-                        <td>Rp. <center><input class="txt" type="text" name="txt" value="{{ harga_nego }}" /></center></td>
+                        <td>Rp. <input class="txt" type="text" name="txt" value="{{ harga_nego }}" /></td>
                     </tbody>
                     {{/each}}
                     <tbody>
-                        <td></td>
+                        <!-- <td></td> -->
                         <td></td>
                         <td>Total</td>
                         <td></td>
@@ -79,20 +79,35 @@
                         </div>
                         {{/carts}}
                     </tbody>
+                    <tbody>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                        <td><div class="input-group pull-right"><button type="button" class="btn btn-success">Nego Harga</button></div></td>
+                    </tbody>
             </table>
         </div>
     </div>
-            
-    <div class="input-group"><button type="button" class="btn btn-success">Nego Harga</button></div>
+    </section>
+    <section class="content">       
+    
     <div class="col-md-6"></div>
     <div class="col-md-4">
+    {{#carts}}
         <center>
-            <button type="button" class="btn btn-primary">Setuju</button>
-            <button type="button" class="btn btn-danger">Batal</button>
+            <a href="#" class="add-cart">
+                <span class="btn btn-primary" aria-hidden="true">Setuju</span>
+            </a>
+            <a href="/cart/list/{{ id_user }}" class="add-cart">
+                <span class="btn btn-danger" aria-hidden="true">Batal</span>
+            </a>
         </center>
+    {{/carts}}
     </div>
 
     <div class="col-md-12">
+    <div class="clearfix"></div>
     <h3 class="text-center">Chat Harga</h3>
         <div class="panel panel-primary">
         <div class="panel-heading"><span class="glyphicon glyphicon-comment"></span> Chat</div>
@@ -134,6 +149,7 @@
             </script>
         </div>
     </div>   
+    <div class="clearfix"></div>
     </section>
 </div>
 

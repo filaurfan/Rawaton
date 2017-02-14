@@ -10,7 +10,7 @@ var Profile = require('../models/usersprofile');
 var Cart = require('../models/cart');
 var CartItem = require('../models/cartitem');
 
-router.get('/nego/:id_user/:id_cart', ensureAuthenticated, function(req, res){
+router.get('/nego/:id_user/:id_produk', ensureAuthenticated, function(req, res){
 	
 });
 
