@@ -2,13 +2,13 @@
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>
-       Pesan
-      </h1>
+      <h1>Pesan</h1>
+      {{#messages}} 
       <ol class="breadcrumb">
-        <li><a href="index2.html"><i class="fa fa-dashboard"></i> Beranda</a></li>
+        <li><a href="/seller/dashboard/{{ to_id }}"><i class="fa fa-dashboard"></i> Beranda</a></li>
         <li class="active">Pesan</li>
       </ol>
+      {{/messages}}
     </section>
 
     <!-- Main content -->
@@ -21,7 +21,7 @@
         <div class="col-md-4">
             <form action="#" method="get" class="progress-group">
               <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <input type="text" name="q" class="form-control" placeholder="Cari...">
                   <span class="input-group-btn">
                     <button type="submit" name="search" id="search-btn" class="btn btn-default"><i class="fa fa-search"></i>
                     </button>
@@ -35,29 +35,27 @@
           <table class="table table-bordered table-hover table-striped">
               <thead>
                 <tr>
-                  <th width="5px"><input type="CHECKBOX" name="pilih_all"></th>
                   <th width="150px">Nama</th>
-                  <th width="150px">Produk</th>
+                  <th width="150px">ID Message</th>
                   <th width="150px">Tanggal</th>
+                  <th width="150px">Status</th>
+                  <th width="10px">View</th>
                 </tr>
               </thead>
+              {{#each messages}}
               <a href="profile.html">
               <tbody>
-                  <td><input type="CHECKBOX" name="pilih"></td>
-                  <td><b> Suminto</b></td>
-                  <td>Sony Xperia XZ</td>
-                  <td>27/1/2017</td>
+                  <td><b>{{ from_name }}</b></td>
+                  <td>{{ _id }}</td>
+                  <td>{{ tanggal_message }}</td>
+                  <td>{{ status_nego }}</td>
+                  <td>
+                    <a class="btn btn-warning btn-xs" href='/chat/nego/{{ from_id }}/{{ to_id }}/{{ id_cart }}/{{ _id }}' ><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                  </td>
               </tbody>
               </a>
-
-              <tbody>
-                  <td><input type="CHECKBOX" name="pilih"></td>
-                  <td><b> Paijah</b></td>
-                  <td>Kemeja</td>
-                  <td>25/1/2017</td>
-              </tbody>
+              {{/each}}
           </table>
-            <input type="submit" name="mit" class="btn btn-danger" value="Hapus">
         </div>
         </div>
         </div>

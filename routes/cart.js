@@ -11,6 +11,9 @@ var Cart = require('../models/cart');
 var CartItem = require('../models/cartitem');
 var AlamatPengiriman = require('../models/cartalamat');
 
+var DumpCart = require('../models/dumpcart');
+var DumpCartItem = require('../models/DumpCartItem');
+
 router.get('/nego/:id_user', ensureAuthenticated, function(req, res){
 	var id_user = req.params.id_user;
 	var id_cart = req.session.id_cart;
@@ -253,22 +256,33 @@ router.post('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
 
 //akses list cart buyer :
 //option satu
-router.get('/list/:id_user', ensureAuthenticated, function(req, res, next){
+router.get('/list/:id_user', ensureAuthenticated, function(req, res){
 	var _id = req.params.id_user;
 	var id_cart = req.session.id_cart;
 	var tanggal_buat = new Date();
-		
+	var id_dumpcart = req.session.id_dumpcart;
+
+	console.log("session dump cart di list"+id_dumpcart);
+
 	User.findOne({ _id: _id }, function(err, user) {
-		if (!err) {
+		if (user) {
 			if(user.role == "buyer"){
-        		Cart.findOne({ _id: id_cart}, function(err, cart){
-				    if(cart) {
-				    	CartItem.find({ id_cart: cart._id}, function(err, item){
-				    		if (!err) {
-				    			Profile.findOne({id_user: _id}, function(err, profile){
-		          					if (!err) {
-		          						console.log(user);
-		    	        				return res.render('buyerlistcart', {users: user, carts: cart, items: item, profile_buyer: profile, layout: 'layout_buyer'});
+	        	Cart.findOne({ _id: id_cart}, function(err, cart){
+					if(cart) {
+						CartItem.find({ id_cart: cart._id}, function(err, item){
+							if (!err) {
+								Profile.findOne({id_user: _id}, function(err, profile){
+								    if (!err) {
+								    	DumpCart.findOne({_id : id_dumpcart}, function(err, dumpcart){
+									    	if (!err) {
+										    	DumpCartItem.find({id_cart: dumpcart._id}, function(err, dumpitem){
+										    		if (!err) {
+		    		console.log(user);
+		    	    return res.render('buyerlistcart', {users: user, carts: cart, items: item, dumpcarts: dumpcart, dumpitems: dumpitem, profile_buyer: profile, layout: 'layout_buyer'});
+								    				}
+								    			});
+								    		}
+								    	});
 		          					}
 		          				});
 				    		}else{
@@ -293,6 +307,7 @@ router.get('/list/:id_user', ensureAuthenticated, function(req, res, next){
 router.post('/add/:id_product', ensureAuthenticated, function(req, res){
 	var id_product = req.params.id_product;
 	var id_cart = req.session.id_cart;
+	var id_dumpcart = req.session.id_dumpcart;
 	var id_user = req.session.id_user;
 	var harga = req.body.harga;
 	var jumlah = req.body.jumlah;
@@ -305,16 +320,18 @@ router.post('/add/:id_product', ensureAuthenticated, function(req, res){
 				if(product) {
 					Alamat.findOne({ id_user: product.id_User }, function(err, alamat){
 						if (alamat) {
-							Cart.findOne({_id : id_cart}, function(err, cart){
-								if (cart) {
-									var total = cart.total_harga + hargaakhir;
-									Cart.update({_id: id_cart}, {$set: {total_harga : total, id_seller: product.id_User}}, function(err){
+							console.log("Session dumpcart "+id_dumpcart);
+							DumpCart.findOne({_id: id_dumpcart}, function(err, dumpcart){
+								if (dumpcart) {
+									var total = dumpcart.total_harga + hargaakhir;
+									DumpCart.update({ _id: id_dumpcart}, {$set: {total_harga : total, id_seller: product.id_User}}, function(err){
 						      			if(err){
 							    			console.log(err);
 							    		}
 						      		});
-						      		var item = new CartItem({
-						      			id_cart: id_cart,
+						      	
+								    var dumpitem = new DumpCartItem({
+						      			id_cart: id_dumpcart,
 						      			id_product: id_product,
 						      			id_seller: product.id_User,
 						      			nama_product: product.name_product,
@@ -323,10 +340,43 @@ router.post('/add/:id_product', ensureAuthenticated, function(req, res){
 						      			jumlah: jumlah,
 						      			harga_nego: hargaakhir,
 						      			tanggal_pesan: tanggal_pesan
-						      		});				
-								    CartItem.create(item, function(err){
+						      		});
+								    DumpCartItem.create(dumpitem, function(err, dumpitem){
 								    	if (!err) {
-								    		res.redirect('/cart/list/'+id_user);
+								    		req.session.id_dumpitem = dumpitem._id;
+								    		console.log("Berhasil mengadd dumpitem 0 ="+req.session.id_dumpitem);
+								    		Cart.findOne({_id : id_cart}, function(err, cart){
+												if (cart) {
+													var total = cart.total_harga + hargaakhir;
+													console.log("Berhasil mengadd dumpitem 1 ="+req.session.id_dumpitem);
+													Cart.update({_id: id_cart}, {$set: {total_harga : total, id_seller: product.id_User}}, function(err){
+										      			if(err){
+											    			console.log(err);
+											    		}
+										      		});	
+										      		console.log("Berhasil mengadd dumpitem 2 ="+req.session.id_dumpitem);
+										      		var item = new CartItem({
+										      			id_cart: id_cart,
+										      			id_dumpitem : req.session.id_dumpitem,
+										      			id_product: id_product,
+										      			id_seller: product.id_User,
+										      			nama_product: product.name_product,
+										      			nama_seller: alamat.nama_toko,
+										      			gambar_item: product.picture_product,
+										      			jumlah: jumlah,
+										      			harga_nego: hargaakhir,
+										      			tanggal_pesan: tanggal_pesan
+										      		});				
+												    CartItem.create(item, function(err){
+												    	if (!err) {
+												    		res.redirect('/cart/list/'+id_user);
+												    		console.log("Berhasil mengadd item");
+												    	}else{
+												    		return res.render('500');
+												    	}
+												    });					      		
+												}
+											});
 								    	}else{
 								    		return res.render('500');
 								    	}
@@ -345,10 +395,13 @@ router.post('/add/:id_product', ensureAuthenticated, function(req, res){
     });
 });
 
-router.get('/delete/:id_cartitem', ensureAuthenticated, function(req, res){
+router.get('/delete/:id_cartitem/:id_dumpitem', ensureAuthenticated, function(req, res, next){
 	var id_cartitem = req.params.id_cartitem;
+	var id_dumpcartitem = req.params.id_dumpitem;
+	var id_dumpcart = req.session.id_dumpcart;
 	var id_cart = req.session.id_cart;
 	var id_user = req.session.id_user;
+
 	if (id_cartitem) {
 		User.findOne({ _id: id_user }, function(err, user) {
         	if(user.role == "buyer"){
@@ -359,20 +412,44 @@ router.get('/delete/:id_cartitem', ensureAuthenticated, function(req, res){
 			    				if(!err){
 			    					var total = cart.total_harga - item.harga_nego;
 									Cart.update({_id: id_cart}, {$set: {total_harga : total}}, function(err){
-								      	if(err){
-									    	console.log(err);
+								      	if(!err){
+									    	console.log("harga total broo"+total);
 									    }
 								    });
 								    CartItem.remove({_id : id_cartitem}, function(err) {
 							        	if(!err) {
-								          	console.log('Removed Product');
+								          	console.log('Removed Product1');
+								          	// return next();
+								        } else {
+								          	res.statusCode = 500;
+								          	console.log('Internal error(%d): %s',res.statusCode,err.message);
+								         	return res.send({ error: 'Server error' });
+								        }
+							        });
+			    				}
+			    			});
+			    		}
+					});
+					DumpCart.findOne({_id : id_dumpcart}, function(err, dumpcart){
+			    		if(!err) {
+			    			DumpCartItem.findOne({_id: id_dumpcartitem}, function(err, dumpitem){
+			    				if(!err){
+			    					var total = dumpcart.total_harga - dumpitem.harga_nego;
+									DumpCart.update({_id: id_dumpcart}, {$set: {total_harga : total}}, function(err){
+								      	if(err){
+									    	console.log(err);
+									    }
+								    });
+								    DumpCartItem.remove({_id : id_dumpcartitem}, function(err) {
+							        	if(!err) {
+								          	console.log('Removed Dump Product');
 								          	return res.redirect('/cart/list/'+id_user);
 								        } else {
 								          	res.statusCode = 500;
 								          	console.log('Internal error(%d): %s',res.statusCode,err.message);
 								         	return res.send({ error: 'Server error' });
 								        }
-							        });	
+							        });
 			    				}
 			    			});
 			    		}

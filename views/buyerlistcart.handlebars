@@ -19,7 +19,7 @@
         </div>
         <div class="col-md-12 box-body">
             <div class="table">
-                <table class="table table-bordered table-hover table-striped" >
+                <table class="table table-bordered table-hover table-striped" id="container">
                     <thead>
                         <tr>
                             <th width="5px"></th>
@@ -33,16 +33,18 @@
                         </tr>
                     </thead>
                     {{#each items}}
-                    <tbody>
+                    <tbody id="container">
                         <td><input type="CHECKBOX" name="pilih"></td>
                         <td>{{ id_product }} </td>
-                        <td><img class="profile-user-img img-responsive img-circle" src="../../{{ gambar_item }}"></td>
+                        <td><img class="profile-user-img img-responsive img-circle" src="/uploads/{{ gambar_item }}"></td>
                         <td>{{ nama_product }}</td>
                         <td>{{ nama_seller }}</td>
                         <td>{{ jumlah }}</td>
                         <td>Rp. {{ harga_nego }}</td>
                         <td>
-                            <a onClick="return confirm('Anda yakin ingin menghapus data ini?')" href='/cart/delete/{{ _id }}' class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                            <form action="/cart/delete/{{ _id }}/{{ id_dumpitem }}" >
+                                <button id="button-2"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                            </form>                 
                         </td>
                     </tbody>
                     {{/each}}
@@ -61,7 +63,7 @@
                         <td></td>
                     </tbody>
                 </table>
-            <div class="col-md-8"></div>
+                <div class="col-md-8"></div>
                 {{#carts}}
                 <a href="/cart/nego/{{ id_user }}" class="add-cart">
                     <span class="btn btn-info" aria-hidden="true">NEGO</span>
@@ -69,10 +71,13 @@
                 <a href="/cart/checkout/{{ id_user }}" class="add-cart">
                     <span class="btn btn-info" aria-hidden="true">CHECKOUT</span>
                 </a>
-                <a href="/chat/nego/{{ id_user }}" class="add-cart">
-                    <span class="btn btn-info" aria-hidden="true">Negotest</span>
-                </a>
                 {{/carts}}
+                {{#dumpcarts}}
+                <a href="/chat/nego/{{ id_user }}/{{ id_seller }}/{{ _id }}" class="add-cart">
+                    <span class="btn btn-info" aria-hidden="true">TEST</span>
+                </a>
+                {{/dumpcarts}}
+                
             </div>
         </div>
     </section>

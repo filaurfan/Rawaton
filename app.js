@@ -12,7 +12,7 @@ var mongo = require('mongodb');
 var mongoose = require('mongoose');
 var favicon = require('serve-favicon');
 
-
+// var users{};
 var multer = require('multer');
 var fs = require('fs');
 
@@ -27,6 +27,74 @@ var chat = require('./routes/chat');
 
 // Init App
 var app = express();
+
+// var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+
+
+//Whenever someone connects this gets executed
+io.on('connection', function(socket){
+  socket.on('new user', function(data, callback){
+    if (data in users) {
+      callback(false);
+    } else{
+      callback(true);
+      socket.nickname = data;
+      users[socket.nickname] = socket;
+      updateNicknames();
+    }
+  });
+
+  function updateNicknames(){
+    io.socket.emit('usernames', Object.key[users]);
+  }
+
+  socket.on('send message', function(data, callback){
+    var msg  = data.trim();
+    if (msg.substr(0, 3) === '/w') {
+      msg=msg.substr(3);
+      var ind = msg.indexOf(' ');
+      if (ind !== -1) {
+        var name = msg.substring(0, ind);
+        var msg = msg.substring(ind + 1);
+        if (name in users) {
+          user[name].emit('wispher', {msg: msg, nick: socket.nickname});
+          console.log("WHISPER!");
+        }else{
+          callback("errrorrr wisper");
+        }
+        
+      }
+      else{
+        callback("Errorrorororoor");
+      }
+    }else{
+      io.socket.emit('new message', {msg: data, nick: socket.nickname});
+    }
+  });
+
+  socket.on('disconnect', function(data){
+    if (!socket.nickname) return;
+    delete users[socket.nickname];
+    nicknames.splice(nicknames.indexOf(socket.nickname), 1);
+    updateNicknames();
+  });
+  // console.log('A user connected');
+
+  // //Send a message after a timeout of 4seconds
+  // setTimeout(function(){
+  //   socket.send('Sent a message 4seconds after connection!');
+  // }, 4000);
+
+  // //Whenever someone disconnects this piece of code executed
+  // socket.on('disconnect', function () {
+  //   console.log('A user disconnected');
+  // });
+
+});
+
 
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 // View Engine
@@ -95,6 +163,10 @@ app.use('/chat', chat);
 // Set Port
 app.set('port', (process.env.PORT || 3000));
 
-app.listen(app.get('port'), function(){
+http.listen(app.get('port'), function(){
 	console.log('Server started on port '+app.get('port'));
 });
+
+// http.listen(3000, function(){
+//   console.log('listening on *:3000');
+// });

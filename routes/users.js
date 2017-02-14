@@ -9,6 +9,10 @@ var Profile = require('../models/usersprofile');
 var Alamat = require('../models/usersalamat');
 var Online	= require('../models/online');
 var Cart = require('../models/cart');
+
+var DumpCart = require('../models/dumpcart');
+var DumpCartItem = require('../models/DumpCartItem');
+
 // Register
 router.get('/register', ensureAuthenticated, function(req, res){
 	res.render('homeregister', {layout: 'layout_login'});
@@ -175,11 +179,55 @@ router.post('/login', passport.authenticate('local-login', {failureRedirect:'/us
 								else {
 									console.log('error bro');
 								}
-							});							
+							});						
 					    }else{
 
 					    }
+					    if (!err) {
+					    	Cart.findOne({ id_user: id, status: "belum"}, function(err, cart){
+								if(cart) {
+							    	req.session.id_cart = cart._id;
+							    	console.log("ini session kalo udah punya cart sebelumnya"+req.session.id_cart);
+							    } else{
+
+							    }
+							});	
+					    }
 					});
+					DumpCart.findOne({ id_user: id, status: "belum"}, function(err, dumpcart){
+						if(dumpcart) {
+					    	req.session.id_dumpcart = dumpcart._id;
+					    	console.log("ini session kalo udah punya cart sebelumnya"+req.session.id_dumpcart);
+					    } else if (!dumpcart){
+					    	var dumpcart = new DumpCart({
+			      				id_cart: req.session.id_cart,
+			      				id_user: id,
+			      				tanggal_buat: new Date(),
+			      				status: "belum",
+			      				total_harga : 0
+			      			});
+			      			DumpCart.create(dumpcart ,function(err) {  
+								if (!err) {
+									console.log('berhasil menyimpan dumpcart');
+								}
+								else {
+									console.log('error bro');
+								}
+							});					
+					    }else{
+
+					    }
+					    if (!err) {
+					    	DumpCart.findOne({ id_user: id, status: "belum"}, function(err, dumpcart){
+								if(dumpcart) {
+								    req.session.id_dumpcart = dumpcart._id;
+								    console.log("ini session kalo udah punya cart sebelumnya loh"+req.session.id_dumpcart);
+								}else{
+
+								}
+							});	
+					    }
+					});					
 				}
 				Online.findOne({id_user: id}, function(err, online){
 					if (online) {
