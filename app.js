@@ -96,7 +96,7 @@ var app = express();
 // });
 
 
-app.use(favicon(__dirname + '/public/images/favicon.ico'));
+
 // View Engine
 app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', exphbs({defaultLayout:'layout'}));
@@ -151,7 +151,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
 //cuma tambah komnetar untuk branch ajaaaaa
 
 app.use('/', routes);
