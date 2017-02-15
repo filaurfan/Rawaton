@@ -369,7 +369,7 @@ router.post('/product/input/:id_user', uploadproduct, ensureAuthenticated, funct
 	var name_product = req.body.name_product;
 	var category_product = req.body.category_product;
 	var price_product = req.body.price_product;
-	var entity_product = req.body.entity_product;
+	var quantity_product = req.body.quantity_product;
 	var description_product = req.body.description_product;
 	var picture_product = req.file.originalname;
 	var created_at = new Date();
@@ -378,7 +378,7 @@ router.post('/product/input/:id_user', uploadproduct, ensureAuthenticated, funct
 	req.checkBody('name_product', 'Nama Barang is required').notEmpty();
 	req.checkBody('category_product', 'Kategory Barang is not valid').notEmpty();
 	req.checkBody('price_product', 'Harga Barang is not valid').notEmpty();
-	req.checkBody('entity_product', 'Stock Barang is required').notEmpty();
+	req.checkBody('quantity_product', 'Stock Barang is required').notEmpty();
 	req.checkBody('description_product', 'Deskripsi Barang is required').notEmpty();
 	// req.checkBody('picture_product', 'Gambar Barang is required').notEmpty();
 
@@ -398,7 +398,7 @@ router.post('/product/input/:id_user', uploadproduct, ensureAuthenticated, funct
 		    id_User: id_user,
 		    category_product: category_product,
 		    price_product: price_product,
-		    entity_product: entity_product,
+		    quantity_product: quantity_product,
 		    description_product: description_product,
 		    picture_product: picture_product,
 		    created_at: created_at
