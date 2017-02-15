@@ -11,29 +11,29 @@ var Cart = require('../models/cart');
 var CartItem = require('../models/cartitem');
 var Message = require('../models/message');
 
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+// var app = require('express')();
+// var http = require('http').Server(app);
+// var io = require('socket.io')(http);
 
 var DumpCart = require('../models/dumpcart');
 var DumpCartItem = require('../models/DumpCartItem');
 
 router.post('/update/:id_dumpcart', ensureAuthenticated, function(req, res){
 	var id_dumpcart = req.params.id_dumpcart;
-	var total_harga = req.body.total_harga;
-	var harga_nego = req.body.harga_nego;
+	// var total_harga = req.body.total_harga;
+	// var harga_nego = req.body.harga_nego;
 
-	console.log("ini id dump cart"+id_dumpcart);
-	DumpCart.update({_id: id_dumpcart, status: "belum"}, {$set: {total_harga: total_harga}}, function(err, dump){
-		if (!err) {
-			console.log("berhasil update boy"+dump);
-		}
-	});
-	DumpCartItem.update({_id: id_dumpitem}, {$set: {harga_nego: harga_nego}}, function(err, dump){
-		if (!err) {
-			console.log("berhasil update boy"+dump);
-		}
-	});
+	// console.log("ini id dump cart"+id_dumpcart);
+	// DumpCart.update({_id: id_dumpcart, status: "belum"}, {$set: {total_harga: total_harga}}, function(err, dump){
+	// 	if (!err) {
+	// 		console.log("berhasil update boy"+dump);
+	// 	}
+	// });
+	// DumpCartItem.update({_id: id_dumpitem}, {$set: {harga_nego: harga_nego}}, function(err, dump){
+	// 	if (!err) {
+	// 		console.log("berhasil update boy"+dump);
+	// 	}
+	// });
 	return console.log("berhasil berhasil update");
 });
 
@@ -148,11 +148,11 @@ router.get('/nego/:id_user/:id_seller/:id_dumpcart/:id_message', ensureAuthentic
     });
 });
 
-io.on('connection', function(socket){
-  socket.on('chat message', function(msg){
-    io.emit('chat message', msg);
-  });
-});
+// io.on('connection', function(socket){
+//   socket.on('chat message', function(msg){
+//     io.emit('chat message', msg);
+//   });
+// });
 
 function ensureAuthenticated(req, res, next){
 	if(req.isAuthenticated()){

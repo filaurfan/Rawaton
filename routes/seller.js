@@ -31,7 +31,7 @@ router.get('/pesan/:id_user', ensureAuthenticated, function(req, res){
         				Profile.findOne({id_user: _id}, function(err, profile){
         					if (profile) {
         						console.log(user);
-								res.render('sellerpesan', {users: user, profile_seller: profile, messages: message, layout: 'layout_user'});
+								return res.render('sellerpesan', {users: user, profile_seller: profile, messages: message, layout: 'layout_user'});
 							}
 						});
         			}
@@ -41,7 +41,7 @@ router.get('/pesan/:id_user', ensureAuthenticated, function(req, res){
         			if (message) {
 		        		Profile.findOne({id_user: _id}, function(err, profile){
 							console.log(user);
-							res.render('buyerpesan', {users: user, profile_buyer: profile, messages: message, layout: 'layout_buyer'});
+							return res.render('buyerpesan', {users: user, profile_buyer: profile, messages: message, layout: 'layout_buyer'});
 						});
 					}
 				});
@@ -64,7 +64,7 @@ router.get('/pemesanan/:id_user', ensureAuthenticated, function(req, res){
         			if (cart) {
         				Profile.findOne({id_user: _id}, function(err, profile){
 		        			console.log(user);
-		    	        	res.render('sellerpemesanan', {users: user, carts: cart, profile_seller: profile, layout: 'layout_user'});
+		    	        	return res.render('sellerpemesanan', {users: user, carts: cart, profile_seller: profile, layout: 'layout_user'});
 		        		});
         			}
         		});     		
@@ -73,7 +73,7 @@ router.get('/pemesanan/:id_user', ensureAuthenticated, function(req, res){
         			if (cart) {
         				Profile.findOne({id_user: _id}, function(err, profile){
 		        			console.log(user);
-		    	        	res.render('buyerpemesanan', {users: user, carts: cart, profile_buyer: profile, layout: 'layout_buyer'});
+		    	        	return res.render('buyerpemesanan', {users: user, carts: cart, profile_buyer: profile, layout: 'layout_buyer'});
 		        		});
         			}
         		});
@@ -101,7 +101,7 @@ router.get('/listpemesanan/:id_user/:id_cart', ensureAuthenticated, function(req
         							if (alamat) {
         								Profile.findOne({id_user: _id}, function(err, profile){
 						        			console.log(user);
-   		 	        						res.render('sellerlistpemesanan', {users: user, carts: cart, alamats: alamat, profile_seller: profile, items: item, layout: 'layout_user'});
+   		 	        						return res.render('sellerlistpemesanan', {users: user, carts: cart, alamats: alamat, profile_seller: profile, items: item, layout: 'layout_user'});
 						        		});
         							}
         						});
@@ -118,7 +118,7 @@ router.get('/listpemesanan/:id_user/:id_cart', ensureAuthenticated, function(req
         							if (alamat) {
         								Profile.findOne({id_user: _id}, function(err, profile){
 						        			console.log(user);
-   		 	        						res.render('buyerlistpemesanan', {users: user, carts: cart, alamats: alamat, profile_buyer: profile, items: item, layout: 'layout_buyer'});
+   		 	        						return res.render('buyerlistpemesanan', {users: user, carts: cart, alamats: alamat, profile_buyer: profile, items: item, layout: 'layout_buyer'});
 						        		});
         							}
         						});
@@ -142,10 +142,10 @@ router.get('/dashboard/:id_user', ensureAuthenticated, function(req, res){
         User.findOne({ _id: _id }, function(err, user) {
         	if(user.role == "seller"){
         		console.log(user);
-    	        res.render('sellerdashboard', {users: user, layout: 'layout_user'});
+    	        return res.render('sellerdashboard', {users: user, layout: 'layout_user'});
         	}else if(user.role == "buyer"){
         		console.log(user);
-    	        res.render('buyerdashboard', {users: user, layout: 'layout_buyer'});
+    	        return res.render('buyerdashboard', {users: user, layout: 'layout_buyer'});
         	}else{
 
         	}
@@ -162,10 +162,10 @@ router.get('/profile/:id_user', ensureAuthenticated, function(req, res){
 	        	Alamat.findOne({ id_user: _id }, function(err, alamat){
 	        		if(user.role == "seller"){
 		        		console.log(user);
-		    	        res.render('sellerprofile', {users: user, profile_seller: profile, alamat_seller: alamat, layout: 'layout_user'});
+		    	        return res.render('sellerprofile', {users: user, profile_seller: profile, alamat_seller: alamat, layout: 'layout_user'});
 		        	}else if(user.role == "buyer"){
 		        		console.log(user);
-		    	        res.render('buyerprofile', {users: user, profile_buyer: profile, alamat_buyer: alamat,  layout: 'layout_buyer'});
+		    	        return res.render('buyerprofile', {users: user, profile_buyer: profile, alamat_buyer: alamat,  layout: 'layout_buyer'});
 		        	}else{
 
 		        	}
@@ -184,10 +184,10 @@ router.get('/pengaturan/:id_user', ensureAuthenticated, function(req, res){
 	        	Alamat.findOne({ id_user: user._id }, function(err, alamat){
 	        		if(user.role == "seller"){
 		        		console.log(user);
-		    	        res.render('sellerpengaturan', {users: user, profile_seller: profile, alamat_seller: alamat, layout: 'layout_user'});
+		    	        return res.render('sellerpengaturan', {users: user, profile_seller: profile, alamat_seller: alamat, layout: 'layout_user'});
 		        	}else if(user.role == "buyer"){
 		        		console.log(user);
-		    	        res.render('buyerpengaturan', {users: user, profile_buyer: profile, alamat_buyer: alamat,  layout: 'layout_buyer'});
+		    	        return res.render('buyerpengaturan', {users: user, profile_buyer: profile, alamat_buyer: alamat,  layout: 'layout_buyer'});
 		        	}else{
 
 		        	}
@@ -302,7 +302,7 @@ router.get('/product/list/:id_user', ensureAuthenticated, function(req, res, nex
 		        if(!err) {
 		        	Profile.findOne({id_user: _id}, function(err, profile){
 						console.log(user);
-						res.render('sellerlistproduct', {users: user, profile_seller: profile, products: product, layout: 'layout_user'});
+						return res.render('sellerlistproduct', {users: user, profile_seller: profile, products: product, layout: 'layout_user'});
 					});
 		      	} else {
 		        	return res.render('500');
@@ -337,7 +337,7 @@ router.get('/product/all', function(req, res){
 		res.redirect('/seller/product/all/' + id_user);
 	} else {
 	    Product.find({}).sort({created_at: 1}).exec(function(err, products) {
-			res.render('productall', {products: products});
+			return res.render('productall', {products: products});
 		});
 	}
 });
@@ -349,7 +349,7 @@ router.get('/product/input/:id_user', ensureAuthenticated, function(req, res){
 		    if(!err) {
 		    	Profile.findOne({id_user: _id}, function(err, profile){
 		        	console.log(user);
-		    	    res.render('sellerinputproduct', {users: user, profile_seller: profile, layout: 'layout_user'});
+		    	    return res.render('sellerinputproduct', {users: user, profile_seller: profile, layout: 'layout_user'});
 		        });
 		    } else {
 		       	return res.render('500');
@@ -413,7 +413,7 @@ router.post('/product/input/:id_user', uploadproduct, ensureAuthenticated, funct
 						else {
 						    console.log('berhasil menyimpan');
 							req.flash('success_msg', 'You are registered and can now login');					
-						    res.redirect('/seller/product/list/'+ id_user);
+						    return res.redirect('/seller/product/list/'+ id_user);
 						}
 					});
 				}else if(user.role == "buyer"){
@@ -438,7 +438,7 @@ router.get('/product/update/:id_product/:id_user', ensureAuthenticated, function
 			    		if (product) {
 			    			Profile.findOne({id_user: id_user}, function(err, profile){
 					        	console.log(user);
-					    	    res.render('sellerupdateproduct', {users: user, profile_seller: profile, products: product, layout: 'layout_user'});
+					    	    return res.render('sellerupdateproduct', {users: user, profile_seller: profile, products: product, layout: 'layout_user'});
 					        });
 			    		}
 				    });					
