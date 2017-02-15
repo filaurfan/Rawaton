@@ -36,7 +36,7 @@ router.get('/nego/:id_user', ensureAuthenticated, function(req, res){
 				    	});
 
 				    } else {
-				    	console.log("Keranjang belum ada");
+				    	return console.log("Keranjang belum ada");
 				    }
 			    });
         	}else if(user.role == "seller"){
@@ -145,7 +145,7 @@ router.post('/pembayaran/:id_user', ensureAuthenticated, function(req, res, next
 						Cart.findOne({ id_user: id_buyer, status: "belum"}, function(err, cart2){
 							if (cart2) {
 								req.session.id_cart = cart2._id;
-								res.redirect('/seller/pemesanan/'+id_buyer);
+								return res.redirect('/seller/pemesanan/'+id_buyer);
 							}
 						});
 					}else{
@@ -173,7 +173,7 @@ router.get('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
           				Profile.findOne({id_user: id_user}, function(err, profile){
           					if (!err) {
           						console.log(user);
-    	        				res.render('cartalamatpemesan', {users: user, alamats: alamat, profiles_buyer: profile, layout: 'layout_buyer'});
+    	        				return res.render('cartalamatpemesan', {users: user, alamats: alamat, profiles_buyer: profile, layout: 'layout_buyer'});
           					}
           				});
           			}
@@ -213,7 +213,7 @@ router.post('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
 	console.log(id_buyer);
 	if(errors){
 		console.log("error boy");
-		res.redirect('/cart/checkout/'+id_buyer);
+		return res.redirect('/cart/checkout/'+id_buyer);
 	} else {
         User.findOne({ _id: id_buyer }, function(err, user) {
         	if(user.role == "buyer"){
@@ -234,15 +234,15 @@ router.post('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
 						console.log("berhasil menyimpan alamat pengiriman");
 					}else{
 						console.log(err);
-						res.redirect('/cart/checkout/'+id_buyer);
+						// res.redirect('/cart/checkout/'+id_buyer);
 					}
 				});
 				Cart.update({ _id: id_cart }, { $set: {status_pengiriman: "belum di konfirmasi", tanggal_pengiriman: ""}}, function(err){
 					if (!err) {
-						res.redirect('/cart/pembayaran/'+id_buyer);
+						return res.redirect('/cart/pembayaran/'+id_buyer);
 					}else{
 						console.log(err);
-						res.redirect('/cart/checkout/'+id_buyer);
+						return res.redirect('/cart/checkout/'+id_buyer);
 					}
 				});
         	}else if(user.role == "seller"){
@@ -277,8 +277,8 @@ router.get('/list/:id_user', ensureAuthenticated, function(req, res){
 									    	if (!err) {
 										    	DumpCartItem.find({id_cart: dumpcart._id}, function(err, dumpitem){
 										    		if (!err) {
-		    		console.log(user);
-		    	    return res.render('buyerlistcart', {users: user, carts: cart, items: item, dumpcarts: dumpcart, dumpitems: dumpitem, profile_buyer: profile, layout: 'layout_buyer'});
+											    		console.log(user);
+											    	    return res.render('buyerlistcart', {users: user, carts: cart, items: item, dumpcarts: dumpcart, dumpitems: dumpitem, profile_buyer: profile, layout: 'layout_buyer'});
 								    				}
 								    			});
 								    		}
@@ -290,7 +290,7 @@ router.get('/list/:id_user', ensureAuthenticated, function(req, res){
 				    		}
 				    	});
 				    } else {
-				    	console.log("Keranjang belum ada");
+				    	return console.log("Keranjang belum ada");
 				    }
 			    });
         	}else if(user.role == "seller"){
@@ -369,8 +369,8 @@ router.post('/add/:id_product', ensureAuthenticated, function(req, res){
 										      		});				
 												    CartItem.create(item, function(err){
 												    	if (!err) {
-												    		res.redirect('/cart/list/'+id_user);
 												    		console.log("Berhasil mengadd item");
+												    		return res.redirect('/cart/list/'+id_user);
 												    	}else{
 												    		return res.render('500');
 												    	}

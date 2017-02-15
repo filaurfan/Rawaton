@@ -1,48 +1,4 @@
 
-<script src="/socket.io/socket.io.js"></script>
-<script>
-      var socket = io();
-      socket.on('message', function(data){document.write(data)});
-        function setUsername(){
-            socket.emit('setUsername', document.getElementById('name').value);
-        };
-        var user;
-        socket.on('userExists', function(data){
-            document.getElementById('error-container').innerHTML = data;
-        });
-        socket.on('username', function(data){
-            var html = '';
-            for (var i = 0; i < data.length; i++) {
-                html == data[i]+"<br/>"
-            }
-            $users.html(html);
-        });
-
-        $messageForm.submit(function(e){
-            e.PreventDefault();
-            socket.emit('send message', $messageBox.val(), function(data){
-                $chat.append("<span class=error><b>"+ data +"</span><br/>")
-            });
-            $messageBox.val('');
-        });
-
-        socket.on('new message', function(data){
-            $chat.append("<span class=msg><b>"+ data.nick+": </b>"+ data.msg +"</span><br/>")
-        });
-
-        socket.on('whisper', function(data){
-            $chat.append("<span class=whisper><b>"+ data.nick+": </b>"+ data.msg +"</span><br/>")
-        });
-        function sendMessage(){
-            var msg = document.getElementById('message').value;
-            if(msg){
-                socket.emit('msg', {message: msg, user: user});
-            }
-        }
-        
-</script>
-
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -127,22 +83,6 @@
     {{#users}}
     <input type="text" hidden="hidden" name="user" id="user" value="{{ role }}">
     {{/users}}
-
-    <!-- ////////////////////////////////////////////////////////////////////////////////// -->
-    <div class="col-md-12">
-        <div class="clearfix"></div>
-            <p>Enter a Username:</p>
-            <p id="nickError"></p>
-            <form id="setNick">
-                <input type="text" name="nickname" id="nickname"></input>
-                <input type="submit"></input>
-            </form>
-        <div id="nickWrap"></div>
-
-        <div class="clearfix"></div>
-    </div>
-    <!-- //////////////////////////////////////////////////////////////////////////////// -->
-
 
     <div class="col-md-12">
     <div class="clearfix"></div>
