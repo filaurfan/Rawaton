@@ -66,7 +66,7 @@ router.get('/category/:category/:id_user', ensureAuthenticated, function(req, re
 	var id_user = req.params.id_user;
 	var category = req.params.category;
 
-	if (category == "otomotif") {
+	if (category == "Otomotif") {
 		Product.find({category_product : category}).sort({'created_at': -1}).exec(function(err, product) {
 		    if(!err) {
 		    	User
@@ -79,7 +79,7 @@ router.get('/category/:category/:id_user', ensureAuthenticated, function(req, re
 		        return res.render('500');
 		    }
 	    });
-	}else if (category == "smartphone") {
+	}else if (category == "SmartphoneHandphone") {
 		Product.find({category_product : category}).sort({'created_at': -1}).exec(function(err, product) {
 		    if(!err) {
 		    	User
@@ -92,7 +92,7 @@ router.get('/category/:category/:id_user', ensureAuthenticated, function(req, re
 		        return res.render('500');
 		    }
 	    });
-	}else if (category == "fashion") {
+	}else if (category == "Fashion") {
 		Product.find({category_product : category}).sort({'created_at': -1}).exec(function(err, product) {
 		    if(!err) {
 		    	User
@@ -113,12 +113,12 @@ router.get('/category/:category', function(req, res){
 	var category = req.params.category;
 	if(req.isAuthenticated()){
 		var id_user = req.session.id_user;
-		if (category == "otomotif") {
-			res.redirect('/category/otomotif/' + id_user);
-		}else if (category == "smartphone") {
-			res.redirect('/category/smartphone/' + id_user);
-		}else if (category == "fashion") {
-		   	res.redirect('/category/fashion/' + id_user);
+		if (category == "Otomotif") {
+			res.redirect('/category/Otomotif/' + id_user);
+		}else if (category == "SmartphoneHandphone") {
+			res.redirect('/category/SmartphoneHandphone/' + id_user);
+		}else if (category == "Fashion") {
+		   	res.redirect('/category/Fashion/' + id_user);
 		}else{
 		    		
 		}
@@ -128,11 +128,11 @@ router.get('/category/:category', function(req, res){
 		.sort({'created_at': -1})
 		.exec(function(err, product) {
 		    if(!err) {
-		    	if (category == "otomotif") {
+		    	if (category == "Otomotif") {
 		    		return res.render('productotomotif', {products: product});
-		    	}else if (category == "smartphone") {
+		    	}else if (category == "SmartphoneHandphone") {
 		    		return res.render('productsmartphone', {products: product});
-		    	}else if (category == "fashion") {
+		    	}else if (category == "Fashion") {
 		    		return res.render('productfashion', {products: product});
 		    	}else{
 
