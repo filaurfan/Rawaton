@@ -382,7 +382,7 @@ router.post('/product/input/:id_user', uploadproduct, ensureAuthenticated, funct
 	var target_path = 'public/uploads/' + req.file.originalname;
 	fs.renameSync(tmp_path, target_path);
 
-	fs.unlinkSync(tmp_path);
+	// fs.unlinkSync(tmp_path);
 	var errors = req.validationErrors();
 
 	if(errors){
