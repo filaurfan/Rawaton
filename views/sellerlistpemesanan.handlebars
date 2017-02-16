@@ -8,9 +8,9 @@
         {{#carts}}
         <small>{{ tanggal_buat }}</small>
         <ol class="breadcrumb">
-            <li><a href="/seller/dashboard/{{ id_user }}"><i class="fa fa-dashboard"></i> Beranda</a></li>
-            <li><a href="/seller/pemesanan/{{ id_user }}"><i class="fa fa-shopping-cart"></i> Pemesanan</a></li>
-            <li><a href="/seller/listpemesanan/{{ id_user }}/{{ _id }}"><i class="fa fa-shopping-cart"></i> List Pemesanan</a></li>
+            <li><a href="/seller/dashboard/{{ id_seller }}"><i class="fa fa-dashboard"></i> Beranda</a></li>
+            <li><a href="/seller/pemesanan/{{ id_seller }}"><i class="fa fa-shopping-cart"></i> Pemesanan</a></li>
+            <li><a href="/seller/listpemesanan/{{ id_seller }}/{{ _id }}"><i class="fa fa-shopping-cart"></i> List Pemesanan</a></li>
         </ol>
         {{/carts}}
     </section>
@@ -36,7 +36,7 @@
                     {{#each items}}
                     <tbody>
                         <td>{{ id_product }} </td>
-                        <td><img class="profile-user-img img-responsive img-circle" src="/public/uploads/{{ gambar_item }}"></td>
+                        <td><img class="profile-user-img img-responsive img-circle" src="/uploads/{{ gambar_item }}"></td>
                         <td>{{ nama_product }}</td>
                         <td>{{ nama_seller }}</td>
                         <td>{{ jumlah }}</td>
@@ -125,8 +125,9 @@
         </form> 
     </section>
     {{#carts}}
-    <button type="submit" class="add-cart" href="/seller/pemesanan/{{ id_seller }}">Back</button>
+    <p><a type="button" class="btn btn-primary pull-right" href="/seller/pemesanan/{{ id_seller }}">Back</a></p>
     {{/carts}}
+    <div class="clearfix"></div>
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->

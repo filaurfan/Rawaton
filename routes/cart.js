@@ -90,7 +90,7 @@ router.get('/pembayaran/:id_user', ensureAuthenticated, function(req, res, next)
         		Profile.findOne({id_user: id_buyer}, function(err, profile){
           			if (!err) {
           				console.log(user);
-    	        		res.render('cartpembayaran', {users: user, profiles_buyer: profile,  layout: 'layout_buyer'});
+    	        		res.render('cartpembayaran', {users: user, profile_buyer: profile,  layout: 'layout_buyer'});
           			}
           		});
         	}else if(user.role == "seller"){
@@ -173,7 +173,7 @@ router.get('/checkout/:id_user', ensureAuthenticated, function(req, res, next){
           				Profile.findOne({id_user: id_user}, function(err, profile){
           					if (!err) {
           						console.log(user);
-    	        				return res.render('cartalamatpemesan', {users: user, alamats: alamat, profiles_buyer: profile, layout: 'layout_buyer'});
+    	        				return res.render('cartalamatpemesan', {users: user, alamats: alamat, profile_buyer: profile, layout: 'layout_buyer'});
           					}
           				});
           			}
