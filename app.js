@@ -151,7 +151,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(favicon(__dirname + '/public/images/favicon.ico'));
+// app.use(favicon(__dirname + '/public/images/favicon.ico'));
 //cuma tambah komnetar untuk branch ajaaaaa
 
 app.use('/', routes);
