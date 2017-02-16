@@ -34,7 +34,9 @@
                 <ul class="dropdown-menu">
                 <!-- User image -->
                 <li class="user-header">
+                {{#profile_buyer}}
                     <img src="/uploads/{{ gambar_user }}" class="img-circle" alt="User Image">
+                    {{/profile_buyer}}
                     {{#users}}
                         <p>{{ username }}<small>Member since {{ member_at }}</small></p>
                     {{/users}}
